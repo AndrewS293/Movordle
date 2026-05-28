@@ -4,888 +4,1389 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CINEMATLE</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Mono:wght@300;400;500&family=Bebas+Neue&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400;1,700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #0a0a0f;
-    --surface: #12121a;
-    --surface2: #1a1a26;
-    --border: #2a2a3a;
-    --gold: #c9a84c;
-    --gold-dim: #8a6e2e;
-    --green: #2d6a4f;
-    --green-bright: #52b788;
-    --yellow: #7b5e1a;
-    --yellow-bright: #e9c46a;
-    --red: #6b2737;
-    --text: #e8e4d9;
-    --text-dim: #8a8578;
-    --text-muted: #4a4840;
-    --accent: #c9a84c;
-    --film-strip: #1e1e2e;
-  }
+:root {
+  --bg:           #0b0c0f;
+  --surface:      #13141a;
+  --surface2:     #1a1c25;
+  --surface3:     #222530;
+  --border:       #2a2d3a;
+  --border-hi:    #3e4256;
+  --gold:         #d4a853;
+  --gold2:        #f0c878;
+  --gold-dim:     #5a4420;
+  --gold-glow:    rgba(212,168,83,0.15);
+  --green:        #0d2b1e;
+  --green-hi:     #22c55e;
+  --green-text:   #86efac;
+  --yellow:       #2b2006;
+  --yellow-hi:    #f59e0b;
+  --yellow-text:  #fde68a;
+  --wrong:        #0e0f14;
+  --wrong-text:   #3a3d52;
+  --text:         #e4e0f4;
+  --text-dim:     #7b7fa0;
+  --text-muted:   #3e4158;
+  --red:          #c0392b;
+  --red-dim:      #3a1010;
+}
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
 
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'DM Mono', monospace;
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+  background-image:
+    radial-gradient(ellipse 60% 40% at 50% 0%, rgba(212,168,83,0.05) 0%, transparent 60%);
+}
 
-  /* Film grain overlay */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-    pointer-events: none;
-    z-index: 1000;
-    opacity: 0.4;
-  }
+/* ── FILM STRIP ── */
+.filmstrip {
+  height: 28px;
+  background: #05050a;
+  border-bottom: 1px solid #000;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  gap: 0;
+}
+.filmstrip-hole {
+  width: 16px; height: 11px;
+  border-radius: 3px;
+  background: #1a1a2a;
+  border: 1px solid #000;
+  margin: 0 8px;
+  flex-shrink: 0;
+}
 
-  /* Film strip top */
-  .film-strip {
-    background: var(--film-strip);
-    height: 28px;
-    display: flex;
-    align-items: center;
-    gap: 0;
-    overflow: hidden;
-    border-bottom: 1px solid #000;
-  }
-  .film-hole {
-    width: 16px;
-    height: 12px;
-    background: var(--bg);
-    border-radius: 2px;
-    margin: 0 8px;
-    flex-shrink: 0;
-    box-shadow: inset 0 0 0 1px #000;
-  }
+/* ── HEADER ── */
+header {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  padding: 20px 28px 16px;
+  border-bottom: 1px solid var(--border);
+  gap: 16px;
+}
+.logo-block { text-align: center; }
+.logo {
+  font-family: 'Playfair Display', serif;
+  font-weight: 900;
+  font-size: clamp(38px, 7vw, 72px);
+  color: var(--gold);
+  letter-spacing: 0.1em;
+  line-height: 1;
+  text-shadow: 0 0 60px rgba(212,168,83,0.3);
+}
+.logo-sub {
+  font-family: 'Inter', sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.35em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  margin-top: 5px;
+}
+.header-stats {
+  display: flex;
+  gap: 20px;
+  justify-content: flex-start;
+}
+.stat-pill { text-align: center; }
+.stat-num {
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  font-size: 22px;
+  color: var(--gold);
+  line-height: 1;
+}
+.stat-lbl {
+  font-size: 8px;
+  letter-spacing: 0.2em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+.header-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+.icon-btn {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  width: 34px; height: 34px;
+  cursor: pointer;
+  font-size: 15px;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+  border-radius: 6px;
+}
+.icon-btn:hover { border-color: var(--gold-dim); color: var(--gold); background: var(--surface3); }
 
-  header {
-    text-align: center;
-    padding: 24px 20px 16px;
-    border-bottom: 1px solid var(--border);
-    position: relative;
-  }
+/* ── LEGEND ── */
+.legend {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 7px 20px;
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+.legend-item {
+  display: flex; align-items: center; gap: 7px;
+  font-size: 10px; color: var(--text-dim);
+  letter-spacing: 0.04em;
+  font-family: 'JetBrains Mono', monospace;
+}
+.legend-dot {
+  width: 10px; height: 10px;
+  border-radius: 3px; border: 1px solid transparent;
+}
+.legend-dot.c { background: var(--green); border-color: var(--green-hi); }
+.legend-dot.y { background: var(--yellow); border-color: var(--yellow-hi); }
+.legend-dot.w { background: var(--wrong); border-color: var(--border); }
 
-  .logo {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(42px, 8vw, 72px);
-    letter-spacing: 0.2em;
-    color: var(--gold);
-    text-shadow: 0 0 40px rgba(201, 168, 76, 0.3), 2px 2px 0 #000;
-    line-height: 1;
-  }
+/* ── MAIN ── */
+.main { max-width: 1160px; margin: 0 auto; padding: 20px 14px 48px; }
 
-  .tagline {
-    font-size: 10px;
-    letter-spacing: 0.4em;
-    text-transform: uppercase;
-    color: var(--text-dim);
-    margin-top: 4px;
-  }
+/* ── ERROR ── */
+.error-msg {
+  background: rgba(192,57,43,0.1);
+  border: 1px solid rgba(192,57,43,0.35);
+  border-radius: 6px;
+  padding: 10px 14px;
+  font-size: 12px; color: #f08070;
+  margin-bottom: 14px; display: none;
+}
+.error-msg.show { display: block; }
 
-  .header-meta {
-    display: flex;
-    justify-content: center;
-    gap: 24px;
-    margin-top: 12px;
-    font-size: 11px;
-    color: var(--text-dim);
-    letter-spacing: 0.1em;
-  }
+/* ── HINT BOX ── */
+.hint-box {
+  background: linear-gradient(135deg, var(--surface), var(--surface2));
+  border: 1px solid var(--gold-dim);
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin-bottom: 12px;
+  animation: fadeUp 0.5s ease;
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.hint-header {
+  display: flex; align-items: center; gap: 8px;
+  margin-bottom: 10px;
+}
+.hint-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase;
+  background: var(--gold-dim); color: var(--gold);
+  padding: 3px 8px; border-radius: 4px;
+}
+.hint-title {
+  font-size: 11px; color: var(--text-dim);
+  letter-spacing: 0.06em;
+}
+.hint-choices {
+  display: flex; gap: 8px; flex-wrap: wrap;
+}
+.hint-choice-btn {
+  background: var(--surface3);
+  border: 1px solid var(--border-hi);
+  color: var(--text);
+  padding: 8px 14px;
+  font-family: 'Inter', sans-serif;
+  font-size: 11px; letter-spacing: 0.05em;
+  cursor: pointer; border-radius: 6px;
+  transition: all 0.2s;
+  display: flex; align-items: center; gap: 6px;
+}
+.hint-choice-btn:hover { border-color: var(--gold-dim); background: var(--surface2); color: var(--gold); }
+.hint-choice-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.hint-revealed {
+  font-size: 12px; color: var(--text);
+  line-height: 1.6;
+  padding: 10px 12px;
+  background: var(--wrong);
+  border: 1px solid var(--border-hi);
+  border-radius: 6px;
+  margin-top: 4px;
+}
+.hint-revealed strong { color: var(--gold); }
 
-  .guesses-left {
-    color: var(--gold);
-    font-weight: 500;
-  }
+/* ── SEARCH ── */
+.search-section { margin-bottom: 18px; }
+.search-row {
+  display: flex; gap: 8px; align-items: stretch;
+  position: relative;
+}
+.search-wrap { flex: 1; position: relative; }
+.search-icon {
+  position: absolute; left: 13px; top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted); font-size: 15px;
+  pointer-events: none;
+}
+.search-input {
+  width: 100%;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 14px 14px 14px 40px;
+  font-family: 'Inter', sans-serif; font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  border-radius: 6px;
+}
+.search-input:focus {
+  border-color: var(--gold-dim);
+  box-shadow: 0 0 0 2px var(--gold-glow);
+}
+.search-input::placeholder { color: var(--text-muted); }
+.search-input:disabled { opacity: 0.4; cursor: not-allowed; }
 
-  /* Legend */
-  .legend {
-    display: flex;
-    justify-content: center;
-    gap: 16px;
-    padding: 10px 20px;
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    flex-wrap: wrap;
-  }
-  .legend-item {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 10px;
-    letter-spacing: 0.05em;
-    color: var(--text-dim);
-  }
-  .legend-dot {
-    width: 12px;
-    height: 12px;
-    border-radius: 2px;
-  }
-  .legend-dot.green { background: var(--green-bright); }
-  .legend-dot.yellow { background: var(--yellow-bright); }
-  .legend-dot.red { background: #4a1a24; border: 1px solid #6b2737; }
+.guess-btn {
+  background: var(--gold);
+  color: #0a0b0e;
+  border: none;
+  padding: 0 26px;
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: all 0.15s;
+  border-radius: 6px;
+  white-space: nowrap;
+  min-height: 50px;
+  min-width: 100px;
+}
+.guess-btn:hover:not(:disabled) {
+  background: var(--gold2);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 20px rgba(212,168,83,0.35);
+}
+.guess-btn:disabled { background: var(--surface3); color: var(--text-muted); cursor: not-allowed; }
 
-  /* Main layout */
-  .main {
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 20px 16px;
-  }
+.giveup-btn {
+  background: transparent;
+  color: var(--text-dim);
+  border: 1px solid var(--border);
+  padding: 0 18px;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition: all 0.15s;
+  border-radius: 6px;
+  min-height: 50px;
+  white-space: nowrap;
+}
+.giveup-btn:hover:not(:disabled) { border-color: var(--red); color: #f08070; }
+.giveup-btn:disabled { opacity: 0.3; cursor: not-allowed; }
 
-  /* Search input */
-  .search-container {
-    position: relative;
-    margin-bottom: 20px;
-  }
+/* ── AUTOCOMPLETE ── */
+.autocomplete-drop {
+  position: absolute;
+  top: calc(100% + 4px); left: 0; right: 0;
+  background: var(--surface2);
+  border: 1px solid var(--border-hi);
+  border-radius: 6px;
+  z-index: 200;
+  max-height: 280px; overflow-y: auto;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.55);
+  display: none;
+}
+.autocomplete-drop.open { display: block; }
+.ac-item {
+  display: flex; align-items: center; gap: 11px;
+  padding: 9px 13px; cursor: pointer;
+  transition: background 0.1s;
+  border-bottom: 1px solid var(--border);
+}
+.ac-item:last-child { border-bottom: none; }
+.ac-item:hover { background: var(--surface3); }
+.ac-thumb {
+  width: 28px; height: 40px;
+  object-fit: cover; border-radius: 3px;
+  background: var(--surface3); flex-shrink: 0;
+}
+.ac-thumb-ph {
+  width: 28px; height: 40px;
+  background: var(--surface3); border-radius: 3px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; flex-shrink: 0; color: var(--text-muted);
+}
+.ac-info { flex: 1; min-width: 0; }
+.ac-title { font-size: 13px; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ac-meta { font-size: 10px; color: var(--text-dim); margin-top: 2px; font-family: 'JetBrains Mono', monospace; }
+.ac-loading { padding: 14px; text-align: center; font-size: 11px; color: var(--text-dim); }
 
-  .search-wrap {
-    display: flex;
-    gap: 10px;
-    align-items: stretch;
-  }
+/* ── PIPS ── */
+.guesses-bar {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 14px; padding: 0 2px;
+}
+.pips { display: flex; gap: 4px; }
+.pip {
+  width: 20px; height: 5px; border-radius: 3px;
+  background: var(--surface3); transition: background 0.3s;
+}
+.pip.used { background: var(--gold-dim); }
+.pip.danger { background: var(--red); }
+.guesses-text { font-size: 11px; color: var(--text-dim); font-family: 'JetBrains Mono', monospace; }
+.guesses-text span { color: var(--gold); font-weight: 500; }
 
-  .search-input-wrap {
-    position: relative;
-    flex: 1;
-  }
+/* ── COLUMN HEADERS ── */
+.col-header-row {
+  display: grid;
+  grid-template-columns: 84px repeat(9, 1fr);
+  gap: 4px;
+  margin-bottom: 5px;
+  padding: 0 2px;
+}
+.col-h {
+  text-align: center;
+  font-size: 8px; letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-family: 'JetBrains Mono', monospace;
+  padding: 3px 2px;
+}
+.col-h:first-child { text-align: left; }
 
-  .search-input {
-    width: 100%;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    color: var(--text);
-    padding: 14px 18px;
-    font-family: 'DM Mono', monospace;
-    font-size: 14px;
-    letter-spacing: 0.05em;
-    outline: none;
-    transition: border-color 0.2s, box-shadow 0.2s;
-  }
+/* ── GUESS ROWS ── */
+.guess-rows { display: flex; flex-direction: column; gap: 4px; }
 
-  .search-input:focus {
-    border-color: var(--gold);
-    box-shadow: 0 0 0 1px var(--gold-dim), 0 0 20px rgba(201,168,76,0.08);
-  }
+.guess-row {
+  display: grid;
+  grid-template-columns: 84px repeat(9, 1fr);
+  gap: 4px;
+  animation: rowIn 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+@keyframes rowIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
 
-  .search-input::placeholder { color: var(--text-muted); }
+/* Poster */
+.poster-cell {
+  position: relative; border-radius: 5px; overflow: hidden;
+  background: var(--surface2); border: 1px solid var(--border);
+  aspect-ratio: 2/3; min-height: 120px;
+}
+.poster-img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.poster-fb {
+  width: 100%; height: 100%;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 5px; color: var(--text-muted); font-size: 22px;
+}
+.poster-fb small { font-size: 7px; text-align: center; padding: 0 4px; color: var(--text-muted); }
+.poster-overlay {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  background: linear-gradient(transparent, rgba(0,0,0,0.88));
+  padding: 18px 5px 5px;
+  font-size: 8px; font-weight: 600;
+  color: rgba(255,255,255,0.9); text-align: center;
+  line-height: 1.25; letter-spacing: 0.02em;
+}
 
-  .guess-btn {
-    background: var(--gold);
-    color: #0a0a0f;
-    border: none;
-    padding: 14px 28px;
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 18px;
-    letter-spacing: 0.15em;
-    cursor: pointer;
-    transition: background 0.15s, transform 0.1s;
-    white-space: nowrap;
-  }
-  .guess-btn:hover { background: #ddb95c; }
-  .guess-btn:active { transform: scale(0.98); }
-  .guess-btn:disabled { background: var(--text-muted); cursor: not-allowed; }
+/* Cells */
+.data-col { display: flex; flex-direction: column; gap: 4px; }
+.cell {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  padding: 6px 5px;
+  text-align: center;
+  font-size: 10px;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  position: relative; overflow: hidden;
+  min-height: 38px;
+  transition: background 0.4s ease, border-color 0.4s ease;
+  animation: cellFlip 0.55s ease both;
+}
+@keyframes cellFlip {
+  0%   { transform: scaleY(1); }
+  40%  { transform: scaleY(0); opacity: 0.3; }
+  100% { transform: scaleY(1); }
+}
+.cell.correct { background: var(--green); border-color: var(--green-hi); color: var(--green-text); }
+.cell.close   { background: var(--yellow); border-color: var(--yellow-hi); color: var(--yellow-text); }
+.cell.wrong   { background: var(--wrong); border-color: var(--border); color: var(--wrong-text); }
 
-  /* Autocomplete dropdown */
-  .autocomplete {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-top: none;
-    z-index: 100;
-    max-height: 220px;
-    overflow-y: auto;
-  }
-  .autocomplete-item {
-    padding: 10px 18px;
-    cursor: pointer;
-    font-size: 13px;
-    color: var(--text);
-    transition: background 0.1s;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .autocomplete-item:hover { background: var(--border); }
-  .autocomplete-item .year-tag {
-    font-size: 11px;
-    color: var(--text-dim);
-  }
+.cell-lbl {
+  font-size: 7px; letter-spacing: 0.15em;
+  text-transform: uppercase; opacity: 0.55;
+  font-family: 'JetBrains Mono', monospace;
+  margin-bottom: 2px;
+}
+.cell-val { font-size: 11px; font-weight: 500; line-height: 1.3; }
+.cell-val.sm { font-size: 9px; }
+.cell-arrow {
+  font-size: 11px; margin-top: 1px; opacity: 0.85;
+  line-height: 1;
+}
 
-  /* Column headers */
-  .col-headers {
-    display: grid;
-    grid-template-columns: 160px repeat(9, 1fr);
-    gap: 3px;
-    margin-bottom: 4px;
-  }
-  .col-header {
-    text-align: center;
-    font-size: 9px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    padding: 4px 2px;
-    line-height: 1.3;
-  }
-  .col-header:first-child { text-align: left; }
+/* Genre / cast tags */
+.tag-wrap { display: flex; flex-wrap: wrap; gap: 2px; justify-content: center; }
+.tag {
+  font-size: 7px; padding: 1px 4px; border-radius: 3px;
+  background: rgba(255,255,255,0.05);
+  letter-spacing: 0.04em; line-height: 1.4;
+}
+.tag.match { background: rgba(34,197,94,0.15); color: var(--green-hi); }
 
-  /* Guess rows */
-  .guesses-container {
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-  }
+.cast-list { display: flex; flex-direction: column; gap: 2px; width: 100%; }
+.cast-name {
+  font-size: 8px; text-align: center; line-height: 1.3;
+  padding: 1px 2px; border-radius: 2px;
+}
+.cast-name.match { background: rgba(34,197,94,0.15); color: var(--green-hi); }
 
-  .guess-row {
-    display: grid;
-    grid-template-columns: 160px repeat(9, 1fr);
-    gap: 3px;
-    animation: slideIn 0.3s ease;
-  }
+/* ── EMPTY ROWS ── */
+.empty-rows { display: flex; flex-direction: column; gap: 4px; margin-top: 4px; }
+.empty-row {
+  display: grid;
+  grid-template-columns: 84px repeat(9, 1fr);
+  gap: 4px; opacity: 0.18;
+}
+.empty-poster {
+  aspect-ratio: 2/3; min-height: 120px;
+  background: var(--surface2);
+  border: 1px dashed var(--border); border-radius: 5px;
+}
+.empty-col { display: flex; flex-direction: column; gap: 4px; }
+.empty-cell {
+  flex: 1; min-height: 38px;
+  background: var(--surface);
+  border: 1px dashed var(--border); border-radius: 5px;
+}
 
-  @keyframes slideIn {
-    from { opacity: 0; transform: translateY(-8px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
+/* ── SPINNER ── */
+.spinner {
+  display: inline-block; width: 13px; height: 13px;
+  border: 2px solid var(--border);
+  border-top-color: var(--gold); border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  vertical-align: middle; margin-right: 7px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
 
-  .guess-cell {
-    padding: 10px 6px;
-    text-align: center;
-    font-size: 11px;
-    letter-spacing: 0.03em;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 52px;
-    line-height: 1.3;
-    position: relative;
-    transition: background 0.4s ease;
-  }
+/* ── MODALS ── */
+.modal-bg {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.88);
+  backdrop-filter: blur(5px);
+  display: none; align-items: center; justify-content: center;
+  z-index: 500; padding: 20px;
+}
+.modal-bg.show { display: flex; animation: bgIn 0.3s ease; }
+@keyframes bgIn { from { opacity: 0; } to { opacity: 1; } }
 
-  .guess-cell.movie-title {
-    text-align: left;
-    justify-content: flex-start;
-    font-size: 12px;
-    font-weight: 500;
-    padding-left: 10px;
-    background: var(--surface) !important;
-    border-left: 2px solid var(--border);
-  }
+.modal {
+  background: var(--surface);
+  border: 1px solid var(--border-hi);
+  border-radius: 10px;
+  max-width: 480px; width: 100%;
+  box-shadow: 0 0 80px rgba(212,168,83,0.1), 0 20px 60px rgba(0,0,0,0.6);
+  animation: modalUp 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  overflow: hidden;
+}
+@keyframes modalUp {
+  from { transform: translateY(24px) scale(0.97); }
+  to   { transform: translateY(0) scale(1); }
+}
+.modal-poster-area {
+  position: relative; height: 190px;
+  overflow: hidden; background: var(--surface2);
+}
+.modal-poster-bg {
+  width: 100%; height: 100%;
+  object-fit: cover; filter: blur(14px) brightness(0.35); transform: scale(1.12);
+}
+.modal-poster-front {
+  position: absolute; left: 50%; top: 50%;
+  transform: translate(-50%, -50%);
+  height: 155px; border-radius: 5px;
+  box-shadow: 0 8px 36px rgba(0,0,0,0.65);
+}
+.modal-body { padding: 26px 30px 30px; text-align: center; }
+.modal-icon { font-size: 40px; margin-bottom: 8px; }
+.modal-headline {
+  font-family: 'Playfair Display', serif;
+  font-weight: 900; font-size: 32px;
+  color: var(--gold); letter-spacing: 0.06em;
+  line-height: 1; margin-bottom: 6px;
+}
+.modal-film {
+  font-family: 'Playfair Display', serif;
+  font-style: italic; font-size: 20px;
+  color: var(--text); margin-bottom: 12px;
+}
+.modal-meta {
+  font-size: 11px; color: var(--text-dim);
+  line-height: 1.9; letter-spacing: 0.03em;
+  margin-bottom: 22px;
+  font-family: 'JetBrains Mono', monospace;
+}
+.modal-actions { display: flex; gap: 8px; justify-content: center; }
+.btn-primary {
+  background: var(--gold); color: #0a0b0e;
+  border: none; padding: 12px 26px;
+  font-family: 'Playfair Display', serif;
+  font-weight: 700; font-size: 15px;
+  letter-spacing: 0.08em; cursor: pointer;
+  border-radius: 6px; transition: all 0.15s;
+}
+.btn-primary:hover { background: var(--gold2); transform: translateY(-1px); }
+.btn-secondary {
+  background: var(--surface2); color: var(--text-dim);
+  border: 1px solid var(--border); padding: 12px 22px;
+  font-family: 'Inter', sans-serif; font-size: 13px;
+  letter-spacing: 0.06em; cursor: pointer;
+  border-radius: 6px; transition: all 0.15s;
+}
+.btn-secondary:hover { border-color: var(--border-hi); color: var(--text); }
 
-  .guess-cell.correct { background: var(--green); color: var(--green-bright); }
-  .guess-cell.close { background: var(--yellow); color: var(--yellow-bright); }
-  .guess-cell.wrong { background: #0e0e16; color: var(--text-muted); border: 1px solid #1a1a26; }
+/* ── CONFIRM DIALOG ── */
+.confirm-modal { max-width: 360px; }
+.confirm-modal .modal-body { padding: 32px 28px; }
+.confirm-title { font-family: 'Playfair Display', serif; font-size: 22px; color: var(--text); margin-bottom: 10px; }
+.confirm-text { font-size: 12px; color: var(--text-dim); line-height: 1.7; margin-bottom: 22px; }
+.btn-danger {
+  background: var(--red-dim); color: #f08070;
+  border: 1px solid var(--red); padding: 12px 22px;
+  font-family: 'Inter', sans-serif; font-size: 13px;
+  letter-spacing: 0.06em; cursor: pointer;
+  border-radius: 6px; transition: all 0.15s;
+}
+.btn-danger:hover { background: rgba(192,57,43,0.25); }
 
-  .arrow-indicator {
-    position: absolute;
-    bottom: 3px;
-    right: 4px;
-    font-size: 9px;
-    opacity: 0.7;
-  }
+/* ── HOW TO PLAY ── */
+.how-card {
+  background: var(--surface);
+  border: 1px solid var(--border); border-radius: 8px;
+  padding: 20px 22px; margin: 0 auto 32px;
+  max-width: 1160px;
+}
+.how-title {
+  font-family: 'Playfair Display', serif; font-weight: 700;
+  font-size: 18px; color: var(--gold);
+  margin-bottom: 14px; letter-spacing: 0.05em;
+}
+.how-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 10px;
+}
+.how-item {
+  display: flex; align-items: flex-start; gap: 9px;
+  font-size: 11px; color: var(--text-dim); line-height: 1.55;
+}
+.how-emoji { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
 
-  /* Hint box */
-  .hint-box {
-    background: linear-gradient(135deg, #1a1208, #12120e);
-    border: 1px solid var(--gold-dim);
-    padding: 14px 20px;
-    margin-bottom: 12px;
-    animation: fadeIn 0.5s ease;
-  }
-  .hint-label {
-    font-family: 'Bebas Neue', sans-serif;
-    letter-spacing: 0.2em;
-    font-size: 14px;
-    color: var(--gold);
-    margin-bottom: 4px;
-  }
-  .hint-text {
-    font-size: 12px;
-    color: var(--text-dim);
-    letter-spacing: 0.05em;
-  }
+.footer-attr {
+  text-align: center; padding: 10px;
+  font-size: 9px; color: var(--text-muted);
+  font-family: 'JetBrains Mono', monospace;
+}
+.footer-attr a { color: var(--gold-dim); text-decoration: none; }
+.footer-attr a:hover { color: var(--gold); }
 
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
+/* ── LOADING STATE ── */
+.loading-overlay {
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 40px 20px; gap: 14px;
+  color: var(--text-dim); font-size: 13px;
+}
+.loading-overlay .spinner { width: 24px; height: 24px; }
 
-  /* Win/Lose overlay */
-  .overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.85);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 500;
-    display: none;
-  }
-  .overlay.show { display: flex; animation: fadeIn 0.4s ease; }
-
-  .result-card {
-    background: var(--surface);
-    border: 1px solid var(--gold-dim);
-    padding: 40px 48px;
-    text-align: center;
-    max-width: 440px;
-    width: 90%;
-    box-shadow: 0 0 80px rgba(201,168,76,0.15);
-  }
-
-  .result-emoji { font-size: 48px; margin-bottom: 16px; }
-
-  .result-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 36px;
-    letter-spacing: 0.2em;
-    color: var(--gold);
-    margin-bottom: 8px;
-  }
-
-  .result-movie {
-    font-family: 'Playfair Display', serif;
-    font-style: italic;
-    font-size: 20px;
-    color: var(--text);
-    margin-bottom: 16px;
-  }
-
-  .result-detail {
-    font-size: 12px;
-    color: var(--text-dim);
-    margin-bottom: 24px;
-    line-height: 1.7;
-  }
-
-  .play-again-btn {
-    background: var(--gold);
-    color: #0a0a0f;
-    border: none;
-    padding: 14px 32px;
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 20px;
-    letter-spacing: 0.2em;
-    cursor: pointer;
-    transition: background 0.15s;
-  }
-  .play-again-btn:hover { background: #ddb95c; }
-
-  /* Scrollbar */
-  ::-webkit-scrollbar { width: 4px; }
-  ::-webkit-scrollbar-track { background: var(--bg); }
-  ::-webkit-scrollbar-thumb { background: var(--border); }
-
-  /* Responsive */
-  @media (max-width: 768px) {
-    .col-headers, .guess-row {
-      grid-template-columns: 110px repeat(9, 1fr);
-    }
-    .guess-cell { font-size: 9px; padding: 7px 2px; min-height: 44px; }
-    .guess-cell.movie-title { font-size: 10px; }
-    .col-header { font-size: 7.5px; }
-  }
-
-  .empty-rows {
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-    margin-top: 3px;
-  }
-  .empty-row {
-    display: grid;
-    grid-template-columns: 160px repeat(9, 1fr);
-    gap: 3px;
-    opacity: 0.25;
-  }
-  @media (max-width: 768px) {
-    .empty-row { grid-template-columns: 110px repeat(9, 1fr); }
-  }
-  .empty-cell {
-    height: 52px;
-    background: var(--surface);
-    border: 1px dashed var(--border);
-  }
-  .empty-cell:first-child { border-left: 2px solid var(--border); }
-
-  .streak-bar {
-    display: flex;
-    justify-content: center;
-    gap: 24px;
-    padding: 8px;
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    font-size: 11px;
-    color: var(--text-dim);
-  }
-  .streak-num { color: var(--gold); font-weight: 500; font-size: 14px; }
+/* ── RESPONSIVE ── */
+@media (max-width: 860px) {
+  .col-header-row, .guess-row, .empty-row { grid-template-columns: 68px repeat(9, 1fr); }
+  .cell { font-size: 9px; min-height: 32px; }
+  .cell-lbl { display: none; }
+  .header { grid-template-columns: 1fr; justify-items: center; }
+  .header-stats { display: none; }
+}
+@media (max-width: 600px) {
+  .col-header-row, .guess-row, .empty-row { grid-template-columns: 56px repeat(9, 1fr); }
+  .cell { min-height: 28px; padding: 3px 2px; }
+  header { grid-template-columns: 1fr; }
+  .header-actions { display: none; }
+  .logo { font-size: 42px; }
+}
 </style>
 </head>
 <body>
 
-<div class="film-strip" id="filmStrip"></div>
+<div class="filmstrip" id="filmstrip"></div>
 
 <header>
-  <div class="logo">CINEMATLE</div>
-  <div class="tagline">Guess the Film — One Frame at a Time</div>
-  <div class="header-meta">
-    <span>Guesses: <span class="guesses-left" id="guessesLeft">10 / 10</span></span>
-    <span>·</span>
-    <span id="dateDisplay"></span>
+  <div class="header-stats">
+    <div class="stat-pill"><div class="stat-num" id="statPlayed">0</div><div class="stat-lbl">Played</div></div>
+    <div class="stat-pill"><div class="stat-num" id="statWon">0</div><div class="stat-lbl">Won</div></div>
+    <div class="stat-pill"><div class="stat-num" id="statStreak">0</div><div class="stat-lbl">Streak</div></div>
+    <div class="stat-pill"><div class="stat-num" id="statAvg">—</div><div class="stat-lbl">Avg</div></div>
+  </div>
+  <div class="logo-block">
+    <div class="logo">CINEMATLE</div>
+    <div class="logo-sub">Guess the Film · One Clue at a Time</div>
+  </div>
+  <div class="header-actions">
+    <button class="icon-btn" onclick="showHowToModal()" title="How to play">?</button>
+    <button class="icon-btn" onclick="newGame()" title="New game">↺</button>
   </div>
 </header>
 
-<div class="streak-bar">
-  <span>Played: <span class="streak-num" id="statPlayed">0</span></span>
-  <span>Won: <span class="streak-num" id="statWon">0</span></span>
-  <span>Streak: <span class="streak-num" id="statStreak">0</span></span>
-</div>
-
 <div class="legend">
-  <div class="legend-item"><div class="legend-dot green"></div> Exact match</div>
-  <div class="legend-item"><div class="legend-dot yellow"></div> Close (±5 yrs / ±$5M / ±5pts)</div>
-  <div class="legend-item"><div class="legend-dot red"></div> No match</div>
+  <div class="legend-item"><div class="legend-dot c"></div>Exact match</div>
+  <div class="legend-item"><div class="legend-dot y"></div>Close (±5 yrs / ±$30M / ±6pts)</div>
+  <div class="legend-item"><div class="legend-dot w"></div>No match</div>
+  <div class="legend-item">↑↓ = direction to target</div>
 </div>
 
 <div class="main">
   <div id="hintContainer"></div>
+  <div class="error-msg" id="errorMsg"></div>
 
-  <div class="search-container">
-    <div class="search-wrap">
-      <div class="search-input-wrap">
-        <input type="text" class="search-input" id="searchInput" placeholder="Search for a movie title..." autocomplete="off">
-        <div class="autocomplete" id="autocomplete" style="display:none"></div>
+  <div class="search-section">
+    <div class="search-row">
+      <div class="search-wrap">
+        <span class="search-icon">🔍</span>
+        <input type="text" class="search-input" id="searchInput" placeholder="Search for a movie…" autocomplete="off">
+        <div class="autocomplete-drop" id="acDrop"></div>
       </div>
-      <button class="guess-btn" id="guessBtn">GUESS</button>
+      <button class="guess-btn" id="guessBtn" disabled>Guess</button>
+      <button class="giveup-btn" id="giveupBtn" onclick="confirmGiveUp()">Give Up</button>
     </div>
   </div>
 
-  <div class="col-headers">
-    <div class="col-header">FILM</div>
-    <div class="col-header">Year</div>
-    <div class="col-header">Genre</div>
-    <div class="col-header">Rating</div>
-    <div class="col-header">Box Office</div>
-    <div class="col-header">RT Score</div>
-    <div class="col-header">Studio</div>
-    <div class="col-header">Director</div>
-    <div class="col-header">Lead Actor</div>
-    <div class="col-header">Support</div>
+  <div class="guesses-bar">
+    <div class="pips" id="pips"></div>
+    <div class="guesses-text">Guesses left: <span id="guessesLeft">10</span></div>
   </div>
 
-  <div class="guesses-container" id="guessesContainer"></div>
+  <div class="col-header-row">
+    <div class="col-h">Film</div>
+    <div class="col-h">Year</div>
+    <div class="col-h">Genres</div>
+    <div class="col-h">Rating</div>
+    <div class="col-h">Box Office</div>
+    <div class="col-h">Score</div>
+    <div class="col-h">Studio</div>
+    <div class="col-h">Director</div>
+    <div class="col-h">Lead</div>
+    <div class="col-h">Cast</div>
+  </div>
+
+  <div class="guess-rows" id="guessRows"></div>
   <div class="empty-rows" id="emptyRows"></div>
 </div>
 
-<div class="overlay" id="overlay">
-  <div class="result-card">
-    <div class="result-emoji" id="resultEmoji"></div>
-    <div class="result-title" id="resultTitle"></div>
-    <div class="result-movie" id="resultMovie"></div>
-    <div class="result-detail" id="resultDetail"></div>
-    <button class="play-again-btn" onclick="newGame()">PLAY AGAIN</button>
+<div style="max-width:1160px;margin:0 auto;padding:0 14px;">
+  <div class="how-card">
+    <div class="how-title">How to Play</div>
+    <div class="how-grid">
+      <div class="how-item"><div class="how-emoji">🎬</div><div>Search any film and submit it as a guess. The mystery film always has won an award.</div></div>
+      <div class="how-item"><div class="how-emoji">🟩</div><div>Green = exact match. Yellow = close. Dark = no match.</div></div>
+      <div class="how-item"><div class="how-emoji">↑↓</div><div>Arrows show whether the true value is higher or lower.</div></div>
+      <div class="how-item"><div class="how-emoji">💡</div><div>Hints unlock at guess 4 and 8. Pick: cast reveal, tagline, or awards.</div></div>
+      <div class="how-item"><div class="how-emoji">🎭</div><div>Genres and cast show partial green for each match.</div></div>
+      <div class="how-item"><div class="how-emoji">🏳️</div><div>Stuck? Use Give Up to reveal the answer.</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="footer-attr">Data by <a href="https://www.themoviedb.org" target="_blank">The Movie Database (TMDB)</a> · Not endorsed by TMDB</div>
+
+<!-- Result Modal -->
+<div class="modal-bg" id="resultModal">
+  <div class="modal">
+    <div class="modal-poster-area">
+      <img class="modal-poster-bg" id="mPosterBg" src="" alt="">
+      <img class="modal-poster-front" id="mPosterFront" src="" alt="">
+    </div>
+    <div class="modal-body">
+      <div class="modal-icon" id="mIcon"></div>
+      <div class="modal-headline" id="mHeadline"></div>
+      <div class="modal-film" id="mFilm"></div>
+      <div class="modal-meta" id="mMeta"></div>
+      <div class="modal-actions">
+        <button class="btn-primary" onclick="newGame()">Play Again</button>
+        <button class="btn-secondary" onclick="closeModal('resultModal')">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Give Up Confirm Modal -->
+<div class="modal-bg" id="confirmModal">
+  <div class="modal confirm-modal">
+    <div class="modal-body">
+      <div class="confirm-title">Give Up?</div>
+      <div class="confirm-text">The answer will be revealed and the game will end. This will count as a loss.</div>
+      <div class="modal-actions" style="justify-content:center">
+        <button class="btn-danger" onclick="giveUp()">Yes, Reveal Answer</button>
+        <button class="btn-secondary" onclick="closeModal('confirmModal')">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- How To Play Modal -->
+<div class="modal-bg" id="howModal">
+  <div class="modal">
+    <div class="modal-body" style="padding-top:32px;text-align:left">
+      <div style="font-family:'Playfair Display',serif;font-size:26px;color:var(--gold);margin-bottom:18px;text-align:center">How to Play</div>
+      <div style="font-size:12px;color:var(--text-dim);line-height:2;margin-bottom:22px">
+        🎬 &nbsp;Search any film and submit it as a guess. The mystery film always has award recognition.<br>
+        🟩 &nbsp;Green = exact match. Yellow = close. Dark = no match.<br>
+        ↑↓ &nbsp;Arrows on numeric fields tell you if the target is higher or lower.<br>
+        💡 &nbsp;Hints unlock at guess 4 and 8 — choose what to reveal.<br>
+        🎭 &nbsp;Genres and Cast highlight green for each individual match.<br>
+        🏳️ &nbsp;Use the Give Up button any time to concede the round.
+      </div>
+      <div style="text-align:center">
+        <button class="btn-primary" onclick="closeModal('howModal')">Got It</button>
+      </div>
+    </div>
   </div>
 </div>
 
 <script>
-// ─── MOVIE DATABASE ───────────────────────────────────────────────────────────
-// Fields: title, year, genre, rating, boxOffice (millions), rtScore, studio, director, lead, support
-const MOVIES = [
-  { title: "The Dark Knight", year: 2008, genre: "Action", rating: "PG-13", boxOffice: 1004, rtScore: 94, studio: "Warner Bros.", director: "Christopher Nolan", lead: "Christian Bale", support: "Heath Ledger" },
-  { title: "Inception", year: 2010, genre: "Sci-Fi", rating: "PG-13", boxOffice: 836, rtScore: 87, studio: "Warner Bros.", director: "Christopher Nolan", lead: "Leonardo DiCaprio", support: "Joseph Gordon-Levitt" },
-  { title: "Interstellar", year: 2014, genre: "Sci-Fi", rating: "PG-13", boxOffice: 701, rtScore: 73, studio: "Paramount", director: "Christopher Nolan", lead: "Matthew McConaughey", support: "Anne Hathaway" },
-  { title: "The Avengers", year: 2012, genre: "Action", rating: "PG-13", boxOffice: 1519, rtScore: 91, studio: "Marvel Studios", director: "Joss Whedon", lead: "Robert Downey Jr.", support: "Chris Evans" },
-  { title: "Avatar", year: 2009, genre: "Sci-Fi", rating: "PG-13", boxOffice: 2923, rtScore: 82, studio: "20th Century Fox", director: "James Cameron", lead: "Sam Worthington", support: "Zoe Saldana" },
-  { title: "Titanic", year: 1997, genre: "Romance", rating: "PG-13", boxOffice: 2264, rtScore: 88, studio: "Paramount", director: "James Cameron", lead: "Leonardo DiCaprio", support: "Kate Winslet" },
-  { title: "Jurassic Park", year: 1993, genre: "Adventure", rating: "PG-13", boxOffice: 1046, rtScore: 91, studio: "Universal", director: "Steven Spielberg", lead: "Sam Neill", support: "Jeff Goldblum" },
-  { title: "The Lion King", year: 1994, genre: "Animation", rating: "G", boxOffice: 987, rtScore: 93, studio: "Walt Disney", director: "Roger Allers", lead: "Matthew Broderick", support: "James Earl Jones" },
-  { title: "Forrest Gump", year: 1994, genre: "Drama", rating: "PG-13", boxOffice: 678, rtScore: 71, studio: "Paramount", director: "Robert Zemeckis", lead: "Tom Hanks", support: "Robin Wright" },
-  { title: "Pulp Fiction", year: 1994, genre: "Crime", rating: "R", boxOffice: 214, rtScore: 92, studio: "Miramax", director: "Quentin Tarantino", lead: "John Travolta", support: "Samuel L. Jackson" },
-  { title: "The Matrix", year: 1999, genre: "Sci-Fi", rating: "R", boxOffice: 467, rtScore: 88, studio: "Warner Bros.", director: "The Wachowskis", lead: "Keanu Reeves", support: "Laurence Fishburne" },
-  { title: "Goodfellas", year: 1990, genre: "Crime", rating: "R", boxOffice: 47, rtScore: 96, studio: "Warner Bros.", director: "Martin Scorsese", lead: "Ray Liotta", support: "Robert De Niro" },
-  { title: "Schindler's List", year: 1993, genre: "Drama", rating: "R", boxOffice: 322, rtScore: 97, studio: "Universal", director: "Steven Spielberg", lead: "Liam Neeson", support: "Ralph Fiennes" },
-  { title: "The Silence of the Lambs", year: 1991, genre: "Thriller", rating: "R", boxOffice: 273, rtScore: 96, studio: "Orion Pictures", director: "Jonathan Demme", lead: "Jodie Foster", support: "Anthony Hopkins" },
-  { title: "Fight Club", year: 1999, genre: "Drama", rating: "R", boxOffice: 101, rtScore: 79, studio: "20th Century Fox", director: "David Fincher", lead: "Brad Pitt", support: "Edward Norton" },
-  { title: "The Shawshank Redemption", year: 1994, genre: "Drama", rating: "R", boxOffice: 16, rtScore: 89, studio: "Columbia", director: "Frank Darabont", lead: "Tim Robbins", support: "Morgan Freeman" },
-  { title: "Gladiator", year: 2000, genre: "Action", rating: "R", boxOffice: 460, rtScore: 77, studio: "Universal", director: "Ridley Scott", lead: "Russell Crowe", support: "Joaquin Phoenix" },
-  { title: "The Lord of the Rings: Fellowship", year: 2001, genre: "Fantasy", rating: "PG-13", boxOffice: 898, rtScore: 91, studio: "New Line Cinema", director: "Peter Jackson", lead: "Elijah Wood", support: "Ian McKellen" },
-  { title: "Spider-Man", year: 2002, genre: "Action", rating: "PG-13", boxOffice: 821, rtScore: 89, studio: "Columbia", director: "Sam Raimi", lead: "Tobey Maguire", support: "Kirsten Dunst" },
-  { title: "Finding Nemo", year: 2003, genre: "Animation", rating: "G", boxOffice: 940, rtScore: 99, studio: "Pixar", director: "Andrew Stanton", lead: "Albert Brooks", support: "Ellen DeGeneres" },
-  { title: "Pirates of the Caribbean", year: 2003, genre: "Adventure", rating: "PG-13", boxOffice: 654, rtScore: 79, studio: "Walt Disney", director: "Gore Verbinski", lead: "Johnny Depp", support: "Orlando Bloom" },
-  { title: "Batman Begins", year: 2005, genre: "Action", rating: "PG-13", boxOffice: 374, rtScore: 85, studio: "Warner Bros.", director: "Christopher Nolan", lead: "Christian Bale", support: "Michael Caine" },
-  { title: "Casino Royale", year: 2006, genre: "Action", rating: "PG-13", boxOffice: 594, rtScore: 94, studio: "Sony", director: "Martin Campbell", lead: "Daniel Craig", support: "Eva Green" },
-  { title: "No Country for Old Men", year: 2007, genre: "Crime", rating: "R", boxOffice: 171, rtScore: 93, studio: "Miramax", director: "Coen Brothers", lead: "Tommy Lee Jones", support: "Javier Bardem" },
-  { title: "The Social Network", year: 2010, genre: "Drama", rating: "PG-13", boxOffice: 224, rtScore: 96, studio: "Columbia", director: "David Fincher", lead: "Jesse Eisenberg", support: "Justin Timberlake" },
-  { title: "Black Swan", year: 2010, genre: "Thriller", rating: "R", boxOffice: 329, rtScore: 87, studio: "Fox Searchlight", director: "Darren Aronofsky", lead: "Natalie Portman", support: "Mila Kunis" },
-  { title: "Toy Story", year: 1995, genre: "Animation", rating: "G", boxOffice: 362, rtScore: 100, studio: "Pixar", director: "John Lasseter", lead: "Tom Hanks", support: "Tim Allen" },
-  { title: "Iron Man", year: 2008, genre: "Action", rating: "PG-13", boxOffice: 585, rtScore: 94, studio: "Marvel Studios", director: "Jon Favreau", lead: "Robert Downey Jr.", support: "Gwyneth Paltrow" },
-  { title: "Gravity", year: 2013, genre: "Sci-Fi", rating: "PG-13", boxOffice: 716, rtScore: 96, studio: "Warner Bros.", director: "Alfonso Cuarón", lead: "Sandra Bullock", support: "George Clooney" },
-  { title: "Mad Max: Fury Road", year: 2015, genre: "Action", rating: "R", boxOffice: 375, rtScore: 97, studio: "Warner Bros.", director: "George Miller", lead: "Tom Hardy", support: "Charlize Theron" },
-  { title: "The Revenant", year: 2015, genre: "Drama", rating: "R", boxOffice: 533, rtScore: 78, studio: "20th Century Fox", director: "Alejandro G. Iñárritu", lead: "Leonardo DiCaprio", support: "Tom Hardy" },
-  { title: "La La Land", year: 2016, genre: "Musical", rating: "PG-13", boxOffice: 446, rtScore: 91, studio: "Lionsgate", director: "Damien Chazelle", lead: "Ryan Gosling", support: "Emma Stone" },
-  { title: "Get Out", year: 2017, genre: "Horror", rating: "R", boxOffice: 255, rtScore: 98, studio: "Universal", director: "Jordan Peele", lead: "Daniel Kaluuya", support: "Allison Williams" },
-  { title: "Black Panther", year: 2018, genre: "Action", rating: "PG-13", boxOffice: 1347, rtScore: 96, studio: "Marvel Studios", director: "Ryan Coogler", lead: "Chadwick Boseman", support: "Michael B. Jordan" },
-  { title: "Joker", year: 2019, genre: "Drama", rating: "R", boxOffice: 1079, rtScore: 68, studio: "Warner Bros.", director: "Todd Phillips", lead: "Joaquin Phoenix", support: "Robert De Niro" },
-  { title: "Parasite", year: 2019, genre: "Thriller", rating: "R", boxOffice: 258, rtScore: 98, studio: "CJ Entertainment", director: "Bong Joon-ho", lead: "Song Kang-ho", support: "Lee Sun-kyun" },
-  { title: "Tenet", year: 2020, genre: "Sci-Fi", rating: "PG-13", boxOffice: 365, rtScore: 69, studio: "Warner Bros.", director: "Christopher Nolan", lead: "John David Washington", support: "Robert Pattinson" },
-  { title: "Dune", year: 2021, genre: "Sci-Fi", rating: "PG-13", boxOffice: 401, rtScore: 83, studio: "Warner Bros.", director: "Denis Villeneuve", lead: "Timothée Chalamet", support: "Zendaya" },
-  { title: "Everything Everywhere All at Once", year: 2022, genre: "Sci-Fi", rating: "R", boxOffice: 72, rtScore: 95, studio: "A24", director: "Daniel Kwan", lead: "Michelle Yeoh", support: "Ke Huy Quan" },
-  { title: "Oppenheimer", year: 2023, genre: "Drama", rating: "R", boxOffice: 952, rtScore: 93, studio: "Universal", director: "Christopher Nolan", lead: "Cillian Murphy", support: "Emily Blunt" },
-  { title: "Barbie", year: 2023, genre: "Comedy", rating: "PG-13", boxOffice: 1441, rtScore: 88, studio: "Warner Bros.", director: "Greta Gerwig", lead: "Margot Robbie", support: "Ryan Gosling" },
-  { title: "Top Gun: Maverick", year: 2022, genre: "Action", rating: "PG-13", boxOffice: 1493, rtScore: 96, studio: "Paramount", director: "Joseph Kosinski", lead: "Tom Cruise", support: "Miles Teller" },
-  { title: "The Batman", year: 2022, genre: "Action", rating: "PG-13", boxOffice: 770, rtScore: 85, studio: "Warner Bros.", director: "Matt Reeves", lead: "Robert Pattinson", support: "Zoë Kravitz" },
-  { title: "Doctor Strange", year: 2016, genre: "Action", rating: "PG-13", boxOffice: 677, rtScore: 89, studio: "Marvel Studios", director: "Scott Derrickson", lead: "Benedict Cumberbatch", support: "Tilda Swinton" },
-  { title: "Guardians of the Galaxy", year: 2014, genre: "Action", rating: "PG-13", boxOffice: 773, rtScore: 92, studio: "Marvel Studios", director: "James Gunn", lead: "Chris Pratt", support: "Zoe Saldana" },
-  { title: "Whiplash", year: 2014, genre: "Drama", rating: "R", boxOffice: 49, rtScore: 94, studio: "Sony Classics", director: "Damien Chazelle", lead: "Miles Teller", support: "J.K. Simmons" },
-  { title: "Gone Girl", year: 2014, genre: "Thriller", rating: "R", boxOffice: 369, rtScore: 87, studio: "20th Century Fox", director: "David Fincher", lead: "Ben Affleck", support: "Rosamund Pike" },
-  { title: "Her", year: 2013, genre: "Sci-Fi", rating: "R", boxOffice: 48, rtScore: 94, studio: "Warner Bros.", director: "Spike Jonze", lead: "Joaquin Phoenix", support: "Scarlett Johansson" },
-  { title: "12 Years a Slave", year: 2013, genre: "Drama", rating: "R", boxOffice: 187, rtScore: 96, studio: "Fox Searchlight", director: "Steve McQueen", lead: "Chiwetel Ejiofor", support: "Michael Fassbender" },
-  { title: "The Wolf of Wall Street", year: 2013, genre: "Crime", rating: "R", boxOffice: 392, rtScore: 77, studio: "Paramount", director: "Martin Scorsese", lead: "Leonardo DiCaprio", support: "Jonah Hill" },
-  { title: "American Hustle", year: 2013, genre: "Crime", rating: "R", boxOffice: 251, rtScore: 93, studio: "Columbia", director: "David O. Russell", lead: "Christian Bale", support: "Amy Adams" },
-  { title: "Frozen", year: 2013, genre: "Animation", rating: "PG", boxOffice: 1280, rtScore: 90, studio: "Walt Disney", director: "Chris Buck", lead: "Idina Menzel", support: "Kristen Bell" },
-  { title: "The Hunger Games", year: 2012, genre: "Action", rating: "PG-13", boxOffice: 694, rtScore: 84, studio: "Lionsgate", director: "Gary Ross", lead: "Jennifer Lawrence", support: "Josh Hutcherson" },
-  { title: "Django Unchained", year: 2012, genre: "Western", rating: "R", boxOffice: 425, rtScore: 87, studio: "Columbia", director: "Quentin Tarantino", lead: "Jamie Foxx", support: "Christoph Waltz" },
-  { title: "Lincoln", year: 2012, genre: "Drama", rating: "PG-13", boxOffice: 275, rtScore: 89, studio: "Disney", director: "Steven Spielberg", lead: "Daniel Day-Lewis", support: "Sally Field" },
-  { title: "The Artist", year: 2011, genre: "Drama", rating: "PG-13", boxOffice: 44, rtScore: 97, studio: "Warner Bros.", director: "Michel Hazanavicius", lead: "Jean Dujardin", support: "Bérénice Bejo" },
-  { title: "Argo", year: 2012, genre: "Drama", rating: "R", boxOffice: 232, rtScore: 96, studio: "Warner Bros.", director: "Ben Affleck", lead: "Ben Affleck", support: "Bryan Cranston" },
-  { title: "Silver Linings Playbook", year: 2012, genre: "Comedy", rating: "R", boxOffice: 237, rtScore: 92, studio: "Weinstein Company", director: "David O. Russell", lead: "Bradley Cooper", support: "Jennifer Lawrence" },
-  { title: "Moonlight", year: 2016, genre: "Drama", rating: "R", boxOffice: 65, rtScore: 98, studio: "A24", director: "Barry Jenkins", lead: "Trevante Rhodes", support: "Mahershala Ali" },
-  { title: "Arrival", year: 2016, genre: "Sci-Fi", rating: "PG-13", boxOffice: 203, rtScore: 94, studio: "Paramount", director: "Denis Villeneuve", lead: "Amy Adams", support: "Jeremy Renner" },
-  { title: "Dunkirk", year: 2017, genre: "Drama", rating: "PG-13", boxOffice: 527, rtScore: 92, studio: "Warner Bros.", director: "Christopher Nolan", lead: "Fionn Whitehead", support: "Mark Rylance" },
-  { title: "Baby Driver", year: 2017, genre: "Action", rating: "R", boxOffice: 226, rtScore: 93, studio: "Sony", director: "Edgar Wright", lead: "Ansel Elgort", support: "Jon Hamm" },
-  { title: "The Shape of Water", year: 2017, genre: "Fantasy", rating: "R", boxOffice: 195, rtScore: 92, studio: "Fox Searchlight", director: "Guillermo del Toro", lead: "Sally Hawkins", support: "Michael Shannon" },
-  { title: "Call Me by Your Name", year: 2017, genre: "Romance", rating: "R", boxOffice: 18, rtScore: 95, studio: "Sony Classics", director: "Luca Guadagnino", lead: "Armie Hammer", support: "Timothée Chalamet" },
-  { title: "The Grand Budapest Hotel", year: 2014, genre: "Comedy", rating: "R", boxOffice: 174, rtScore: 91, studio: "Fox Searchlight", director: "Wes Anderson", lead: "Ralph Fiennes", support: "Tony Revolori" },
-  { title: "Birdman", year: 2014, genre: "Comedy", rating: "R", boxOffice: 104, rtScore: 91, studio: "Fox Searchlight", director: "Alejandro G. Iñárritu", lead: "Michael Keaton", support: "Emma Stone" },
-  { title: "Boyhood", year: 2014, genre: "Drama", rating: "R", boxOffice: 25, rtScore: 98, studio: "IFC Films", director: "Richard Linklater", lead: "Ellar Coltrane", support: "Patricia Arquette" },
-  { title: "The Martian", year: 2015, genre: "Sci-Fi", rating: "PG-13", boxOffice: 630, rtScore: 91, studio: "20th Century Fox", director: "Ridley Scott", lead: "Matt Damon", support: "Jessica Chastain" },
-  { title: "The Hateful Eight", year: 2015, genre: "Western", rating: "R", boxOffice: 155, rtScore: 74, studio: "Weinstein Company", director: "Quentin Tarantino", lead: "Samuel L. Jackson", support: "Kurt Russell" },
-  { title: "Room", year: 2015, genre: "Drama", rating: "R", boxOffice: 35, rtScore: 94, studio: "A24", director: "Lenny Abrahamson", lead: "Brie Larson", support: "Jacob Tremblay" },
-  { title: "Spotlight", year: 2015, genre: "Drama", rating: "R", boxOffice: 98, rtScore: 97, studio: "Open Road Films", director: "Tom McCarthy", lead: "Mark Ruffalo", support: "Rachel McAdams" },
-  { title: "Hell or High Water", year: 2016, genre: "Crime", rating: "R", boxOffice: 37, rtScore: 98, studio: "Lionsgate", director: "David Mackenzie", lead: "Chris Pine", support: "Ben Foster" },
-  { title: "Hacksaw Ridge", year: 2016, genre: "Drama", rating: "R", boxOffice: 180, rtScore: 85, studio: "Lionsgate", director: "Mel Gibson", lead: "Andrew Garfield", support: "Vince Vaughn" },
-  { title: "Three Billboards", year: 2017, genre: "Drama", rating: "R", boxOffice: 160, rtScore: 88, studio: "Fox Searchlight", director: "Martin McDonagh", lead: "Frances McDormand", support: "Woody Harrelson" },
-  { title: "A Quiet Place", year: 2018, genre: "Horror", rating: "PG-13", boxOffice: 340, rtScore: 96, studio: "Paramount", director: "John Krasinski", lead: "Emily Blunt", support: "John Krasinski" },
-  { title: "Hereditary", year: 2018, genre: "Horror", rating: "R", boxOffice: 80, rtScore: 89, studio: "A24", director: "Ari Aster", lead: "Toni Collette", support: "Alex Wolff" },
-  { title: "Roma", year: 2018, genre: "Drama", rating: "R", boxOffice: 8, rtScore: 96, studio: "Netflix", director: "Alfonso Cuarón", lead: "Yalitza Aparicio", support: "Marina de Tavira" },
-  { title: "Green Book", year: 2018, genre: "Drama", rating: "PG-13", boxOffice: 321, rtScore: 78, studio: "Universal", director: "Peter Farrelly", lead: "Viggo Mortensen", support: "Mahershala Ali" },
-  { title: "Once Upon a Time in Hollywood", year: 2019, genre: "Comedy", rating: "R", boxOffice: 377, rtScore: 85, studio: "Columbia", director: "Quentin Tarantino", lead: "Leonardo DiCaprio", support: "Brad Pitt" },
-  { title: "1917", year: 2019, genre: "Drama", rating: "R", boxOffice: 385, rtScore: 89, studio: "Universal", director: "Sam Mendes", lead: "George MacKay", support: "Dean-Charles Chapman" },
-  { title: "Knives Out", year: 2019, genre: "Comedy", rating: "PG-13", boxOffice: 312, rtScore: 97, studio: "Lionsgate", director: "Rian Johnson", lead: "Daniel Craig", support: "Chris Evans" },
-  { title: "Ford v Ferrari", year: 2019, genre: "Drama", rating: "PG-13", boxOffice: 225, rtScore: 91, studio: "20th Century Fox", director: "James Mangold", lead: "Matt Damon", support: "Christian Bale" },
-  { title: "Midsommar", year: 2019, genre: "Horror", rating: "R", boxOffice: 28, rtScore: 83, studio: "A24", director: "Ari Aster", lead: "Florence Pugh", support: "Jack Reynor" },
-  { title: "Little Women", year: 2019, genre: "Drama", rating: "PG", boxOffice: 218, rtScore: 95, studio: "Columbia", director: "Greta Gerwig", lead: "Saoirse Ronan", support: "Florence Pugh" },
-  { title: "Soul", year: 2020, genre: "Animation", rating: "PG", boxOffice: 121, rtScore: 95, studio: "Pixar", director: "Pete Docter", lead: "Jamie Foxx", support: "Tina Fey" },
-  { title: "Promising Young Woman", year: 2020, genre: "Thriller", rating: "R", boxOffice: 14, rtScore: 90, studio: "Focus Features", director: "Emerald Fennell", lead: "Carey Mulligan", support: "Bo Burnham" },
-  { title: "Nomadland", year: 2020, genre: "Drama", rating: "R", boxOffice: 38, rtScore: 93, studio: "Searchlight", director: "Chloé Zhao", lead: "Frances McDormand", support: "David Strathairn" },
-  { title: "The Power of the Dog", year: 2021, genre: "Drama", rating: "R", boxOffice: 2, rtScore: 93, studio: "Netflix", director: "Jane Campion", lead: "Benedict Cumberbatch", support: "Kodi Smit-McPhee" },
-  { title: "CODA", year: 2021, genre: "Drama", rating: "PG-13", boxOffice: 1, rtScore: 73, studio: "Apple TV+", director: "Sian Heder", lead: "Emilia Jones", support: "Troy Kotsur" },
-  { title: "Belfast", year: 2021, genre: "Drama", rating: "PG-13", boxOffice: 23, rtScore: 87, studio: "Focus Features", director: "Kenneth Branagh", lead: "Jude Hill", support: "Caitríona Balfe" },
-  { title: "No Time to Die", year: 2021, genre: "Action", rating: "PG-13", boxOffice: 774, rtScore: 83, studio: "Universal", director: "Cary Fukunaga", lead: "Daniel Craig", support: "Léa Seydoux" },
-  { title: "The Northman", year: 2022, genre: "Action", rating: "R", boxOffice: 69, rtScore: 89, studio: "Focus Features", director: "Robert Eggers", lead: "Alexander Skarsgård", support: "Anya Taylor-Joy" },
-  { title: "Babylon", year: 2022, genre: "Comedy", rating: "R", boxOffice: 15, rtScore: 56, studio: "Paramount", director: "Damien Chazelle", lead: "Brad Pitt", support: "Margot Robbie" },
-  { title: "Tár", year: 2022, genre: "Drama", rating: "R", boxOffice: 38, rtScore: 91, studio: "Focus Features", director: "Todd Field", lead: "Cate Blanchett", support: "Noémie Merlant" },
-  { title: "Women Talking", year: 2022, genre: "Drama", rating: "PG-13", boxOffice: 10, rtScore: 88, studio: "Orion", director: "Sarah Polley", lead: "Rooney Mara", support: "Claire Foy" },
-  { title: "The Whale", year: 2022, genre: "Drama", rating: "R", boxOffice: 12, rtScore: 61, studio: "A24", director: "Darren Aronofsky", lead: "Brendan Fraser", support: "Sadie Sink" },
-  { title: "Anatomy of a Fall", year: 2023, genre: "Thriller", rating: "R", boxOffice: 17, rtScore: 96, studio: "Neon", director: "Justine Triet", lead: "Sandra Hüller", support: "Swann Arlaud" },
-  { title: "The Zone of Interest", year: 2023, genre: "Drama", rating: "PG-13", boxOffice: 12, rtScore: 93, studio: "A24", director: "Jonathan Glazer", lead: "Christian Friedel", support: "Sandra Hüller" },
-  { title: "Killers of the Flower Moon", year: 2023, genre: "Crime", rating: "R", boxOffice: 157, rtScore: 93, studio: "Apple TV+", director: "Martin Scorsese", lead: "Leonardo DiCaprio", support: "Lily Gladstone" },
-  { title: "Past Lives", year: 2023, genre: "Romance", rating: "PG-13", boxOffice: 22, rtScore: 98, studio: "A24", director: "Celine Song", lead: "Greta Lee", support: "Teo Yoo" },
-  { title: "Poor Things", year: 2023, genre: "Comedy", rating: "R", boxOffice: 44, rtScore: 91, studio: "Searchlight", director: "Yorgos Lanthimos", lead: "Emma Stone", support: "Mark Ruffalo" },
-  { title: "May December", year: 2023, genre: "Drama", rating: "R", boxOffice: 3, rtScore: 91, studio: "Netflix", director: "Todd Haynes", lead: "Natalie Portman", support: "Julianne Moore" },
-];
+// ─── CONFIG ───────────────────────────────────────────────────────────────────
+const TMDB_KEY  = '2dca580c2a14b55200e784d157207b4d';
+const TMDB_BASE = 'https://api.themoviedb.org/3';
+const IMG       = 'https://image.tmdb.org/t/p/';
 
-// ─── HINTS PER MOVIE (generated contextually) ─────────────────────────────────
-const HINTS = {
-  default_5: (m) => `This film has a Rotten Tomatoes score of ${m.rtScore}% and was directed by ${m.director.split(' ')[0]}...`,
-  default_9: (m) => `The lead actor/actress is ${m.lead}. Think carefully...`,
-};
+const RATING_ORDER = ['G','PG','PG-13','R','NC-17','NR'];
+const MAX_GUESSES  = 10;
 
-// ─── GAME STATE ───────────────────────────────────────────────────────────────
-let targetMovie = null;
-let guessesUsed = 0;
-const MAX_GUESSES = 10;
-let selectedMovie = null;
-let gameOver = false;
-let stats = JSON.parse(localStorage.getItem('cinematle_stats') || '{"played":0,"won":0,"streak":0}');
+// ─── STATE ────────────────────────────────────────────────────────────────────
+let target         = null;
+let guessesUsed    = 0;
+let selectedId     = null;
+let gameOver       = false;
+let moviePool      = [];   // array of TMDB movie objects (lightweight)
+let fullCache      = {};   // id → full enriched movie data
+let searchTimer    = null;
+let hintsShown     = new Set();
+let stats = JSON.parse(localStorage.getItem('cinematle_v3') || '{"played":0,"won":0,"streak":0,"total":0}');
 
-const COLUMNS = ['year','genre','rating','boxOffice','rtScore','studio','director','lead','support'];
-const COL_LABELS = { year:'Year', genre:'Genre', rating:'Rating', boxOffice:'Box Office', rtScore:'RT Score', studio:'Studio', director:'Director', lead:'Lead Actor', support:'Support' };
-
-function pickDailyMovie() {
-  const seed = Math.floor(Date.now() / 86400000);
-  return MOVIES[seed % MOVIES.length];
+// ─── TMDB HELPERS ─────────────────────────────────────────────────────────────
+async function tmdb(path, params = {}) {
+  const url = new URL(`${TMDB_BASE}${path}`);
+  url.searchParams.set('api_key', TMDB_KEY);
+  for (const [k, v] of Object.entries(params)) url.searchParams.set(k, v);
+  const r = await fetch(url);
+  if (!r.ok) throw new Error(`TMDB ${r.status}`);
+  return r.json();
 }
 
-function formatBoxOffice(n) {
-  if (n >= 1000) return `$${(n/1000).toFixed(1)}B`;
+// Build a pool of well-known, award-winning films via multiple Discover pages
+async function buildMoviePool() {
+  if (moviePool.length > 0) return;
+
+  // Award-winning proxy: vote_count >= 500, vote_average >= 7.0, sorted by vote_average
+  // We fetch several pages to get variety
+  const pages = [1, 2, 3, 4, 5];
+  const baseParams = {
+    include_adult: false,
+    include_video: false,
+    language: 'en-US',
+    'vote_count.gte': 500,
+    'vote_average.gte': 7.2,
+    'release_date.lte': '2024-12-31',
+    sort_by: 'vote_average.desc',
+  };
+
+  const fetches = pages.map(p => tmdb('/discover/movie', { ...baseParams, page: p }).catch(() => null));
+  const results = await Promise.all(fetches);
+
+  const seen = new Set();
+  results.forEach(r => {
+    if (!r || !r.results) return;
+    r.results.forEach(m => {
+      if (!seen.has(m.id) && m.poster_path && m.release_date) {
+        seen.add(m.id);
+        moviePool.push(m);
+      }
+    });
+  });
+
+  // Also fetch page 1 sorted by popularity for mainstream recognition
+  try {
+    const pop = await tmdb('/discover/movie', {
+      ...baseParams,
+      'vote_average.gte': 7.0,
+      'vote_count.gte': 2000,
+      sort_by: 'popularity.desc',
+      page: 1,
+    });
+    if (pop && pop.results) {
+      pop.results.forEach(m => {
+        if (!seen.has(m.id) && m.poster_path && m.release_date) {
+          seen.add(m.id);
+          moviePool.push(m);
+        }
+      });
+    }
+  } catch(e) { /* ignore */ }
+}
+
+function pickDailyMovie() {
+  if (!moviePool.length) return null;
+  const seed = Math.floor(Date.now() / 86400000);
+  const idx  = seed % moviePool.length;
+  return moviePool[idx];
+}
+
+async function getFullMovie(id) {
+  if (fullCache[id]) return fullCache[id];
+
+  const [details, credits, releases, keywords] = await Promise.all([
+    tmdb(`/movie/${id}`),
+    tmdb(`/movie/${id}/credits`),
+    tmdb(`/movie/${id}/release_dates`),
+    tmdb(`/movie/${id}/keywords`).catch(() => ({ keywords: [] })),
+  ]);
+
+  // US rating
+  let rating = 'NR';
+  const us = releases.results?.find(r => r.iso_3166_1 === 'US');
+  if (us) {
+    const cert = us.release_dates.find(d => d.certification && d.certification !== '');
+    if (cert) rating = cert.certification;
+  }
+
+  const director = credits.crew?.find(c => c.job === 'Director')?.name || null;
+  const cast      = credits.cast?.slice(0, 10) || [];
+  const lead      = cast[0]?.name || null;
+  const support   = cast.slice(1, 6).map(a => a.name);
+  const genres    = (details.genres || []).slice(0, 5).map(g => g.name);
+  const boxOffice = details.revenue ? Math.round(details.revenue / 1_000_000) : null;
+  const studio    = details.production_companies?.[0]?.name || null;
+  const rtScore   = details.vote_average ? Math.round(details.vote_average * 10) : null;
+  const year      = details.release_date ? parseInt(details.release_date.slice(0, 4)) : null;
+  const poster    = details.poster_path ? `${IMG}w342${details.poster_path}` : null;
+  const posterFull= details.poster_path ? `${IMG}w780${details.poster_path}` : null;
+  const tagline   = details.tagline || null;
+  const overview  = details.overview || null;
+
+  const movie = {
+    id, title: details.title, year, genres, rating,
+    boxOffice, rtScore, studio, director, lead, support,
+    poster, posterFull, tagline, overview,
+  };
+
+  // Validate: must have all key numeric fields
+  const valid = movie.year && movie.rtScore && movie.boxOffice &&
+                movie.director && movie.lead && genres.length > 0;
+
+  fullCache[id] = valid ? movie : null;
+  return fullCache[id];
+}
+
+async function searchMovies(query) {
+  if (!query || query.length < 2) return [];
+  const data = await tmdb('/search/movie', { query, include_adult: false, language: 'en-US', page: 1 });
+  // Filter to only include movies with enough data to play with
+  return (data.results || [])
+    .filter(m => m.poster_path && m.release_date && m.vote_count >= 50)
+    .slice(0, 9);
+}
+
+// ─── COMPARISON ───────────────────────────────────────────────────────────────
+function compare(guess, tgt, field) {
+  if (field === 'year') {
+    if (!guess.year || !tgt.year) return { state: 'wrong', arrow: null };
+    if (guess.year === tgt.year) return { state: 'correct', arrow: null };
+    const diff = Math.abs(guess.year - tgt.year);
+    return { state: diff <= 5 ? 'close' : 'wrong', arrow: guess.year < tgt.year ? '↑' : '↓' };
+  }
+  if (field === 'boxOffice') {
+    if (!guess.boxOffice || !tgt.boxOffice) return { state: 'wrong', arrow: null };
+    if (guess.boxOffice === tgt.boxOffice) return { state: 'correct', arrow: null };
+    const diff = Math.abs(guess.boxOffice - tgt.boxOffice);
+    return { state: diff <= 30 ? 'close' : 'wrong', arrow: guess.boxOffice < tgt.boxOffice ? '↑' : '↓' };
+  }
+  if (field === 'rtScore') {
+    if (!guess.rtScore || !tgt.rtScore) return { state: 'wrong', arrow: null };
+    if (guess.rtScore === tgt.rtScore) return { state: 'correct', arrow: null };
+    const diff = Math.abs(guess.rtScore - tgt.rtScore);
+    return { state: diff <= 6 ? 'close' : 'wrong', arrow: guess.rtScore < tgt.rtScore ? '↑' : '↓' };
+  }
+  if (field === 'rating') {
+    if (guess.rating === tgt.rating) return { state: 'correct', arrow: null };
+    const gi = RATING_ORDER.indexOf(guess.rating);
+    const ti = RATING_ORDER.indexOf(tgt.rating);
+    if (gi !== -1 && ti !== -1 && Math.abs(gi - ti) === 1) return { state: 'close', arrow: null };
+    return { state: 'wrong', arrow: null };
+  }
+  if (field === 'genres') {
+    const overlap = guess.genres.filter(g => tgt.genres.includes(g));
+    const perfect = overlap.length === guess.genres.length && overlap.length === tgt.genres.length;
+    return { state: perfect ? 'correct' : overlap.length > 0 ? 'close' : 'wrong' };
+  }
+  if (field === 'support') {
+    const overlap = guess.support.filter(a => tgt.support.includes(a));
+    return { state: overlap.length > 0 ? 'close' : 'wrong' };
+  }
+  return { state: guess[field] === tgt[field] ? 'correct' : 'wrong', arrow: null };
+}
+
+function fmtMoney(n) {
+  if (!n) return 'N/A';
+  if (n >= 1000) return `$${(n / 1000).toFixed(1)}B`;
   return `$${n}M`;
 }
 
-function getCellValue(movie, col) {
-  if (col === 'boxOffice') return formatBoxOffice(movie[col]);
-  return String(movie[col]);
-}
-
-function compareCell(guess, target, col) {
-  const gv = guess[col];
-  const tv = target[col];
-  if (col === 'year') {
-    if (gv === tv) return { state: 'correct', arrow: null };
-    if (Math.abs(gv - tv) <= 5) return { state: 'close', arrow: gv < tv ? '↑' : '↓' };
-    return { state: 'wrong', arrow: gv < tv ? '↑' : '↓' };
-  }
-  if (col === 'boxOffice') {
-    if (gv === tv) return { state: 'correct', arrow: null };
-    if (Math.abs(gv - tv) <= 5) return { state: 'close', arrow: gv < tv ? '↑' : '↓' };
-    return { state: 'wrong', arrow: gv < tv ? '↑' : '↓' };
-  }
-  if (col === 'rtScore') {
-    if (gv === tv) return { state: 'correct', arrow: null };
-    if (Math.abs(gv - tv) <= 5) return { state: 'close', arrow: gv < tv ? '↑' : '↓' };
-    return { state: 'wrong', arrow: gv < tv ? '↑' : '↓' };
-  }
-  return { state: gv === tv ? 'correct' : 'wrong', arrow: null };
-}
-
+// ─── UI BUILD ─────────────────────────────────────────────────────────────────
 function buildFilmStrip() {
-  const strip = document.getElementById('filmStrip');
-  for (let i = 0; i < 80; i++) {
-    const hole = document.createElement('div');
-    hole.className = 'film-hole';
-    strip.appendChild(hole);
+  const el = document.getElementById('filmstrip');
+  for (let i = 0; i < 100; i++) {
+    const h = document.createElement('div');
+    h.className = 'filmstrip-hole';
+    el.appendChild(h);
   }
 }
 
-function updateStatsDisplay() {
-  document.getElementById('statPlayed').textContent = stats.played;
-  document.getElementById('statWon').textContent = stats.won;
-  document.getElementById('statStreak').textContent = stats.streak;
+function buildPips() {
+  const el = document.getElementById('pips');
+  el.innerHTML = '';
+  for (let i = 0; i < MAX_GUESSES; i++) {
+    const p = document.createElement('div');
+    const isLast = i === MAX_GUESSES - 1;
+    p.className = 'pip' + (i < guessesUsed ? (isLast ? ' danger' : ' used') : '');
+    el.appendChild(p);
+  }
+  document.getElementById('guessesLeft').textContent = MAX_GUESSES - guessesUsed;
 }
 
-function updateGuessesLeft() {
-  document.getElementById('guessesLeft').textContent = `${MAX_GUESSES - guessesUsed} / ${MAX_GUESSES}`;
-}
-
-function renderEmptyRows(count) {
-  const container = document.getElementById('emptyRows');
-  container.innerHTML = '';
-  for (let i = 0; i < count; i++) {
+function buildEmptyRows(n) {
+  const el = document.getElementById('emptyRows');
+  el.innerHTML = '';
+  for (let i = 0; i < n; i++) {
     const row = document.createElement('div');
     row.className = 'empty-row';
-    // title cell
-    const title = document.createElement('div');
-    title.className = 'empty-cell';
-    row.appendChild(title);
+    const poster = document.createElement('div');
+    poster.className = 'empty-poster';
+    row.appendChild(poster);
     for (let j = 0; j < 9; j++) {
-      const cell = document.createElement('div');
-      cell.className = 'empty-cell';
-      row.appendChild(cell);
+      const col = document.createElement('div'); col.className = 'empty-col';
+      const c1  = document.createElement('div'); c1.className = 'empty-cell';
+      const c2  = document.createElement('div'); c2.className = 'empty-cell';
+      col.appendChild(c1); col.appendChild(c2);
+      row.appendChild(col);
     }
-    container.appendChild(row);
+    el.appendChild(row);
   }
+}
+
+function makeCell(label, content, state, arrow, delay) {
+  const cell = document.createElement('div');
+  cell.className = `cell ${state}`;
+  cell.style.animationDelay = `${delay}ms`;
+
+  const lbl = document.createElement('div');
+  lbl.className = 'cell-lbl';
+  lbl.textContent = label;
+  cell.appendChild(lbl);
+
+  if (typeof content === 'string' || typeof content === 'number') {
+    const v = document.createElement('div');
+    v.className = 'cell-val' + (String(content).length > 12 ? ' sm' : '');
+    v.textContent = content;
+    cell.appendChild(v);
+  } else if (content) {
+    cell.appendChild(content);
+  }
+
+  if (arrow) {
+    const a = document.createElement('div');
+    a.className = 'cell-arrow';
+    a.textContent = arrow;
+    cell.appendChild(a);
+  }
+  return cell;
+}
+
+function genreEl(guess, tgt) {
+  const wrap = document.createElement('div');
+  wrap.className = 'tag-wrap';
+  guess.genres.forEach(g => {
+    const t = document.createElement('span');
+    t.className = 'tag' + (tgt.genres.includes(g) ? ' match' : '');
+    t.textContent = g;
+    wrap.appendChild(t);
+  });
+  return wrap;
+}
+
+function castEl(support, tgtSupport) {
+  const wrap = document.createElement('div');
+  wrap.className = 'cast-list';
+  support.forEach(name => {
+    const el = document.createElement('div');
+    el.className = 'cast-name' + (tgtSupport.includes(name) ? ' match' : '');
+    el.textContent = name;
+    wrap.appendChild(el);
+  });
+  return wrap;
 }
 
 function addGuessRow(movie) {
-  const container = document.getElementById('guessesContainer');
-  const row = document.createElement('div');
-  row.className = 'guess-row';
+  const container = document.getElementById('guessRows');
+  const wrap = document.createElement('div');
+  wrap.className = 'guess-row';
 
-  // Title cell
-  const titleCell = document.createElement('div');
-  titleCell.className = 'guess-cell movie-title';
-  titleCell.textContent = movie.title;
-  row.appendChild(titleCell);
+  // Poster
+  const pc = document.createElement('div');
+  pc.className = 'poster-cell';
+  if (movie.poster) {
+    const img = document.createElement('img');
+    img.className = 'poster-img';
+    img.src = movie.poster; img.alt = movie.title; img.loading = 'lazy';
+    pc.appendChild(img);
+  } else {
+    const fb = document.createElement('div');
+    fb.className = 'poster-fb';
+    fb.innerHTML = `🎬<small>${movie.title}</small>`;
+    pc.appendChild(fb);
+  }
+  const ol = document.createElement('div');
+  ol.className = 'poster-overlay';
+  ol.textContent = movie.title;
+  pc.appendChild(ol);
+  wrap.appendChild(pc);
 
-  // Data cells with staggered animation
-  COLUMNS.forEach((col, i) => {
-    const result = compareCell(movie, targetMovie, col);
-    const cell = document.createElement('div');
-    cell.className = `guess-cell ${result.state}`;
-    cell.style.animationDelay = `${i * 80}ms`;
-    cell.style.opacity = '0';
-    setTimeout(() => { cell.style.opacity = '1'; }, i * 80);
+  // Data columns
+  const defs = [
+    { lbl: 'YEAR',    field: 'year',      display: movie.year || 'N/A' },
+    { lbl: 'GENRES',  field: 'genres',    display: null },
+    { lbl: 'RATING',  field: 'rating',    display: movie.rating },
+    { lbl: 'B.O.',    field: 'boxOffice', display: fmtMoney(movie.boxOffice) },
+    { lbl: 'SCORE',   field: 'rtScore',   display: movie.rtScore ? `${movie.rtScore}%` : 'N/A' },
+    { lbl: 'STUDIO',  field: 'studio',    display: movie.studio || 'N/A' },
+    { lbl: 'DIRECTOR',field: 'director',  display: movie.director || 'N/A' },
+    { lbl: 'LEAD',    field: 'lead',      display: movie.lead || 'N/A' },
+    { lbl: 'CAST',    field: 'support',   display: null },
+  ];
 
-    const val = document.createElement('span');
-    val.textContent = getCellValue(movie, col);
-    cell.appendChild(val);
+  defs.forEach((d, i) => {
+    const col = document.createElement('div');
+    col.className = 'data-col';
 
-    if (result.arrow) {
-      const arrow = document.createElement('span');
-      arrow.className = 'arrow-indicator';
-      arrow.textContent = result.arrow;
-      cell.appendChild(arrow);
-    }
-    row.appendChild(cell);
+    const res = compare(movie, target, d.field);
+    let content;
+    if (d.field === 'genres') content = genreEl(movie, target);
+    else if (d.field === 'support') content = castEl(movie.support, target.support);
+    else content = d.display;
+
+    const cell = makeCell(d.lbl, content, res.state, res.arrow || null, i * 60);
+    col.appendChild(cell);
+    wrap.appendChild(col);
   });
 
-  container.appendChild(row);
-  renderEmptyRows(MAX_GUESSES - guessesUsed);
+  container.appendChild(wrap);
+  wrap.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  buildEmptyRows(Math.max(0, MAX_GUESSES - guessesUsed));
 }
 
-function showHint(guessNum) {
-  const container = document.getElementById('hintContainer');
-  let text = '';
-  if (guessNum === 5) {
-    text = `The film was released in ${targetMovie.year} and has a ${targetMovie.rtScore}% RT score.`;
-  } else if (guessNum === 9) {
-    text = `The lead actor/actress is <strong>${targetMovie.lead}</strong>. This is your last hint!`;
-  }
-  if (!text) return;
+// ─── HINTS ────────────────────────────────────────────────────────────────────
+function showHintWidget(guessNum) {
+  if (hintsShown.has(guessNum)) return;
+  hintsShown.add(guessNum);
 
+  const container = document.getElementById('hintContainer');
   const box = document.createElement('div');
   box.className = 'hint-box';
-  box.innerHTML = `<div class="hint-label">🎬 Hint Unlocked — Guess ${guessNum}</div><div class="hint-text">${text}</div>`;
+  box.id = `hint-${guessNum}`;
+
+  box.innerHTML = `
+    <div class="hint-header">
+      <div class="hint-badge">Hint · Guess ${guessNum}</div>
+      <div class="hint-title">Choose a clue to reveal:</div>
+    </div>
+    <div class="hint-choices">
+      <button class="hint-choice-btn" onclick="revealHint(${guessNum},'cast',this)">🎭 Cast Member</button>
+      <button class="hint-choice-btn" onclick="revealHint(${guessNum},'tagline',this)">💬 Tagline / Plot</button>
+      <button class="hint-choice-btn" onclick="revealHint(${guessNum},'awards',this)">🏆 Award Info</button>
+    </div>
+    <div id="hint-reveal-${guessNum}" style="display:none"></div>
+  `;
   container.appendChild(box);
 }
 
-function showResult(won) {
+function revealHint(guessNum, type, btn) {
+  if (!target) return;
+  // Disable all buttons in this hint
+  const box = document.getElementById(`hint-${guessNum}`);
+  box.querySelectorAll('.hint-choice-btn').forEach(b => b.disabled = true);
+
+  const revealEl = document.getElementById(`hint-reveal-${guessNum}`);
+  revealEl.style.display = 'block';
+
+  if (type === 'cast') {
+    const pool = [target.lead, ...target.support].filter(Boolean);
+    const pick = pool[Math.floor(Math.random() * pool.length)];
+    revealEl.innerHTML = `<div class="hint-revealed">🎭 Cast: <strong>${pick || 'Unknown'}</strong></div>`;
+  } else if (type === 'tagline') {
+    const text = target.tagline || target.overview?.slice(0, 180) || 'No description available.';
+    revealEl.innerHTML = `<div class="hint-revealed">💬 "${text}"</div>`;
+  } else if (type === 'awards') {
+    // Proxy: TMDB vote score and popularity as "critical recognition"
+    const score = target.rtScore || '?';
+    const yr    = target.year || '?';
+    const info  = score >= 80
+      ? `This film has received widespread critical acclaim with a score of <strong>${score}%</strong>.`
+      : score >= 65
+      ? `This film earned mostly positive reviews with a score of <strong>${score}%</strong>.`
+      : `This film has a score of <strong>${score}%</strong>.`;
+    revealEl.innerHTML = `<div class="hint-revealed">🏆 Released in <strong>${yr}</strong>. ${info} The director is known for ${target.genres.slice(0,2).join(' and ')} films.</div>`;
+  }
+}
+
+// ─── SUBMIT ───────────────────────────────────────────────────────────────────
+async function submitGuess() {
+  if (!selectedId || gameOver) return;
+  const btn = document.getElementById('guessBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span>';
+
+  try {
+    const movie = await getFullMovie(selectedId);
+    if (!movie) {
+      showError('That film is missing key data — try another.');
+      btn.innerHTML = 'Guess';
+      btn.disabled = !selectedId;
+      return;
+    }
+
+    guessesUsed++;
+    addGuessRow(movie);
+    buildPips();
+
+    if (guessesUsed === 4) showHintWidget(4);
+    if (guessesUsed === 8) showHintWidget(8);
+
+    const won = movie.id === target.id || movie.title.toLowerCase() === target.title.toLowerCase();
+    if (won) {
+      endGame(true);
+    } else if (guessesUsed >= MAX_GUESSES) {
+      endGame(false);
+    }
+  } catch (e) {
+    showError('Failed to load movie data. Please try again.');
+    console.error(e);
+  }
+
+  selectedId = null;
+  document.getElementById('searchInput').value = '';
+  document.getElementById('acDrop').classList.remove('open');
+  btn.innerHTML = 'Guess';
+  btn.disabled = true;
+}
+
+// ─── GIVE UP ──────────────────────────────────────────────────────────────────
+function confirmGiveUp() {
+  if (gameOver) return;
+  document.getElementById('confirmModal').classList.add('show');
+}
+
+function giveUp() {
+  closeModal('confirmModal');
+  if (gameOver) return;
+  endGame(false, true);
+}
+
+// ─── END GAME ─────────────────────────────────────────────────────────────────
+function endGame(won, gaveUp = false) {
   gameOver = true;
   stats.played++;
   if (won) {
     stats.won++;
     stats.streak++;
+    stats.total += guessesUsed;
   } else {
     stats.streak = 0;
   }
-  localStorage.setItem('cinematle_stats', JSON.stringify(stats));
-  updateStatsDisplay();
+  localStorage.setItem('cinematle_v3', JSON.stringify(stats));
+  updateStats();
 
-  document.getElementById('guessBtn').disabled = true;
   document.getElementById('searchInput').disabled = true;
+  document.getElementById('guessBtn').disabled    = true;
+  document.getElementById('giveupBtn').disabled   = true;
 
-  setTimeout(() => {
-    document.getElementById('resultEmoji').textContent = won ? '🏆' : '🎬';
-    document.getElementById('resultTitle').textContent = won ? 'CUT! PERFECT TAKE!' : 'THAT\'S A WRAP';
-    document.getElementById('resultMovie').textContent = `"${targetMovie.title}"`;
-    document.getElementById('resultDetail').innerHTML = won
-      ? `You identified the film in <strong>${guessesUsed}</strong> guess${guessesUsed === 1 ? '' : 'es'}!<br>
-         ${targetMovie.year} · ${targetMovie.genre} · Dir. ${targetMovie.director}`
-      : `The film was <em>${targetMovie.title}</em> (${targetMovie.year})<br>
-         Directed by ${targetMovie.director} · Starring ${targetMovie.lead}<br>
-         Box Office: ${formatBoxOffice(targetMovie.boxOffice)} · RT: ${targetMovie.rtScore}%`;
-    document.getElementById('overlay').classList.add('show');
-  }, 600);
+  const poster = target.posterFull || target.poster || '';
+  document.getElementById('mPosterBg').src    = poster;
+  document.getElementById('mPosterFront').src = poster;
+  document.getElementById('mIcon').textContent     = won ? '🏆' : gaveUp ? '🏳️' : '🎬';
+  document.getElementById('mHeadline').textContent = won ? 'BRILLIANT!' : gaveUp ? 'REVEALED' : "GAME OVER";
+  document.getElementById('mFilm').textContent     = `"${target.title}"`;
+  document.getElementById('mMeta').innerHTML = won
+    ? `Identified in <strong>${guessesUsed}</strong> guess${guessesUsed === 1 ? '' : 'es'} ·
+       ${target.year} · ${target.genres.slice(0,3).join(', ')}<br>
+       Dir. ${target.director} · ${target.lead}`
+    : `${target.year} · ${target.genres.slice(0,3).join(', ')}<br>
+       Dir. ${target.director} · ${target.lead}<br>
+       Box Office: ${fmtMoney(target.boxOffice)} · Score: ${target.rtScore}%`;
+
+  setTimeout(() => document.getElementById('resultModal').classList.add('show'), won ? 600 : 400);
 }
 
-function submitGuess() {
-  if (!selectedMovie || gameOver) return;
-  if (guessesUsed >= MAX_GUESSES) return;
+function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+function showHowToModal() { document.getElementById('howModal').classList.add('show'); }
 
-  guessesUsed++;
-  addGuessRow(selectedMovie);
-  updateGuessesLeft();
-
-  if (guessesUsed === 5 || guessesUsed === 9) showHint(guessesUsed);
-
-  if (selectedMovie.title === targetMovie.title) {
-    showResult(true);
-  } else if (guessesUsed >= MAX_GUESSES) {
-    showResult(false);
-  }
-
-  // Reset input
-  selectedMovie = null;
-  document.getElementById('searchInput').value = '';
-  document.getElementById('autocomplete').style.display = 'none';
-  document.getElementById('guessBtn').disabled = true;
+// ─── STATS ────────────────────────────────────────────────────────────────────
+function updateStats() {
+  document.getElementById('statPlayed').textContent = stats.played;
+  document.getElementById('statWon').textContent    = stats.won;
+  document.getElementById('statStreak').textContent = stats.streak;
+  document.getElementById('statAvg').textContent    = stats.won > 0 ? (stats.total / stats.won).toFixed(1) : '—';
 }
 
-function filterMovies(query) {
-  if (!query || query.length < 1) return [];
-  const q = query.toLowerCase();
-  return MOVIES
-    .filter(m => m.title.toLowerCase().includes(q))
-    .slice(0, 8);
-}
-
-function setupAutocomplete() {
+// ─── SEARCH ───────────────────────────────────────────────────────────────────
+function setupSearch() {
   const input = document.getElementById('searchInput');
-  const dropdown = document.getElementById('autocomplete');
-  const btn = document.getElementById('guessBtn');
+  const drop  = document.getElementById('acDrop');
+  const btn   = document.getElementById('guessBtn');
 
   input.addEventListener('input', () => {
     const q = input.value.trim();
-    const results = filterMovies(q);
-    if (results.length === 0 || q === '') {
-      dropdown.style.display = 'none';
-      selectedMovie = null;
-      btn.disabled = true;
-      return;
-    }
-    dropdown.innerHTML = '';
-    results.forEach(movie => {
-      const item = document.createElement('div');
-      item.className = 'autocomplete-item';
-      item.innerHTML = `<span>${movie.title}</span><span class="year-tag">${movie.year}</span>`;
-      item.addEventListener('click', () => {
-        selectedMovie = movie;
-        input.value = movie.title;
-        dropdown.style.display = 'none';
-        btn.disabled = false;
-      });
-      dropdown.appendChild(item);
-    });
-    dropdown.style.display = 'block';
+    clearTimeout(searchTimer);
+    selectedId = null; btn.disabled = true;
+    if (q.length < 2) { drop.classList.remove('open'); return; }
+
+    drop.innerHTML = '<div class="ac-loading"><span class="spinner"></span>Searching…</div>';
+    drop.classList.add('open');
+
+    searchTimer = setTimeout(async () => {
+      try {
+        const results = await searchMovies(q);
+        drop.innerHTML = '';
+        if (!results.length) {
+          drop.innerHTML = '<div class="ac-loading">No results found</div>';
+          return;
+        }
+        results.forEach(r => {
+          const item = document.createElement('div');
+          item.className = 'ac-item';
+          const yr = r.release_date?.slice(0, 4) || '?';
+          if (r.poster_path) {
+            const img = document.createElement('img');
+            img.className = 'ac-thumb';
+            img.src = `${IMG}w92${r.poster_path}`; img.alt = '';
+            item.appendChild(img);
+          } else {
+            const ph = document.createElement('div');
+            ph.className = 'ac-thumb-ph'; ph.textContent = '🎬';
+            item.appendChild(ph);
+          }
+          const info = document.createElement('div');
+          info.className = 'ac-info';
+          info.innerHTML = `<div class="ac-title">${r.title}</div>
+                            <div class="ac-meta">${yr} · ★ ${r.vote_average?.toFixed(1) || '?'}</div>`;
+          item.appendChild(info);
+          item.addEventListener('click', () => {
+            selectedId = r.id;
+            input.value = r.title;
+            drop.classList.remove('open');
+            btn.disabled = false;
+          });
+          drop.appendChild(item);
+        });
+      } catch (e) {
+        drop.innerHTML = '<div class="ac-loading">Search failed — check connection</div>';
+      }
+    }, 280);
   });
 
-  input.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' && selectedMovie) submitGuess();
-  });
-
-  document.addEventListener('click', (e) => {
-    if (!e.target.closest('.search-input-wrap')) {
-      dropdown.style.display = 'none';
-    }
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !btn.disabled) submitGuess();
+    if (e.key === 'Escape') drop.classList.remove('open');
   });
 
   btn.addEventListener('click', submitGuess);
-  btn.disabled = true;
+  document.addEventListener('click', e => {
+    if (!e.target.closest('.search-wrap')) drop.classList.remove('open');
+  });
 }
 
-function newGame() {
-  guessesUsed = 0;
-  selectedMovie = null;
-  gameOver = false;
-  targetMovie = MOVIES[Math.floor(Math.random() * MOVIES.length)];
-  document.getElementById('guessesContainer').innerHTML = '';
+function showError(msg) {
+  const el = document.getElementById('errorMsg');
+  el.textContent = msg; el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 4500);
+}
+
+// ─── NEW GAME ─────────────────────────────────────────────────────────────────
+async function newGame() {
+  guessesUsed = 0; selectedId = null; gameOver = false; target = null;
+  hintsShown.clear();
+
+  document.getElementById('guessRows').innerHTML = '';
   document.getElementById('hintContainer').innerHTML = '';
-  document.getElementById('overlay').classList.remove('show');
+  document.getElementById('errorMsg').classList.remove('show');
+  document.getElementById('resultModal').classList.remove('show');
+  document.getElementById('confirmModal').classList.remove('show');
   document.getElementById('searchInput').value = '';
   document.getElementById('searchInput').disabled = false;
   document.getElementById('guessBtn').disabled = true;
-  updateGuessesLeft();
-  renderEmptyRows(MAX_GUESSES);
-  updateStatsDisplay();
+  document.getElementById('giveupBtn').disabled = false;
+  document.getElementById('acDrop').classList.remove('open');
+
+  buildPips();
+  buildEmptyRows(MAX_GUESSES);
+  updateStats();
+
+  // Show loading state
+  const main = document.getElementById('guessRows');
+  main.innerHTML = '<div class="loading-overlay"><span class="spinner"></span>Loading today\'s film…</div>';
+
+  try {
+    await buildMoviePool();
+    const candidate = pickDailyMovie();
+    if (!candidate) throw new Error('No pool');
+
+    // Try candidates until we find one with full data
+    let picked = null;
+    for (let offset = 0; offset < Math.min(30, moviePool.length); offset++) {
+      const seed = Math.floor(Date.now() / 86400000) + offset;
+      const m = moviePool[seed % moviePool.length];
+      const full = await getFullMovie(m.id);
+      if (full) { picked = full; break; }
+    }
+
+    if (!picked) throw new Error('No valid target');
+    target = picked;
+    console.log('🎬 Target:', target.title); // dev
+
+    main.innerHTML = '';
+    buildEmptyRows(MAX_GUESSES);
+  } catch(e) {
+    main.innerHTML = '';
+    buildEmptyRows(MAX_GUESSES);
+    showError('Could not load today\'s film. Check your connection and refresh.');
+    console.error(e);
+  }
 }
 
-function init() {
-  buildFilmStrip();
-
-  // Set date
-  const now = new Date();
-  document.getElementById('dateDisplay').textContent = now.toLocaleDateString('en-US', { month:'long', day:'numeric', year:'numeric' });
-
-  // Pick today's movie
-  targetMovie = pickDailyMovie();
-
-  setupAutocomplete();
-  updateGuessesLeft();
-  renderEmptyRows(MAX_GUESSES);
-  updateStatsDisplay();
-}
-
-init();
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+buildFilmStrip();
+setupSearch();
+updateStats();
+newGame();
 </script>
 </body>
 </html>
