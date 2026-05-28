@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CINEMATLE</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Mono:wght@300;400;500&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #12121a;
+    --surface2: #1a1a26;
+    --border: #2a2a3a;
+    --gold: #c9a84c;
+    --gold-dim: #8a6e2e;
+    --green: #2d6a4f;
+    --green-bright: #52b788;
+    --yellow: #7b5e1a;
+    --yellow-bright: #e9c46a;
+    --red: #6b2737;
+    --text: #e8e4d9;
+    --text-dim: #8a8578;
+    --text-muted: #4a4840;
+    --accent: #c9a84c;
+    --film-strip: #1e1e2e;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Film grain overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.4;
+  }
+
+  /* Film strip top */
+  .film-strip {
+    background: var(--film-strip);
+    height: 28px;
+    display: flex;
+    align-items: center;
+    gap: 0;
+    overflow: hidden;
+    border-bottom: 1px solid #000;
+  }
+  .film-hole {
+    width: 16px;
+    height: 12px;
+    background: var(--bg);
+    border-radius: 2px;
+    margin: 0 8px;
+    flex-shrink: 0;
+    box-shadow: inset 0 0 0 1px #000;
+  }
+
+  header {
+    text-align: center;
+    padding: 24px 20px 16px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+
+  .logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(42px, 8vw, 72px);
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    text-shadow: 0 0 40px rgba(201, 168, 76, 0.3), 2px 2px 0 #000;
+    line-height: 1;
+  }
+
+  .tagline {
+    font-size: 10px;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-top: 4px;
+  }
+
+  .header-meta {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    margin-top: 12px;
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 0.1em;
+  }
+
+  .guesses-left {
+    color: var(--gold);
+    font-weight: 500;
+  }
+
+  /* Legend */
+  .legend {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    padding: 10px 20px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 10px;
+    letter-spacing: 0.05em;
+    color: var(--text-dim);
+  }
+  .legend-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+  }
+  .legend-dot.green { background: var(--green-bright); }
+  .legend-dot.yellow { background: var(--yellow-bright); }
+  .legend-dot.red { background: #4a1a24; border: 1px solid #6b2737; }
+
+  /* Main layout */
+  .main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 20px 16px;
+  }
+
+  /* Search input */
+  .search-container {
+    position: relative;
+    margin-bottom: 20px;
+  }
+
+  .search-wrap {
+    display: flex;
+    gap: 10px;
+    align-items: stretch;
+  }
+
+  .search-input-wrap {
+    position: relative;
+    flex: 1;
+  }
+
+  .search-input {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 14px 18px;
+    font-family: 'DM Mono', monospace;
+    font-size: 14px;
+    letter-spacing: 0.05em;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .search-input:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 1px var(--gold-dim), 0 0 20px rgba(201,168,76,0.08);
+  }
+
+  .search-input::placeholder { color: var(--text-muted); }
+
+  .guess-btn {
+    background: var(--gold);
+    color: #0a0a0f;
+    border: none;
+    padding: 14px 28px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    letter-spacing: 0.15em;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+    white-space: nowrap;
+  }
+  .guess-btn:hover { background: #ddb95c; }
+  .guess-btn:active { transform: scale(0.98); }
+  .guess-btn:disabled { background: var(--text-muted); cursor: not-allowed; }
+
+  /* Autocomplete dropdown */
+  .autocomplete {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-top: none;
+    z-index: 100;
+    max-height: 220px;
+    overflow-y: auto;
+  }
+  .autocomplete-item {
+    padding: 10px 18px;
+    cursor: pointer;
+    font-size: 13px;
+    color: var(--text);
+    transition: background 0.1s;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .autocomplete-item:hover { background: var(--border); }
+  .autocomplete-item .year-tag {
+    font-size: 11px;
+    color: var(--text-dim);
+  }
+
+  /* Column headers */
+  .col-headers {
+    display: grid;
+    grid-template-columns: 160px repeat(9, 1fr);
+    gap: 3px;
+    margin-bottom: 4px;
+  }
+  .col-header {
+    text-align: center;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    padding: 4px 2px;
+    line-height: 1.3;
+  }
+  .col-header:first-child { text-align: left; }
+
+  /* Guess rows */
+  .guesses-container {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .guess-row {
+    display: grid;
+    grid-template-columns: 160px repeat(9, 1fr);
+    gap: 3px;
+    animation: slideIn 0.3s ease;
+  }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .guess-cell {
+    padding: 10px 6px;
+    text-align: center;
+    font-size: 11px;
+    letter-spacing: 0.03em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 52px;
+    line-height: 1.3;
+    position: relative;
+    transition: background 0.4s ease;
+  }
+
+  .guess-cell.movie-title {
+    text-align: left;
+    justify-content: flex-start;
+    font-size: 12px;
+    font-weight: 500;
+    padding-left: 10px;
+    background: var(--surface) !important;
+    border-left: 2px solid var(--border);
+  }
+
+  .guess-cell.correct { background: var(--green); color: var(--green-bright); }
+  .guess-cell.close { background: var(--yellow); color: var(--yellow-bright); }
+  .guess-cell.wrong { background: #0e0e16; color: var(--text-muted); border: 1px solid #1a1a26; }
+
+  .arrow-indicator {
+    position: absolute;
+    bottom: 3px;
+    right: 4px;
+    font-size: 9px;
+    opacity: 0.7;
+  }
+
+  /* Hint box */
+  .hint-box {
+    background: linear-gradient(135deg, #1a1208, #12120e);
+    border: 1px solid var(--gold-dim);
+    padding: 14px 20px;
+    margin-bottom: 12px;
+    animation: fadeIn 0.5s ease;
+  }
+  .hint-label {
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.2em;
+    font-size: 14px;
+    color: var(--gold);
+    margin-bottom: 4px;
+  }
+  .hint-text {
+    font-size: 12px;
+    color: var(--text-dim);
+    letter-spacing: 0.05em;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  /* Win/Lose overlay */
+  .overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 500;
+    display: none;
+  }
+  .overlay.show { display: flex; animation: fadeIn 0.4s ease; }
+
+  .result-card {
+    background: var(--surface);
+    border: 1px solid var(--gold-dim);
+    padding: 40px 48px;
+    text-align: center;
+    max-width: 440px;
+    width: 90%;
+    box-shadow: 0 0 80px rgba(201,168,76,0.15);
+  }
+
+  .result-emoji { font-size: 48px; margin-bottom: 16px; }
+
+  .result-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+
+  .result-movie {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 20px;
+    color: var(--text);
+    margin-bottom: 16px;
+  }
+
+  .result-detail {
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-bottom: 24px;
+    line-height: 1.7;
+  }
+
+  .play-again-btn {
+    background: var(--gold);
+    color: #0a0a0f;
+    border: none;
+    padding: 14px 32px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: 0.2em;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .play-again-btn:hover { background: #ddb95c; }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .col-headers, .guess-row {
+      grid-template-columns: 110px repeat(9, 1fr);
+    }
+    .guess-cell { font-size: 9px; padding: 7px 2px; min-height: 44px; }
+    .guess-cell.movie-title { font-size: 10px; }
+    .col-header { font-size: 7.5px; }
+  }
+
+  .empty-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    margin-top: 3px;
+  }
+  .empty-row {
+    display: grid;
+    grid-template-columns: 160px repeat(9, 1fr);
+    gap: 3px;
+    opacity: 0.25;
+  }
+  @media (max-width: 768px) {
+    .empty-row { grid-template-columns: 110px repeat(9, 1fr); }
+  }
+  .empty-cell {
+    height: 52px;
+    background: var(--surface);
+    border: 1px dashed var(--border);
+  }
+  .empty-cell:first-child { border-left: 2px solid var(--border); }
+
+  .streak-bar {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    padding: 8px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    font-size: 11px;
+    color: var(--text-dim);
+  }
+  .streak-num { color: var(--gold); font-weight: 500; font-size: 14px; }
+</style>
+</head>
+<body>
+
+<div class="film-strip" id="filmStrip"></div>
+
+<header>
+  <div class="logo">CINEMATLE</div>
+  <div class="tagline">Guess the Film — One Frame at a Time</div>
+  <div class="header-meta">
+    <span>Guesses: <span class="guesses-left" id="guessesLeft">10 / 10</span></span>
+    <span>·</span>
+    <span id="dateDisplay"></span>
+  </div>
+</header>
+
+<div class="streak-bar">
+  <span>Played: <span class="streak-num" id="statPlayed">0</span></span>
+  <span>Won: <span class="streak-num" id="statWon">0</span></span>
+  <span>Streak: <span class="streak-num" id="statStreak">0</span></span>
+</div>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot green"></div> Exact match</div>
+  <div class="legend-item"><div class="legend-dot yellow"></div> Close (±5 yrs / ±$5M / ±5pts)</div>
+  <div class="legend-item"><div class="legend-dot red"></div> No match</div>
+</div>
+
+<div class="main">
+  <div id="hintContainer"></div>
+
+  <div class="search-container">
+    <div class="search-wrap">
+      <div class="search-input-wrap">
+        <input type="text" class="search-input" id="searchInput" placeholder="Search for a movie title..." autocomplete="off">
+        <div class="autocomplete" id="autocomplete" style="display:none"></div>
+      </div>
+      <button class="guess-btn" id="guessBtn">GUESS</button>
+    </div>
+  </div>
+
+  <div class="col-headers">
+    <div class="col-header">FILM</div>
+    <div class="col-header">Year</div>
+    <div class="col-header">Genre</div>
+    <div class="col-header">Rating</div>
+    <div class="col-header">Box Office</div>
+    <div class="col-header">RT Score</div>
+    <div class="col-header">Studio</div>
+    <div class="col-header">Director</div>
+    <div class="col-header">Lead Actor</div>
+    <div class="col-header">Support</div>
+  </div>
+
+  <div class="guesses-container" id="guessesContainer"></div>
+  <div class="empty-rows" id="emptyRows"></div>
+</div>
+
+<div class="overlay" id="overlay">
+  <div class="result-card">
+    <div class="result-emoji" id="resultEmoji"></div>
+    <div class="result-title" id="resultTitle"></div>
+    <div class="result-movie" id="resultMovie"></div>
+    <div class="result-detail" id="resultDetail"></div>
+    <button class="play-again-btn" onclick="newGame()">PLAY AGAIN</button>
+  </div>
+</div>
+
+<script>
+// ─── MOVIE DATABASE ───────────────────────────────────────────────────────────
+// Fields: title, year, genre, rating, boxOffice (millions), rtScore, studio, director, lead, support
+const MOVIES = [
+  { title: "The Dark Knight", year: 2008, genre: "Action", rating: "PG-13", boxOffice: 1004, rtScore: 94, studio: "Warner Bros.", director: "Christopher Nolan", lead: "Christian Bale", support: "Heath Ledger" },
+  { title: "Inception", year: 2010, genre: "Sci-Fi", rating: "PG-13", boxOffice: 836, rtScore: 87, studio: "Warner Bros.", director: "Christopher Nolan", lead: "Leonardo DiCaprio", support: "Joseph Gordon-Levitt" },
+  { title: "Interstellar", year: 2014, genre: "Sci-Fi", rating: "PG-13", boxOffice: 701, rtScore: 73, studio: "Paramount", director: "Christopher Nolan", lead: "Matthew McConaughey", support: "Anne Hathaway" },
+  { title: "The Avengers", year: 2012, genre: "Action", rating: "PG-13", boxOffice: 1519, rtScore: 91, studio: "Marvel Studios", director: "Joss Whedon", lead: "Robert Downey Jr.", support: "Chris Evans" },
+  { title: "Avatar", year: 2009, genre: "Sci-Fi", rating: "PG-13", boxOffice: 2923, rtScore: 82, studio: "20th Century Fox", director: "James Cameron", lead: "Sam Worthington", support: "Zoe Saldana" },
+  { title: "Titanic", year: 1997, genre: "Romance", rating: "PG-13", boxOffice: 2264, rtScore: 88, studio: "Paramount", director: "James Cameron", lead: "Leonardo DiCaprio", support: "Kate Winslet" },
+  { title: "Jurassic Park", year: 1993, genre: "Adventure", rating: "PG-13", boxOffice: 1046, rtScore: 91, studio: "Universal", director: "Steven Spielberg", lead: "Sam Neill", support: "Jeff Goldblum" },
+  { title: "The Lion King", year: 1994, genre: "Animation", rating: "G", boxOffice: 987, rtScore: 93, studio: "Walt Disney", director: "Roger Allers", lead: "Matthew Broderick", support: "James Earl Jones" },
+  { title: "Forrest Gump", year: 1994, genre: "Drama", rating: "PG-13", boxOffice: 678, rtScore: 71, studio: "Paramount", director: "Robert Zemeckis", lead: "Tom Hanks", support: "Robin Wright" },
+  { title: "Pulp Fiction", year: 1994, genre: "Crime", rating: "R", boxOffice: 214, rtScore: 92, studio: "Miramax", director: "Quentin Tarantino", lead: "John Travolta", support: "Samuel L. Jackson" },
+  { title: "The Matrix", year: 1999, genre: "Sci-Fi", rating: "R", boxOffice: 467, rtScore: 88, studio: "Warner Bros.", director: "The Wachowskis", lead: "Keanu Reeves", support: "Laurence Fishburne" },
+  { title: "Goodfellas", year: 1990, genre: "Crime", rating: "R", boxOffice: 47, rtScore: 96, studio: "Warner Bros.", director: "Martin Scorsese", lead: "Ray Liotta", support: "Robert De Niro" },
+  { title: "Schindler's List", year: 1993, genre: "Drama", rating: "R", boxOffice: 322, rtScore: 97, studio: "Universal", director: "Steven Spielberg", lead: "Liam Neeson", support: "Ralph Fiennes" },
+  { title: "The Silence of the Lambs", year: 1991, genre: "Thriller", rating: "R", boxOffice: 273, rtScore: 96, studio: "Orion Pictures", director: "Jonathan Demme", lead: "Jodie Foster", support: "Anthony Hopkins" },
+  { title: "Fight Club", year: 1999, genre: "Drama", rating: "R", boxOffice: 101, rtScore: 79, studio: "20th Century Fox", director: "David Fincher", lead: "Brad Pitt", support: "Edward Norton" },
+  { title: "The Shawshank Redemption", year: 1994, genre: "Drama", rating: "R", boxOffice: 16, rtScore: 89, studio: "Columbia", director: "Frank Darabont", lead: "Tim Robbins", support: "Morgan Freeman" },
+  { title: "Gladiator", year: 2000, genre: "Action", rating: "R", boxOffice: 460, rtScore: 77, studio: "Universal", director: "Ridley Scott", lead: "Russell Crowe", support: "Joaquin Phoenix" },
+  { title: "The Lord of the Rings: Fellowship", year: 2001, genre: "Fantasy", rating: "PG-13", boxOffice: 898, rtScore: 91, studio: "New Line Cinema", director: "Peter Jackson", lead: "Elijah Wood", support: "Ian McKellen" },
+  { title: "Spider-Man", year: 2002, genre: "Action", rating: "PG-13", boxOffice: 821, rtScore: 89, studio: "Columbia", director: "Sam Raimi", lead: "Tobey Maguire", support: "Kirsten Dunst" },
+  { title: "Finding Nemo", year: 2003, genre: "Animation", rating: "G", boxOffice: 940, rtScore: 99, studio: "Pixar", director: "Andrew Stanton", lead: "Albert Brooks", support: "Ellen DeGeneres" },
+  { title: "Pirates of the Caribbean", year: 2003, genre: "Adventure", rating: "PG-13", boxOffice: 654, rtScore: 79, studio: "Walt Disney", director: "Gore Verbinski", lead: "Johnny Depp", support: "Orlando Bloom" },
+  { title: "Batman Begins", year: 2005, genre: "Action", rating: "PG-13", boxOffice: 374, rtScore: 85, studio: "Warner Bros.", director: "Christopher Nolan", lead: "Christian Bale", support: "Michael Caine" },
+  { title: "Casino Royale", year: 2006, genre: "Action", rating: "PG-13", boxOffice: 594, rtScore: 94, studio: "Sony", director: "Martin Campbell", lead: "Daniel Craig", support: "Eva Green" },
+  { title: "No Country for Old Men", year: 2007, genre: "Crime", rating: "R", boxOffice: 171, rtScore: 93, studio: "Miramax", director: "Coen Brothers", lead: "Tommy Lee Jones", support: "Javier Bardem" },
+  { title: "The Social Network", year: 2010, genre: "Drama", rating: "PG-13", boxOffice: 224, rtScore: 96, studio: "Columbia", director: "David Fincher", lead: "Jesse Eisenberg", support: "Justin Timberlake" },
+  { title: "Black Swan", year: 2010, genre: "Thriller", rating: "R", boxOffice: 329, rtScore: 87, studio: "Fox Searchlight", director: "Darren Aronofsky", lead: "Natalie Portman", support: "Mila Kunis" },
+  { title: "Toy Story", year: 1995, genre: "Animation", rating: "G", boxOffice: 362, rtScore: 100, studio: "Pixar", director: "John Lasseter", lead: "Tom Hanks", support: "Tim Allen" },
+  { title: "Iron Man", year: 2008, genre: "Action", rating: "PG-13", boxOffice: 585, rtScore: 94, studio: "Marvel Studios", director: "Jon Favreau", lead: "Robert Downey Jr.", support: "Gwyneth Paltrow" },
+  { title: "Gravity", year: 2013, genre: "Sci-Fi", rating: "PG-13", boxOffice: 716, rtScore: 96, studio: "Warner Bros.", director: "Alfonso Cuarón", lead: "Sandra Bullock", support: "George Clooney" },
+  { title: "Mad Max: Fury Road", year: 2015, genre: "Action", rating: "R", boxOffice: 375, rtScore: 97, studio: "Warner Bros.", director: "George Miller", lead: "Tom Hardy", support: "Charlize Theron" },
+  { title: "The Revenant", year: 2015, genre: "Drama", rating: "R", boxOffice: 533, rtScore: 78, studio: "20th Century Fox", director: "Alejandro G. Iñárritu", lead: "Leonardo DiCaprio", support: "Tom Hardy" },
+  { title: "La La Land", year: 2016, genre: "Musical", rating: "PG-13", boxOffice: 446, rtScore: 91, studio: "Lionsgate", director: "Damien Chazelle", lead: "Ryan Gosling", support: "Emma Stone" },
+  { title: "Get Out", year: 2017, genre: "Horror", rating: "R", boxOffice: 255, rtScore: 98, studio: "Universal", director: "Jordan Peele", lead: "Daniel Kaluuya", support: "Allison Williams" },
+  { title: "Black Panther", year: 2018, genre: "Action", rating: "PG-13", boxOffice: 1347, rtScore: 96, studio: "Marvel Studios", director: "Ryan Coogler", lead: "Chadwick Boseman", support: "Michael B. Jordan" },
+  { title: "Joker", year: 2019, genre: "Drama", rating: "R", boxOffice: 1079, rtScore: 68, studio: "Warner Bros.", director: "Todd Phillips", lead: "Joaquin Phoenix", support: "Robert De Niro" },
+  { title: "Parasite", year: 2019, genre: "Thriller", rating: "R", boxOffice: 258, rtScore: 98, studio: "CJ Entertainment", director: "Bong Joon-ho", lead: "Song Kang-ho", support: "Lee Sun-kyun" },
+  { title: "Tenet", year: 2020, genre: "Sci-Fi", rating: "PG-13", boxOffice: 365, rtScore: 69, studio: "Warner Bros.", director: "Christopher Nolan", lead: "John David Washington", support: "Robert Pattinson" },
+  { title: "Dune", year: 2021, genre: "Sci-Fi", rating: "PG-13", boxOffice: 401, rtScore: 83, studio: "Warner Bros.", director: "Denis Villeneuve", lead: "Timothée Chalamet", support: "Zendaya" },
+  { title: "Everything Everywhere All at Once", year: 2022, genre: "Sci-Fi", rating: "R", boxOffice: 72, rtScore: 95, studio: "A24", director: "Daniel Kwan", lead: "Michelle Yeoh", support: "Ke Huy Quan" },
+  { title: "Oppenheimer", year: 2023, genre: "Drama", rating: "R", boxOffice: 952, rtScore: 93, studio: "Universal", director: "Christopher Nolan", lead: "Cillian Murphy", support: "Emily Blunt" },
+  { title: "Barbie", year: 2023, genre: "Comedy", rating: "PG-13", boxOffice: 1441, rtScore: 88, studio: "Warner Bros.", director: "Greta Gerwig", lead: "Margot Robbie", support: "Ryan Gosling" },
+  { title: "Top Gun: Maverick", year: 2022, genre: "Action", rating: "PG-13", boxOffice: 1493, rtScore: 96, studio: "Paramount", director: "Joseph Kosinski", lead: "Tom Cruise", support: "Miles Teller" },
+  { title: "The Batman", year: 2022, genre: "Action", rating: "PG-13", boxOffice: 770, rtScore: 85, studio: "Warner Bros.", director: "Matt Reeves", lead: "Robert Pattinson", support: "Zoë Kravitz" },
+  { title: "Doctor Strange", year: 2016, genre: "Action", rating: "PG-13", boxOffice: 677, rtScore: 89, studio: "Marvel Studios", director: "Scott Derrickson", lead: "Benedict Cumberbatch", support: "Tilda Swinton" },
+  { title: "Guardians of the Galaxy", year: 2014, genre: "Action", rating: "PG-13", boxOffice: 773, rtScore: 92, studio: "Marvel Studios", director: "James Gunn", lead: "Chris Pratt", support: "Zoe Saldana" },
+  { title: "Whiplash", year: 2014, genre: "Drama", rating: "R", boxOffice: 49, rtScore: 94, studio: "Sony Classics", director: "Damien Chazelle", lead: "Miles Teller", support: "J.K. Simmons" },
+  { title: "Gone Girl", year: 2014, genre: "Thriller", rating: "R", boxOffice: 369, rtScore: 87, studio: "20th Century Fox", director: "David Fincher", lead: "Ben Affleck", support: "Rosamund Pike" },
+  { title: "Her", year: 2013, genre: "Sci-Fi", rating: "R", boxOffice: 48, rtScore: 94, studio: "Warner Bros.", director: "Spike Jonze", lead: "Joaquin Phoenix", support: "Scarlett Johansson" },
+  { title: "12 Years a Slave", year: 2013, genre: "Drama", rating: "R", boxOffice: 187, rtScore: 96, studio: "Fox Searchlight", director: "Steve McQueen", lead: "Chiwetel Ejiofor", support: "Michael Fassbender" },
+  { title: "The Wolf of Wall Street", year: 2013, genre: "Crime", rating: "R", boxOffice: 392, rtScore: 77, studio: "Paramount", director: "Martin Scorsese", lead: "Leonardo DiCaprio", support: "Jonah Hill" },
+  { title: "American Hustle", year: 2013, genre: "Crime", rating: "R", boxOffice: 251, rtScore: 93, studio: "Columbia", director: "David O. Russell", lead: "Christian Bale", support: "Amy Adams" },
+  { title: "Frozen", year: 2013, genre: "Animation", rating: "PG", boxOffice: 1280, rtScore: 90, studio: "Walt Disney", director: "Chris Buck", lead: "Idina Menzel", support: "Kristen Bell" },
+  { title: "The Hunger Games", year: 2012, genre: "Action", rating: "PG-13", boxOffice: 694, rtScore: 84, studio: "Lionsgate", director: "Gary Ross", lead: "Jennifer Lawrence", support: "Josh Hutcherson" },
+  { title: "Django Unchained", year: 2012, genre: "Western", rating: "R", boxOffice: 425, rtScore: 87, studio: "Columbia", director: "Quentin Tarantino", lead: "Jamie Foxx", support: "Christoph Waltz" },
+  { title: "Lincoln", year: 2012, genre: "Drama", rating: "PG-13", boxOffice: 275, rtScore: 89, studio: "Disney", director: "Steven Spielberg", lead: "Daniel Day-Lewis", support: "Sally Field" },
+  { title: "The Artist", year: 2011, genre: "Drama", rating: "PG-13", boxOffice: 44, rtScore: 97, studio: "Warner Bros.", director: "Michel Hazanavicius", lead: "Jean Dujardin", support: "Bérénice Bejo" },
+  { title: "Argo", year: 2012, genre: "Drama", rating: "R", boxOffice: 232, rtScore: 96, studio: "Warner Bros.", director: "Ben Affleck", lead: "Ben Affleck", support: "Bryan Cranston" },
+  { title: "Silver Linings Playbook", year: 2012, genre: "Comedy", rating: "R", boxOffice: 237, rtScore: 92, studio: "Weinstein Company", director: "David O. Russell", lead: "Bradley Cooper", support: "Jennifer Lawrence" },
+  { title: "Moonlight", year: 2016, genre: "Drama", rating: "R", boxOffice: 65, rtScore: 98, studio: "A24", director: "Barry Jenkins", lead: "Trevante Rhodes", support: "Mahershala Ali" },
+  { title: "Arrival", year: 2016, genre: "Sci-Fi", rating: "PG-13", boxOffice: 203, rtScore: 94, studio: "Paramount", director: "Denis Villeneuve", lead: "Amy Adams", support: "Jeremy Renner" },
+  { title: "Dunkirk", year: 2017, genre: "Drama", rating: "PG-13", boxOffice: 527, rtScore: 92, studio: "Warner Bros.", director: "Christopher Nolan", lead: "Fionn Whitehead", support: "Mark Rylance" },
+  { title: "Baby Driver", year: 2017, genre: "Action", rating: "R", boxOffice: 226, rtScore: 93, studio: "Sony", director: "Edgar Wright", lead: "Ansel Elgort", support: "Jon Hamm" },
+  { title: "The Shape of Water", year: 2017, genre: "Fantasy", rating: "R", boxOffice: 195, rtScore: 92, studio: "Fox Searchlight", director: "Guillermo del Toro", lead: "Sally Hawkins", support: "Michael Shannon" },
+  { title: "Call Me by Your Name", year: 2017, genre: "Romance", rating: "R", boxOffice: 18, rtScore: 95, studio: "Sony Classics", director: "Luca Guadagnino", lead: "Armie Hammer", support: "Timothée Chalamet" },
+  { title: "The Grand Budapest Hotel", year: 2014, genre: "Comedy", rating: "R", boxOffice: 174, rtScore: 91, studio: "Fox Searchlight", director: "Wes Anderson", lead: "Ralph Fiennes", support: "Tony Revolori" },
+  { title: "Birdman", year: 2014, genre: "Comedy", rating: "R", boxOffice: 104, rtScore: 91, studio: "Fox Searchlight", director: "Alejandro G. Iñárritu", lead: "Michael Keaton", support: "Emma Stone" },
+  { title: "Boyhood", year: 2014, genre: "Drama", rating: "R", boxOffice: 25, rtScore: 98, studio: "IFC Films", director: "Richard Linklater", lead: "Ellar Coltrane", support: "Patricia Arquette" },
+  { title: "The Martian", year: 2015, genre: "Sci-Fi", rating: "PG-13", boxOffice: 630, rtScore: 91, studio: "20th Century Fox", director: "Ridley Scott", lead: "Matt Damon", support: "Jessica Chastain" },
+  { title: "The Hateful Eight", year: 2015, genre: "Western", rating: "R", boxOffice: 155, rtScore: 74, studio: "Weinstein Company", director: "Quentin Tarantino", lead: "Samuel L. Jackson", support: "Kurt Russell" },
+  { title: "Room", year: 2015, genre: "Drama", rating: "R", boxOffice: 35, rtScore: 94, studio: "A24", director: "Lenny Abrahamson", lead: "Brie Larson", support: "Jacob Tremblay" },
+  { title: "Spotlight", year: 2015, genre: "Drama", rating: "R", boxOffice: 98, rtScore: 97, studio: "Open Road Films", director: "Tom McCarthy", lead: "Mark Ruffalo", support: "Rachel McAdams" },
+  { title: "Hell or High Water", year: 2016, genre: "Crime", rating: "R", boxOffice: 37, rtScore: 98, studio: "Lionsgate", director: "David Mackenzie", lead: "Chris Pine", support: "Ben Foster" },
+  { title: "Hacksaw Ridge", year: 2016, genre: "Drama", rating: "R", boxOffice: 180, rtScore: 85, studio: "Lionsgate", director: "Mel Gibson", lead: "Andrew Garfield", support: "Vince Vaughn" },
+  { title: "Three Billboards", year: 2017, genre: "Drama", rating: "R", boxOffice: 160, rtScore: 88, studio: "Fox Searchlight", director: "Martin McDonagh", lead: "Frances McDormand", support: "Woody Harrelson" },
+  { title: "A Quiet Place", year: 2018, genre: "Horror", rating: "PG-13", boxOffice: 340, rtScore: 96, studio: "Paramount", director: "John Krasinski", lead: "Emily Blunt", support: "John Krasinski" },
+  { title: "Hereditary", year: 2018, genre: "Horror", rating: "R", boxOffice: 80, rtScore: 89, studio: "A24", director: "Ari Aster", lead: "Toni Collette", support: "Alex Wolff" },
+  { title: "Roma", year: 2018, genre: "Drama", rating: "R", boxOffice: 8, rtScore: 96, studio: "Netflix", director: "Alfonso Cuarón", lead: "Yalitza Aparicio", support: "Marina de Tavira" },
+  { title: "Green Book", year: 2018, genre: "Drama", rating: "PG-13", boxOffice: 321, rtScore: 78, studio: "Universal", director: "Peter Farrelly", lead: "Viggo Mortensen", support: "Mahershala Ali" },
+  { title: "Once Upon a Time in Hollywood", year: 2019, genre: "Comedy", rating: "R", boxOffice: 377, rtScore: 85, studio: "Columbia", director: "Quentin Tarantino", lead: "Leonardo DiCaprio", support: "Brad Pitt" },
+  { title: "1917", year: 2019, genre: "Drama", rating: "R", boxOffice: 385, rtScore: 89, studio: "Universal", director: "Sam Mendes", lead: "George MacKay", support: "Dean-Charles Chapman" },
+  { title: "Knives Out", year: 2019, genre: "Comedy", rating: "PG-13", boxOffice: 312, rtScore: 97, studio: "Lionsgate", director: "Rian Johnson", lead: "Daniel Craig", support: "Chris Evans" },
+  { title: "Ford v Ferrari", year: 2019, genre: "Drama", rating: "PG-13", boxOffice: 225, rtScore: 91, studio: "20th Century Fox", director: "James Mangold", lead: "Matt Damon", support: "Christian Bale" },
+  { title: "Midsommar", year: 2019, genre: "Horror", rating: "R", boxOffice: 28, rtScore: 83, studio: "A24", director: "Ari Aster", lead: "Florence Pugh", support: "Jack Reynor" },
+  { title: "Little Women", year: 2019, genre: "Drama", rating: "PG", boxOffice: 218, rtScore: 95, studio: "Columbia", director: "Greta Gerwig", lead: "Saoirse Ronan", support: "Florence Pugh" },
+  { title: "Soul", year: 2020, genre: "Animation", rating: "PG", boxOffice: 121, rtScore: 95, studio: "Pixar", director: "Pete Docter", lead: "Jamie Foxx", support: "Tina Fey" },
+  { title: "Promising Young Woman", year: 2020, genre: "Thriller", rating: "R", boxOffice: 14, rtScore: 90, studio: "Focus Features", director: "Emerald Fennell", lead: "Carey Mulligan", support: "Bo Burnham" },
+  { title: "Nomadland", year: 2020, genre: "Drama", rating: "R", boxOffice: 38, rtScore: 93, studio: "Searchlight", director: "Chloé Zhao", lead: "Frances McDormand", support: "David Strathairn" },
+  { title: "The Power of the Dog", year: 2021, genre: "Drama", rating: "R", boxOffice: 2, rtScore: 93, studio: "Netflix", director: "Jane Campion", lead: "Benedict Cumberbatch", support: "Kodi Smit-McPhee" },
+  { title: "CODA", year: 2021, genre: "Drama", rating: "PG-13", boxOffice: 1, rtScore: 73, studio: "Apple TV+", director: "Sian Heder", lead: "Emilia Jones", support: "Troy Kotsur" },
+  { title: "Belfast", year: 2021, genre: "Drama", rating: "PG-13", boxOffice: 23, rtScore: 87, studio: "Focus Features", director: "Kenneth Branagh", lead: "Jude Hill", support: "Caitríona Balfe" },
+  { title: "No Time to Die", year: 2021, genre: "Action", rating: "PG-13", boxOffice: 774, rtScore: 83, studio: "Universal", director: "Cary Fukunaga", lead: "Daniel Craig", support: "Léa Seydoux" },
+  { title: "The Northman", year: 2022, genre: "Action", rating: "R", boxOffice: 69, rtScore: 89, studio: "Focus Features", director: "Robert Eggers", lead: "Alexander Skarsgård", support: "Anya Taylor-Joy" },
+  { title: "Babylon", year: 2022, genre: "Comedy", rating: "R", boxOffice: 15, rtScore: 56, studio: "Paramount", director: "Damien Chazelle", lead: "Brad Pitt", support: "Margot Robbie" },
+  { title: "Tár", year: 2022, genre: "Drama", rating: "R", boxOffice: 38, rtScore: 91, studio: "Focus Features", director: "Todd Field", lead: "Cate Blanchett", support: "Noémie Merlant" },
+  { title: "Women Talking", year: 2022, genre: "Drama", rating: "PG-13", boxOffice: 10, rtScore: 88, studio: "Orion", director: "Sarah Polley", lead: "Rooney Mara", support: "Claire Foy" },
+  { title: "The Whale", year: 2022, genre: "Drama", rating: "R", boxOffice: 12, rtScore: 61, studio: "A24", director: "Darren Aronofsky", lead: "Brendan Fraser", support: "Sadie Sink" },
+  { title: "Anatomy of a Fall", year: 2023, genre: "Thriller", rating: "R", boxOffice: 17, rtScore: 96, studio: "Neon", director: "Justine Triet", lead: "Sandra Hüller", support: "Swann Arlaud" },
+  { title: "The Zone of Interest", year: 2023, genre: "Drama", rating: "PG-13", boxOffice: 12, rtScore: 93, studio: "A24", director: "Jonathan Glazer", lead: "Christian Friedel", support: "Sandra Hüller" },
+  { title: "Killers of the Flower Moon", year: 2023, genre: "Crime", rating: "R", boxOffice: 157, rtScore: 93, studio: "Apple TV+", director: "Martin Scorsese", lead: "Leonardo DiCaprio", support: "Lily Gladstone" },
+  { title: "Past Lives", year: 2023, genre: "Romance", rating: "PG-13", boxOffice: 22, rtScore: 98, studio: "A24", director: "Celine Song", lead: "Greta Lee", support: "Teo Yoo" },
+  { title: "Poor Things", year: 2023, genre: "Comedy", rating: "R", boxOffice: 44, rtScore: 91, studio: "Searchlight", director: "Yorgos Lanthimos", lead: "Emma Stone", support: "Mark Ruffalo" },
+  { title: "May December", year: 2023, genre: "Drama", rating: "R", boxOffice: 3, rtScore: 91, studio: "Netflix", director: "Todd Haynes", lead: "Natalie Portman", support: "Julianne Moore" },
+];
+
+// ─── HINTS PER MOVIE (generated contextually) ─────────────────────────────────
+const HINTS = {
+  default_5: (m) => `This film has a Rotten Tomatoes score of ${m.rtScore}% and was directed by ${m.director.split(' ')[0]}...`,
+  default_9: (m) => `The lead actor/actress is ${m.lead}. Think carefully...`,
+};
+
+// ─── GAME STATE ───────────────────────────────────────────────────────────────
+let targetMovie = null;
+let guessesUsed = 0;
+const MAX_GUESSES = 10;
+let selectedMovie = null;
+let gameOver = false;
+let stats = JSON.parse(localStorage.getItem('cinematle_stats') || '{"played":0,"won":0,"streak":0}');
+
+const COLUMNS = ['year','genre','rating','boxOffice','rtScore','studio','director','lead','support'];
+const COL_LABELS = { year:'Year', genre:'Genre', rating:'Rating', boxOffice:'Box Office', rtScore:'RT Score', studio:'Studio', director:'Director', lead:'Lead Actor', support:'Support' };
+
+function pickDailyMovie() {
+  const seed = Math.floor(Date.now() / 86400000);
+  return MOVIES[seed % MOVIES.length];
+}
+
+function formatBoxOffice(n) {
+  if (n >= 1000) return `$${(n/1000).toFixed(1)}B`;
+  return `$${n}M`;
+}
+
+function getCellValue(movie, col) {
+  if (col === 'boxOffice') return formatBoxOffice(movie[col]);
+  return String(movie[col]);
+}
+
+function compareCell(guess, target, col) {
+  const gv = guess[col];
+  const tv = target[col];
+  if (col === 'year') {
+    if (gv === tv) return { state: 'correct', arrow: null };
+    if (Math.abs(gv - tv) <= 5) return { state: 'close', arrow: gv < tv ? '↑' : '↓' };
+    return { state: 'wrong', arrow: gv < tv ? '↑' : '↓' };
+  }
+  if (col === 'boxOffice') {
+    if (gv === tv) return { state: 'correct', arrow: null };
+    if (Math.abs(gv - tv) <= 5) return { state: 'close', arrow: gv < tv ? '↑' : '↓' };
+    return { state: 'wrong', arrow: gv < tv ? '↑' : '↓' };
+  }
+  if (col === 'rtScore') {
+    if (gv === tv) return { state: 'correct', arrow: null };
+    if (Math.abs(gv - tv) <= 5) return { state: 'close', arrow: gv < tv ? '↑' : '↓' };
+    return { state: 'wrong', arrow: gv < tv ? '↑' : '↓' };
+  }
+  return { state: gv === tv ? 'correct' : 'wrong', arrow: null };
+}
+
+function buildFilmStrip() {
+  const strip = document.getElementById('filmStrip');
+  for (let i = 0; i < 80; i++) {
+    const hole = document.createElement('div');
+    hole.className = 'film-hole';
+    strip.appendChild(hole);
+  }
+}
+
+function updateStatsDisplay() {
+  document.getElementById('statPlayed').textContent = stats.played;
+  document.getElementById('statWon').textContent = stats.won;
+  document.getElementById('statStreak').textContent = stats.streak;
+}
+
+function updateGuessesLeft() {
+  document.getElementById('guessesLeft').textContent = `${MAX_GUESSES - guessesUsed} / ${MAX_GUESSES}`;
+}
+
+function renderEmptyRows(count) {
+  const container = document.getElementById('emptyRows');
+  container.innerHTML = '';
+  for (let i = 0; i < count; i++) {
+    const row = document.createElement('div');
+    row.className = 'empty-row';
+    // title cell
+    const title = document.createElement('div');
+    title.className = 'empty-cell';
+    row.appendChild(title);
+    for (let j = 0; j < 9; j++) {
+      const cell = document.createElement('div');
+      cell.className = 'empty-cell';
+      row.appendChild(cell);
+    }
+    container.appendChild(row);
+  }
+}
+
+function addGuessRow(movie) {
+  const container = document.getElementById('guessesContainer');
+  const row = document.createElement('div');
+  row.className = 'guess-row';
+
+  // Title cell
+  const titleCell = document.createElement('div');
+  titleCell.className = 'guess-cell movie-title';
+  titleCell.textContent = movie.title;
+  row.appendChild(titleCell);
+
+  // Data cells with staggered animation
+  COLUMNS.forEach((col, i) => {
+    const result = compareCell(movie, targetMovie, col);
+    const cell = document.createElement('div');
+    cell.className = `guess-cell ${result.state}`;
+    cell.style.animationDelay = `${i * 80}ms`;
+    cell.style.opacity = '0';
+    setTimeout(() => { cell.style.opacity = '1'; }, i * 80);
+
+    const val = document.createElement('span');
+    val.textContent = getCellValue(movie, col);
+    cell.appendChild(val);
+
+    if (result.arrow) {
+      const arrow = document.createElement('span');
+      arrow.className = 'arrow-indicator';
+      arrow.textContent = result.arrow;
+      cell.appendChild(arrow);
+    }
+    row.appendChild(cell);
+  });
+
+  container.appendChild(row);
+  renderEmptyRows(MAX_GUESSES - guessesUsed);
+}
+
+function showHint(guessNum) {
+  const container = document.getElementById('hintContainer');
+  let text = '';
+  if (guessNum === 5) {
+    text = `The film was released in ${targetMovie.year} and has a ${targetMovie.rtScore}% RT score.`;
+  } else if (guessNum === 9) {
+    text = `The lead actor/actress is <strong>${targetMovie.lead}</strong>. This is your last hint!`;
+  }
+  if (!text) return;
+
+  const box = document.createElement('div');
+  box.className = 'hint-box';
+  box.innerHTML = `<div class="hint-label">🎬 Hint Unlocked — Guess ${guessNum}</div><div class="hint-text">${text}</div>`;
+  container.appendChild(box);
+}
+
+function showResult(won) {
+  gameOver = true;
+  stats.played++;
+  if (won) {
+    stats.won++;
+    stats.streak++;
+  } else {
+    stats.streak = 0;
+  }
+  localStorage.setItem('cinematle_stats', JSON.stringify(stats));
+  updateStatsDisplay();
+
+  document.getElementById('guessBtn').disabled = true;
+  document.getElementById('searchInput').disabled = true;
+
+  setTimeout(() => {
+    document.getElementById('resultEmoji').textContent = won ? '🏆' : '🎬';
+    document.getElementById('resultTitle').textContent = won ? 'CUT! PERFECT TAKE!' : 'THAT\'S A WRAP';
+    document.getElementById('resultMovie').textContent = `"${targetMovie.title}"`;
+    document.getElementById('resultDetail').innerHTML = won
+      ? `You identified the film in <strong>${guessesUsed}</strong> guess${guessesUsed === 1 ? '' : 'es'}!<br>
+         ${targetMovie.year} · ${targetMovie.genre} · Dir. ${targetMovie.director}`
+      : `The film was <em>${targetMovie.title}</em> (${targetMovie.year})<br>
+         Directed by ${targetMovie.director} · Starring ${targetMovie.lead}<br>
+         Box Office: ${formatBoxOffice(targetMovie.boxOffice)} · RT: ${targetMovie.rtScore}%`;
+    document.getElementById('overlay').classList.add('show');
+  }, 600);
+}
+
+function submitGuess() {
+  if (!selectedMovie || gameOver) return;
+  if (guessesUsed >= MAX_GUESSES) return;
+
+  guessesUsed++;
+  addGuessRow(selectedMovie);
+  updateGuessesLeft();
+
+  if (guessesUsed === 5 || guessesUsed === 9) showHint(guessesUsed);
+
+  if (selectedMovie.title === targetMovie.title) {
+    showResult(true);
+  } else if (guessesUsed >= MAX_GUESSES) {
+    showResult(false);
+  }
+
+  // Reset input
+  selectedMovie = null;
+  document.getElementById('searchInput').value = '';
+  document.getElementById('autocomplete').style.display = 'none';
+  document.getElementById('guessBtn').disabled = true;
+}
+
+function filterMovies(query) {
+  if (!query || query.length < 1) return [];
+  const q = query.toLowerCase();
+  return MOVIES
+    .filter(m => m.title.toLowerCase().includes(q))
+    .slice(0, 8);
+}
+
+function setupAutocomplete() {
+  const input = document.getElementById('searchInput');
+  const dropdown = document.getElementById('autocomplete');
+  const btn = document.getElementById('guessBtn');
+
+  input.addEventListener('input', () => {
+    const q = input.value.trim();
+    const results = filterMovies(q);
+    if (results.length === 0 || q === '') {
+      dropdown.style.display = 'none';
+      selectedMovie = null;
+      btn.disabled = true;
+      return;
+    }
+    dropdown.innerHTML = '';
+    results.forEach(movie => {
+      const item = document.createElement('div');
+      item.className = 'autocomplete-item';
+      item.innerHTML = `<span>${movie.title}</span><span class="year-tag">${movie.year}</span>`;
+      item.addEventListener('click', () => {
+        selectedMovie = movie;
+        input.value = movie.title;
+        dropdown.style.display = 'none';
+        btn.disabled = false;
+      });
+      dropdown.appendChild(item);
+    });
+    dropdown.style.display = 'block';
+  });
+
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && selectedMovie) submitGuess();
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.search-input-wrap')) {
+      dropdown.style.display = 'none';
+    }
+  });
+
+  btn.addEventListener('click', submitGuess);
+  btn.disabled = true;
+}
+
+function newGame() {
+  guessesUsed = 0;
+  selectedMovie = null;
+  gameOver = false;
+  targetMovie = MOVIES[Math.floor(Math.random() * MOVIES.length)];
+  document.getElementById('guessesContainer').innerHTML = '';
+  document.getElementById('hintContainer').innerHTML = '';
+  document.getElementById('overlay').classList.remove('show');
+  document.getElementById('searchInput').value = '';
+  document.getElementById('searchInput').disabled = false;
+  document.getElementById('guessBtn').disabled = true;
+  updateGuessesLeft();
+  renderEmptyRows(MAX_GUESSES);
+  updateStatsDisplay();
+}
+
+function init() {
+  buildFilmStrip();
+
+  // Set date
+  const now = new Date();
+  document.getElementById('dateDisplay').textContent = now.toLocaleDateString('en-US', { month:'long', day:'numeric', year:'numeric' });
+
+  // Pick today's movie
+  targetMovie = pickDailyMovie();
+
+  setupAutocomplete();
+  updateGuessesLeft();
+  renderEmptyRows(MAX_GUESSES);
+  updateStatsDisplay();
+}
+
+init();
+</script>
+</body>
+</html>
