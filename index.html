@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CINEMATLE</title>
+<title></title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400;1,700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -626,7 +626,7 @@ header {
   .director-wrap .avatar-circle { width: 46px; height: 46px; }
   .card-stats { grid-template-columns: repeat(3, 1fr); gap: 4px; padding: 8px; }
   .people-group { padding: 0 10px; }
-}
+
 @media (max-width: 500px) {
   header { grid-template-columns: 1fr; justify-items: center; gap: 8px; }
   .header-stats { display: none; }
@@ -654,6 +654,7 @@ header {
   <div class="header-actions">
     <button class="icon-btn" onclick="showHowToModal()" title="How to play">?</button>
     <button class="icon-btn" onclick="showCreateModal()" title="Create custom game" style="font-size:12px;">🎬+</button>
+    <button class="icon-btn" id="browseBtn" onclick="toggleBrowsePanel()" title="Browse movies" style="font-size:14px;">🗂</button>
     <button class="icon-btn" onclick="newGame()" title="New game">↺</button>
   </div>
 </header>
@@ -828,6 +829,168 @@ header {
     </div>
   </div>
 </div>
+<style>
+/* ── BROWSE PANEL ── */
+.browse-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(3px);
+  z-index: 300; opacity: 0; pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+.browse-overlay.show { opacity: 1; pointer-events: all; }
+
+.browse-panel {
+  position: fixed; top: 0; right: 0; bottom: 0;
+  width: 360px; max-width: 95vw;
+  background: var(--surface); border-left: 1px solid var(--border-hi);
+  z-index: 400; display: flex; flex-direction: column;
+  transform: translateX(100%); transition: transform 0.35s cubic-bezier(0.22,1,0.36,1);
+  box-shadow: -10px 0 50px rgba(0,0,0,0.5);
+}
+.browse-panel.open { transform: translateX(0); }
+
+.browse-header {
+  padding: 16px 18px 12px; border-bottom: 1px solid var(--border);
+  display: flex; flex-wrap: wrap; align-items: flex-start; gap: 4px;
+  position: relative; flex-shrink: 0;
+}
+.browse-title {
+  font-family: 'Playfair Display', serif; font-size: 20px;
+  font-weight: 900; color: var(--gold); width: 100%;
+  padding-right: 32px;
+}
+.browse-subtitle { font-size: 10px; color: var(--text-muted); letter-spacing: 0.06em; }
+.browse-close {
+  position: absolute; top: 14px; right: 14px;
+  background: var(--surface2); border: 1px solid var(--border);
+  color: var(--text-dim); width: 28px; height: 28px;
+  border-radius: 7px; cursor: pointer; font-size: 12px;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s;
+}
+.browse-close:hover { border-color: var(--red); color: #fc8181; }
+
+.browse-search-wrap {
+  padding: 12px 14px 8px; position: relative; flex-shrink: 0;
+}
+.browse-search-icon {
+  position: absolute; left: 26px; top: 50%; transform: translateY(-50%);
+  font-size: 14px; pointer-events: none; color: var(--text-muted);
+}
+.browse-search-input {
+  width: 100%; background: var(--surface2); border: 1px solid var(--border);
+  color: var(--text); padding: 10px 32px 10px 36px;
+  font-family: 'Inter', sans-serif; font-size: 13px;
+  border-radius: 9px; outline: none; transition: border-color 0.2s;
+}
+.browse-search-input:focus { border-color: var(--gold-dim); }
+.browse-search-input::placeholder { color: var(--text-muted); }
+.browse-clear-btn {
+  position: absolute; right: 24px; top: 50%; transform: translateY(-50%);
+  background: none; border: none; color: var(--text-muted); cursor: pointer;
+  font-size: 13px; padding: 4px; line-height: 1;
+}
+.browse-clear-btn:hover { color: var(--text); }
+
+.browse-tabs {
+  display: flex; gap: 0; padding: 0 14px 10px; flex-shrink: 0;
+  border-bottom: 1px solid var(--border);
+}
+.browse-tab {
+  flex: 1; padding: 7px 4px; font-size: 10px; letter-spacing: 0.07em;
+  text-transform: uppercase; background: var(--surface2);
+  border: 1px solid var(--border); color: var(--text-dim);
+  cursor: pointer; transition: all 0.15s; font-family: 'JetBrains Mono', monospace;
+}
+.browse-tab:first-child { border-radius: 7px 0 0 7px; }
+.browse-tab:last-child  { border-radius: 0 7px 7px 0; }
+.browse-tab + .browse-tab { border-left: none; }
+.browse-tab.active { background: var(--gold-dim); border-color: var(--gold-dim); color: var(--gold); }
+.browse-tab:hover:not(.active) { color: var(--text); border-color: var(--border-hi); }
+
+.browse-grid-wrap {
+  flex: 1; overflow-y: auto; padding: 12px 14px;
+  scroll-behavior: smooth;
+}
+.browse-grid-wrap::-webkit-scrollbar { width: 5px; }
+.browse-grid-wrap::-webkit-scrollbar-track { background: transparent; }
+.browse-grid-wrap::-webkit-scrollbar-thumb { background: var(--border-hi); border-radius: 3px; }
+
+.browse-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
+}
+
+.browse-card {
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  cursor: default; border-radius: 8px; padding: 6px;
+  transition: background 0.15s;
+}
+.browse-card:hover { background: var(--surface2); }
+.browse-poster {
+  width: 100%; aspect-ratio: 2/3; object-fit: cover;
+  border-radius: 6px; background: var(--surface3);
+  display: block;
+}
+.browse-poster-ph {
+  width: 100%; aspect-ratio: 2/3; background: var(--surface3);
+  border-radius: 6px; display: flex; align-items: center; justify-content: center;
+  font-size: 22px; color: var(--text-muted);
+}
+.browse-card-title {
+  font-size: 10px; color: var(--text-dim); text-align: center;
+  line-height: 1.3; width: 100%;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.browse-loading {
+  grid-column: 1/-1; display: flex; align-items: center; justify-content: center;
+  padding: 32px; color: var(--text-dim); font-size: 12px; gap: 8px;
+}
+.browse-empty {
+  grid-column: 1/-1; text-align: center; padding: 32px 10px;
+  color: var(--text-muted); font-size: 12px; line-height: 1.7;
+}
+
+.browse-load-more { text-align: center; padding: 12px 0 4px; }
+.browse-load-btn {
+  background: var(--surface2); border: 1px solid var(--border);
+  color: var(--text-dim); padding: 8px 22px; border-radius: 8px;
+  font-family: 'Inter', sans-serif; font-size: 11px; cursor: pointer;
+  letter-spacing: 0.06em; transition: all 0.15s;
+}
+.browse-load-btn:hover { border-color: var(--gold-dim); color: var(--gold); }
+.browse-load-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+</style>
+
+<!-- Browse Side Panel -->
+<div class="browse-overlay" id="browseOverlay" onclick="toggleBrowsePanel()"></div>
+<div class="browse-panel" id="browsePanel">
+  <div class="browse-header">
+    <div class="browse-title">🎬 Movie Browser</div>
+    <div class="browse-subtitle">Reference only — title &amp; poster</div>
+    <button class="browse-close" onclick="toggleBrowsePanel()">✕</button>
+  </div>
+  <div class="browse-search-wrap">
+    <span class="browse-search-icon">🔍</span>
+    <input type="text" class="browse-search-input" id="browseSearchInput" placeholder="Search by title…" autocomplete="off">
+    <button class="browse-clear-btn" id="browseClearBtn" onclick="clearBrowseSearch()" style="display:none">✕</button>
+  </div>
+  <div class="browse-tabs">
+    <button class="browse-tab active" data-tab="popular" onclick="switchBrowseTab(this,'popular')">Popular</button>
+    <button class="browse-tab" data-tab="classics" onclick="switchBrowseTab(this,'classics')">Classics</button>
+    <button class="browse-tab" data-tab="acclaimed" onclick="switchBrowseTab(this,'acclaimed')">Acclaimed</button>
+    <button class="browse-tab" data-tab="indie" onclick="switchBrowseTab(this,'indie')">Indie</button>
+    <button class="browse-tab" data-tab="2000s-10s" onclick="switchBrowseTab(this,'2000s-10s')">2000s - 2010s</button>
+  </div>
+  <div class="browse-grid-wrap" id="browseGridWrap">
+    <div class="browse-grid" id="browseGrid"></div>
+    <div class="browse-load-more" id="browseLoadMore" style="display:none">
+      <button class="browse-load-btn" id="browseLoadBtn" onclick="loadMoreBrowse()">Load More</button>
+    </div>
+  </div>
+</div>
+
 
 <script>
 // ─── CONFIG ───────────────────────────────────────────────────────────────────
@@ -862,27 +1025,73 @@ async function tmdb(path, params = {}) {
 
 async function buildMoviePool() {
   if (moviePool.length > 0) return;
-  const pages = [1,2,3,4,5];
-  const base  = { include_adult:false, include_video:false, language:'en-US',
-                   'vote_count.gte':500, 'vote_average.gte':7.2,
-                   'release_date.lte':'2025-12-31', sort_by:'vote_average.desc' };
-  const fetches = pages.map(p => tmdb('/discover/movie', {...base, page:p}).catch(()=>null));
-  const results = await Promise.all(fetches);
   const seen = new Set();
-  results.forEach(r => {
-    if (!r?.results) return;
-    r.results.forEach(m => {
+
+  function addMovies(results, list) {
+    (results || []).forEach(m => {
       if (!seen.has(m.id) && m.poster_path && m.release_date) {
-        seen.add(m.id); moviePool.push(m);
+        seen.add(m.id); list.push(m);
       }
     });
-  });
-  try {
-    const pop = await tmdb('/discover/movie', {...base,'vote_average.gte':7.0,'vote_count.gte':2000,sort_by:'popularity.desc',page:2});
-    if (pop?.results) pop.results.forEach(m => {
-      if (!seen.has(m.id) && m.poster_path && m.release_date) { seen.add(m.id); moviePool.push(m); }
-    });
-  } catch(e) {}
+  }
+
+  // ── BUCKET 1: US English films 1960+ (primary pool ~80%) ──
+  const usBase = {
+    include_adult: false, include_video: false,
+    language: 'en-US', with_original_language: 'en',
+    'vote_count.gte': 500, 'vote_average.gte': 7.0,
+    'release_date.gte': '1960-01-01', 'release_date.lte': '2025-12-31',
+    sort_by: 'vote_average.desc'
+  };
+  const usFetches = [1,2,3,4,5,6].map(p => tmdb('/discover/movie', {...usBase, page:p}).catch(()=>null));
+  const usResults = await Promise.all(usFetches);
+  const usPool = [];
+  usResults.forEach(r => addMovies(r?.results, usPool));
+
+  // Also grab popular English-language films
+  const usPop = await tmdb('/discover/movie', {
+    ...usBase, 'vote_average.gte': 6.8, 'vote_count.gte': 2000,
+    sort_by: 'popularity.desc', page: 1
+  }).catch(() => null);
+  addMovies(usPop?.results, usPool);
+  const usPop2 = await tmdb('/discover/movie', {
+    ...usBase, 'vote_average.gte': 6.8, 'vote_count.gte': 2000,
+    sort_by: 'popularity.desc', page: 2
+  }).catch(() => null);
+  addMovies(usPop2?.results, usPool);
+
+  // ── BUCKET 2: Classic English-language films pre-1960 (occasional ~5%) ──
+  const classicBase = {
+    include_adult: false, include_video: false,
+    language: 'en-US', with_original_language: 'en',
+    'vote_count.gte': 1000, 'vote_average.gte': 7.5,
+    'release_date.lte': '1959-12-31',
+    sort_by: 'vote_average.desc'
+  };
+  const classicResults = await tmdb('/discover/movie', {...classicBase, page:1}).catch(()=>null);
+  const classicPool = [];
+  addMovies(classicResults?.results?.slice(0, 15), classicPool); // keep only top classics
+
+  // ── BUCKET 3: International films — very popular/acclaimed only (~15%) ──
+  const intlBase = {
+    include_adult: false, include_video: false,
+    language: 'en-US',
+    'vote_count.gte': 3000, 'vote_average.gte': 7.8,
+    'release_date.gte': '1960-01-01', 'release_date.lte': '2025-12-31',
+    sort_by: 'vote_average.desc',
+    without_original_language: 'en'
+  };
+  const intlFetches = [1,2].map(p => tmdb('/discover/movie', {...intlBase, page:p}).catch(()=>null));
+  const intlResults = await Promise.all(intlFetches);
+  const intlPool = [];
+  intlResults.forEach(r => addMovies(r?.results, intlPool));
+
+  // Blend: ~80% US, ~5% classic, ~15% international (capped)
+  const intlCap   = Math.floor(usPool.length * 0.18);
+  const classicCap = Math.floor(usPool.length * 0.06);
+  moviePool.push(...usPool);
+  moviePool.push(...intlPool.slice(0, intlCap));
+  moviePool.push(...classicPool.slice(0, classicCap));
 }
 
 function pickDailyMovie() {
@@ -1565,6 +1774,159 @@ async function startCustomGame(data) {
     showError('Could not fully load the custom movie. Some comparisons may be limited.');
   }
 }
+
+// ─── BROWSE PANEL ─────────────────────────────────────────────────────────────
+let browsePanelOpen = false;
+let browseCurrentTab = 'popular';
+let browseCurrentPage = 1;
+let browseSearchTimer = null;
+let browseSearchMode = false;
+let browseSearchPage = 1;
+let browseSearchQuery = '';
+let browseHasMore = true;
+
+const BROWSE_TAB_CONFIG = {
+  popular:  { vote_count_gte: 750,  vote_avg_gte: 7.0,  sort: 'popularity.desc',    label: 'Popular' },
+  classics: { vote_count_gte: 1000, vote_avg_gte: 7.0,  sort: 'vote_average.desc',  label: 'Classics', date_lte: '1985-12-31' },
+  acclaimed:{ vote_count_gte: 2000, vote_avg_gte: 8.2,  sort: 'vote_average.desc',  label: 'Acclaimed' },
+  indie:    { vote_count_gte: 500,  vote_avg_gte: 7.0,  sort: 'vote_average.desc',  label: 'Indie', budget_lte: 5000000 },
+  '2000s-10s': { vote_count_gte: 500,  vote_avg_gte: 7.0,  sort: 'vote_average.desc',  label: '2000s-10s', date_gte: '2000-01-01', date_lte: '2019-12-31' },
+};
+
+function toggleBrowsePanel() {
+  browsePanelOpen = !browsePanelOpen;
+  document.getElementById('browsePanel').classList.toggle('open', browsePanelOpen);
+  document.getElementById('browseOverlay').classList.toggle('show', browsePanelOpen);
+  document.getElementById('browseBtn').style.color = browsePanelOpen ? 'var(--gold)' : '';
+  document.getElementById('browseBtn').style.borderColor = browsePanelOpen ? 'var(--gold-dim)' : '';
+  if (browsePanelOpen && document.getElementById('browseGrid').children.length === 0) {
+    loadBrowseTab('popular', 1);
+  }
+  // wire up search
+  if (browsePanelOpen) {
+    const inp = document.getElementById('browseSearchInput');
+    inp.oninput = () => {
+      const q = inp.value.trim();
+      document.getElementById('browseClearBtn').style.display = q ? 'block' : 'none';
+      clearTimeout(browseSearchTimer);
+      if (!q) { browseSearchMode = false; loadBrowseTab(browseCurrentTab, 1, true); return; }
+      browseSearchMode = true;
+      browseSearchQuery = q;
+      browseSearchPage = 1;
+      browseSearchTimer = setTimeout(() => runBrowseSearch(q, 1, false), 320);
+    };
+  }
+}
+
+async function runBrowseSearch(q, page, append) {
+  if (!append) {
+    document.getElementById('browseGrid').innerHTML = '<div class="browse-loading"><span class="spinner"></span>Searching…</div>';
+    document.getElementById('browseLoadMore').style.display = 'none';
+  }
+  try {
+    const data = await tmdb('/search/movie', { query: q, include_adult: false, language: 'en-US', page });
+    const results = (data.results || []).filter(m => m.poster_path);
+    if (!append) document.getElementById('browseGrid').innerHTML = '';
+    if (!results.length && !append) {
+      document.getElementById('browseGrid').innerHTML = '<div class="browse-empty">No results found.<br><span style="font-size:10px;opacity:.6">Try a different title.</span></div>';
+      return;
+    }
+    results.forEach(m => document.getElementById('browseGrid').appendChild(makeBrowseCard(m)));
+    browseHasMore = page < (data.total_pages || 1) && results.length > 0;
+    document.getElementById('browseLoadMore').style.display = browseHasMore ? 'block' : 'none';
+    if (browseHasMore) {
+      document.getElementById('browseLoadBtn').disabled = false;
+      document.getElementById('browseLoadBtn').textContent = 'Load More';
+    }
+    browseSearchPage = page;
+  } catch(e) {
+    if (!append) document.getElementById('browseGrid').innerHTML = '<div class="browse-empty">Search failed. Try again.</div>';
+  }
+}
+
+async function loadBrowseTab(tab, page, reset) {
+  const grid = document.getElementById('browseGrid');
+  if (reset || page === 1) {
+    grid.innerHTML = '<div class="browse-loading"><span class="spinner"></span>Loading…</div>';
+    document.getElementById('browseLoadMore').style.display = 'none';
+    browseCurrentPage = 1;
+    browseHasMore = true;
+  }
+  const cfg = BROWSE_TAB_CONFIG[tab];
+  const params = {
+    include_adult: false, include_video: false, language: 'en-US',
+    'vote_count.gte': cfg.vote_count_gte,
+    'vote_average.gte': cfg.vote_avg_gte,
+    sort_by: cfg.sort, page,
+  };
+  if (cfg.date_lte) params['release_date.lte'] = cfg.date_lte;
+  try {
+    const data = await tmdb('/discover/movie', params);
+    const results = (data.results || []).filter(m => m.poster_path);
+    if (page === 1) grid.innerHTML = '';
+    results.forEach(m => grid.appendChild(makeBrowseCard(m)));
+    browseHasMore = page < Math.min(data.total_pages || 1, 20);
+    document.getElementById('browseLoadMore').style.display = browseHasMore ? 'block' : 'none';
+    if (browseHasMore) {
+      document.getElementById('browseLoadBtn').disabled = false;
+      document.getElementById('browseLoadBtn').textContent = 'Load More';
+    }
+    browseCurrentPage = page;
+  } catch(e) {
+    if (page === 1) grid.innerHTML = '<div class="browse-empty">Could not load movies. Check connection.</div>';
+  }
+}
+
+function makeBrowseCard(movie) {
+  const card = document.createElement('div');
+  card.className = 'browse-card';
+  if (movie.poster_path) {
+    const img = document.createElement('img');
+    img.className = 'browse-poster';
+    img.src = IMG + 'w185' + movie.poster_path;
+    img.alt = movie.title;
+    img.loading = 'lazy';
+    card.appendChild(img);
+  } else {
+    const ph = document.createElement('div');
+    ph.className = 'browse-poster-ph';
+    ph.textContent = '🎬';
+    card.appendChild(ph);
+  }
+  const title = document.createElement('div');
+  title.className = 'browse-card-title';
+  title.textContent = movie.title;
+  card.appendChild(title);
+  return card;
+}
+
+function switchBrowseTab(btn, tab) {
+  document.querySelectorAll('.browse-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  browseCurrentTab = tab;
+  browseSearchMode = false;
+  document.getElementById('browseSearchInput').value = '';
+  document.getElementById('browseClearBtn').style.display = 'none';
+  loadBrowseTab(tab, 1, true);
+}
+
+function clearBrowseSearch() {
+  document.getElementById('browseSearchInput').value = '';
+  document.getElementById('browseClearBtn').style.display = 'none';
+  browseSearchMode = false;
+  loadBrowseTab(browseCurrentTab, 1, true);
+}
+
+function loadMoreBrowse() {
+  document.getElementById('browseLoadBtn').disabled = true;
+  document.getElementById('browseLoadBtn').textContent = 'Loading…';
+  if (browseSearchMode) {
+    runBrowseSearch(browseSearchQuery, browseSearchPage + 1, true);
+  } else {
+    loadBrowseTab(browseCurrentTab, browseCurrentPage + 1, false);
+  }
+}
+
 
 // ─── INIT ─────────────────────────────────────────────────────────────────────
 buildFilmStrip();
