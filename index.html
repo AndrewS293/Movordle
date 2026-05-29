@@ -1866,6 +1866,7 @@ async function loadBrowseTab(tab, page, reset) {
   params.page = Math.floor(Math.random() * 15) + 1; // random page 1–15
 } else {
   params.sort_by = cfg.sort;
+  params.page = page;
 }
   try {
     console.log('BROWSE PARAMS:', JSON.stringify(params));
@@ -1879,6 +1880,7 @@ async function loadBrowseTab(tab, page, reset) {
         if (cfg.date_lte && yr > parseInt(cfg.date_lte.slice(0,4))) return false;
         return true;
       });
+    results.sort(() => Math.random() - 0.5);
     if (page === 1) grid.innerHTML = '';
     results.forEach(m => grid.appendChild(makeBrowseCard(m)));
     browseHasMore = page < Math.min(data.total_pages || 1, 20);
