@@ -980,7 +980,6 @@ header {
     <button class="browse-tab active" data-tab="popular" onclick="switchBrowseTab(this,'popular')">Popular</button>
     <button class="browse-tab" data-tab="classics" onclick="switchBrowseTab(this,'classics')">Classics</button>
     <button class="browse-tab" data-tab="acclaimed" onclick="switchBrowseTab(this,'acclaimed')">Acclaimed</button>
-    <button class="browse-tab" data-tab="indie" onclick="switchBrowseTab(this,'indie')">Indie</button>
     <button class="browse-tab" data-tab="2000s-10s" onclick="switchBrowseTab(this,'2000s-10s')">2000s - 2010s</button>
     <button class="browse-tab" data-tab="random" onclick="switchBrowseTab(this,'random')">Random</button>
   </div>
@@ -1790,7 +1789,6 @@ const BROWSE_TAB_CONFIG = {
   popular:  { vote_count_gte: 750,  vote_avg_gte: 7.0,  sort: 'popularity.desc',    label: 'Popular' },
   classics: { vote_count_gte: 1000, vote_avg_gte: 7.0,  sort: 'vote_average.desc',  label: 'Classics', date_lte: '1985-12-31' },
   acclaimed:{ vote_count_gte: 2000, vote_avg_gte: 8.2,  sort: 'vote_average.desc',  label: 'Acclaimed' },
-  indie:    { vote_count_gte: 500,  vote_avg_gte: 7.0,  sort: 'vote_average.desc',  label: 'Indie', },
   '2000s-10s': { vote_count_gte: 1000,  vote_avg_gte: 6.0,  sort: 'vote_average.desc',  label: '2000s-10s', date_gte: '2000-01-01', date_lte: '2019-12-31' },
   random:   { vote_count_gte: 300,  vote_avg_gte: 6.5,  sort: 'random', label: 'Random' },
 };
