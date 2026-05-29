@@ -7,29 +7,30 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400;1,700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg:           #0b0c0f;
-  --surface:      #13141a;
-  --surface2:     #1a1c25;
-  --surface3:     #222530;
-  --border:       #2a2d3a;
-  --border-hi:    #3e4256;
-  --gold:         #d4a853;
-  --gold2:        #f0c878;
-  --gold-dim:     #5a4420;
-  --gold-glow:    rgba(212,168,83,0.15);
-  --green:        #0d2b1e;
-  --green-hi:     #22c55e;
-  --green-text:   #86efac;
-  --yellow:       #2b2006;
-  --yellow-hi:    #f59e0b;
-  --yellow-text:  #fde68a;
-  --wrong:        #0e0f14;
-  --wrong-text:   #3a3d52;
-  --text:         #e4e0f4;
-  --text-dim:     #7b7fa0;
-  --text-muted:   #3e4158;
-  --red:          #c0392b;
-  --red-dim:      #3a1010;
+  --bg:          #0d1117;
+  --surface:     #161b27;
+  --surface2:    #1c2333;
+  --surface3:    #242d3f;
+  --border:      #2d3748;
+  --border-hi:   #4a5568;
+  --gold:        #f0b429;
+  --gold2:       #ffd166;
+  --gold-dim:    #7a5c10;
+  --gold-glow:   rgba(240,180,41,0.18);
+  --green:       #1a7a4a;
+  --green-hi:    #48bb78;
+  --green-text:  #f0fff4;
+  --yellow:      #8a6000;
+  --yellow-hi:   #ed8936;
+  --yellow-text: #fffaf0;
+  --wrong-bg:    #1a2035;
+  --wrong-text:  #a0aec0;
+  --text:        #e2e8f0;
+  --text-dim:    #718096;
+  --text-muted:  #4a5568;
+  --red:         #e53e3e;
+  --red-dim:     #2d1111;
+  --radius:      12px;
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -41,27 +42,18 @@ body {
   font-family: 'Inter', sans-serif;
   min-height: 100vh;
   overflow-x: hidden;
-  background-image:
-    radial-gradient(ellipse 60% 40% at 50% 0%, rgba(212,168,83,0.05) 0%, transparent 60%);
 }
 
 /* ── FILM STRIP ── */
 .filmstrip {
-  height: 28px;
-  background: #05050a;
+  height: 26px; background: #05070d;
   border-bottom: 1px solid #000;
-  display: flex;
-  align-items: center;
-  overflow: hidden;
-  gap: 0;
+  display: flex; align-items: center; overflow: hidden;
 }
 .filmstrip-hole {
-  width: 16px; height: 11px;
-  border-radius: 3px;
-  background: #1a1a2a;
-  border: 1px solid #000;
-  margin: 0 8px;
-  flex-shrink: 0;
+  width: 15px; height: 10px; border-radius: 3px;
+  background: #1a1f2e; border: 1px solid #000;
+  margin: 0 7px; flex-shrink: 0;
 }
 
 /* ── HEADER ── */
@@ -69,258 +61,194 @@ header {
   display: grid;
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  padding: 20px 28px 16px;
+  padding: 18px 28px 14px;
   border-bottom: 1px solid var(--border);
-  gap: 16px;
 }
 .logo-block { text-align: center; }
 .logo {
   font-family: 'Playfair Display', serif;
   font-weight: 900;
-  font-size: clamp(38px, 7vw, 72px);
+  font-size: clamp(36px, 6vw, 66px);
   color: var(--gold);
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   line-height: 1;
-  text-shadow: 0 0 60px rgba(212,168,83,0.3);
+  text-shadow: 0 0 40px rgba(240,180,41,0.25);
 }
 .logo-sub {
-  font-family: 'Inter', sans-serif;
-  font-size: 10px;
-  letter-spacing: 0.35em;
-  color: var(--text-dim);
-  text-transform: uppercase;
-  margin-top: 5px;
+  font-size: 10px; letter-spacing: 0.3em;
+  color: var(--text-dim); text-transform: uppercase; margin-top: 4px;
 }
-.header-stats {
-  display: flex;
-  gap: 20px;
-  justify-content: flex-start;
-}
+.header-stats { display: flex; gap: 24px; }
 .stat-pill { text-align: center; }
 .stat-num {
   font-family: 'Playfair Display', serif;
-  font-weight: 700;
-  font-size: 22px;
-  color: var(--gold);
-  line-height: 1;
+  font-weight: 700; font-size: 22px; color: var(--gold); line-height: 1;
 }
 .stat-lbl {
-  font-size: 8px;
-  letter-spacing: 0.2em;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  margin-top: 2px;
+  font-size: 8px; letter-spacing: 0.2em;
+  color: var(--text-muted); text-transform: uppercase; margin-top: 2px;
 }
-.header-actions {
-  display: flex;
-  gap: 8px;
-  justify-content: flex-end;
-}
+.header-actions { display: flex; gap: 8px; justify-content: flex-end; }
 .icon-btn {
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  color: var(--text-dim);
-  width: 34px; height: 34px;
-  cursor: pointer;
-  font-size: 15px;
+  background: var(--surface2); border: 1px solid var(--border);
+  color: var(--text-dim); width: 34px; height: 34px;
+  cursor: pointer; font-size: 15px;
   display: flex; align-items: center; justify-content: center;
-  transition: all 0.2s;
-  border-radius: 6px;
+  transition: all 0.2s; border-radius: 8px;
 }
-.icon-btn:hover { border-color: var(--gold-dim); color: var(--gold); background: var(--surface3); }
+.icon-btn:hover { border-color: var(--gold-dim); color: var(--gold); }
+
+/* ── TOP BAR (hint + guess counter + give up) ── */
+.top-bar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 20px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+.hint-counter-btn {
+  background: var(--surface2); border: 1px solid var(--border);
+  color: var(--text-dim); font-family: 'Inter', sans-serif;
+  font-size: 11px; letter-spacing: 0.06em;
+  padding: 7px 14px; border-radius: 8px; cursor: default;
+  display: flex; align-items: center; gap: 7px;
+}
+.hint-counter-btn .lock-icon { font-size: 12px; }
+.guess-counter {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px; font-weight: 700;
+  color: var(--text);
+  letter-spacing: 0.04em;
+}
+.guess-counter span { color: var(--gold); }
+.giveup-btn {
+  background: transparent; color: var(--text-dim);
+  border: 1px solid var(--border);
+  padding: 7px 14px; font-family: 'Inter', sans-serif;
+  font-size: 11px; letter-spacing: 0.06em;
+  cursor: pointer; transition: all 0.15s; border-radius: 8px;
+  display: flex; align-items: center; gap: 7px;
+  white-space: nowrap;
+}
+.giveup-btn:hover:not(:disabled) { border-color: var(--red); color: #fc8181; }
+.giveup-btn:disabled { opacity: 0.3; cursor: not-allowed; }
 
 /* ── LEGEND ── */
 .legend {
-  background: var(--surface);
-  border-bottom: 1px solid var(--border);
-  padding: 7px 20px;
-  display: flex;
-  justify-content: center;
-  gap: 18px;
-  flex-wrap: wrap;
+  background: var(--surface); border-bottom: 1px solid var(--border);
+  padding: 6px 20px;
+  display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;
 }
 .legend-item {
   display: flex; align-items: center; gap: 7px;
-  font-size: 10px; color: var(--text-dim);
-  letter-spacing: 0.04em;
-  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; color: var(--text-dim); letter-spacing: 0.04em;
 }
 .legend-dot {
-  width: 10px; height: 10px;
-  border-radius: 3px; border: 1px solid transparent;
+  width: 10px; height: 10px; border-radius: 3px; border: 1px solid transparent;
 }
 .legend-dot.c { background: var(--green); border-color: var(--green-hi); }
 .legend-dot.y { background: var(--yellow); border-color: var(--yellow-hi); }
-.legend-dot.w { background: var(--wrong); border-color: var(--border); }
+.legend-dot.w { background: var(--wrong-bg); border-color: var(--border); }
 
 /* ── MAIN ── */
-.main { max-width: 1160px; margin: 0 auto; padding: 20px 14px 48px; }
+.main { max-width: 900px; margin: 0 auto; padding: 20px 16px 48px; }
 
 /* ── ERROR ── */
 .error-msg {
-  background: rgba(192,57,43,0.1);
-  border: 1px solid rgba(192,57,43,0.35);
-  border-radius: 6px;
-  padding: 10px 14px;
-  font-size: 12px; color: #f08070;
-  margin-bottom: 14px; display: none;
+  background: rgba(229,62,62,0.1); border: 1px solid rgba(229,62,62,0.35);
+  border-radius: 8px; padding: 10px 14px;
+  font-size: 12px; color: #fc8181; margin-bottom: 14px; display: none;
 }
 .error-msg.show { display: block; }
 
 /* ── HINT BOX ── */
 .hint-box {
-  background: linear-gradient(135deg, var(--surface), var(--surface2));
+  background: var(--surface2);
   border: 1px solid var(--gold-dim);
-  border-radius: 8px;
-  padding: 14px 16px;
-  margin-bottom: 12px;
-  animation: fadeUp 0.5s ease;
+  border-radius: 10px; padding: 14px 16px;
+  margin-bottom: 12px; animation: fadeUp 0.5s ease;
 }
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(8px); }
   to   { opacity: 1; transform: translateY(0); }
 }
-.hint-header {
-  display: flex; align-items: center; gap: 8px;
-  margin-bottom: 10px;
-}
+.hint-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
 .hint-badge {
-  font-family: 'JetBrains Mono', monospace;
   font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase;
   background: var(--gold-dim); color: var(--gold);
-  padding: 3px 8px; border-radius: 4px;
+  padding: 3px 8px; border-radius: 4px; font-family: 'JetBrains Mono', monospace;
 }
-.hint-title {
-  font-size: 11px; color: var(--text-dim);
-  letter-spacing: 0.06em;
-}
-.hint-choices {
-  display: flex; gap: 8px; flex-wrap: wrap;
-}
+.hint-title { font-size: 11px; color: var(--text-dim); letter-spacing: 0.06em; }
+.hint-choices { display: flex; gap: 8px; flex-wrap: wrap; }
 .hint-choice-btn {
-  background: var(--surface3);
-  border: 1px solid var(--border-hi);
-  color: var(--text);
-  padding: 8px 14px;
-  font-family: 'Inter', sans-serif;
-  font-size: 11px; letter-spacing: 0.05em;
-  cursor: pointer; border-radius: 6px;
-  transition: all 0.2s;
+  background: var(--surface3); border: 1px solid var(--border-hi);
+  color: var(--text); padding: 8px 14px;
+  font-family: 'Inter', sans-serif; font-size: 11px; letter-spacing: 0.05em;
+  cursor: pointer; border-radius: 8px; transition: all 0.2s;
   display: flex; align-items: center; gap: 6px;
 }
-.hint-choice-btn:hover { border-color: var(--gold-dim); background: var(--surface2); color: var(--gold); }
+.hint-choice-btn:hover { border-color: var(--gold-dim); color: var(--gold); }
 .hint-choice-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 .hint-revealed {
-  font-size: 12px; color: var(--text);
-  line-height: 1.6;
-  padding: 10px 12px;
-  background: var(--wrong);
-  border: 1px solid var(--border-hi);
-  border-radius: 6px;
-  margin-top: 4px;
+  font-size: 12px; color: var(--text); line-height: 1.6;
+  padding: 10px 12px; background: var(--surface);
+  border: 1px solid var(--border-hi); border-radius: 8px; margin-top: 4px;
 }
 .hint-revealed strong { color: var(--gold); }
 
 /* ── SEARCH ── */
-.search-section { margin-bottom: 18px; }
-.search-row {
-  display: flex; gap: 8px; align-items: stretch;
-  position: relative;
-}
+.search-section { margin-bottom: 16px; }
+.search-row { display: flex; gap: 8px; align-items: stretch; position: relative; }
 .search-wrap { flex: 1; position: relative; }
 .search-icon {
-  position: absolute; left: 13px; top: 50%;
+  position: absolute; left: 14px; top: 50%;
   transform: translateY(-50%);
-  color: var(--text-muted); font-size: 15px;
-  pointer-events: none;
+  color: var(--text-muted); font-size: 16px; pointer-events: none;
 }
 .search-input {
-  width: 100%;
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  color: var(--text);
-  padding: 14px 14px 14px 40px;
-  font-family: 'Inter', sans-serif; font-size: 14px;
-  outline: none;
-  transition: border-color 0.2s, box-shadow 0.2s;
-  border-radius: 6px;
+  width: 100%; background: var(--surface2);
+  border: 1px solid var(--border); color: var(--text);
+  padding: 15px 15px 15px 44px;
+  font-family: 'Inter', sans-serif; font-size: 15px;
+  outline: none; transition: border-color 0.2s, box-shadow 0.2s;
+  border-radius: 10px;
 }
-.search-input:focus {
-  border-color: var(--gold-dim);
-  box-shadow: 0 0 0 2px var(--gold-glow);
-}
+.search-input:focus { border-color: var(--gold-dim); box-shadow: 0 0 0 3px var(--gold-glow); }
 .search-input::placeholder { color: var(--text-muted); }
 .search-input:disabled { opacity: 0.4; cursor: not-allowed; }
 
 .guess-btn {
-  background: var(--gold);
-  color: #0a0b0e;
-  border: none;
-  padding: 0 26px;
-  font-family: 'Playfair Display', serif;
-  font-weight: 700;
-  font-size: 15px;
-  letter-spacing: 0.1em;
-  cursor: pointer;
-  transition: all 0.15s;
-  border-radius: 6px;
-  white-space: nowrap;
-  min-height: 50px;
-  min-width: 100px;
+  background: var(--gold); color: #0a0b0e;
+  border: none; padding: 0 28px;
+  font-family: 'Inter', sans-serif; font-weight: 600;
+  font-size: 15px; letter-spacing: 0.04em;
+  cursor: pointer; transition: all 0.15s;
+  border-radius: 10px; white-space: nowrap; min-height: 52px;
 }
 .guess-btn:hover:not(:disabled) {
-  background: var(--gold2);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 20px rgba(212,168,83,0.35);
+  background: var(--gold2); transform: translateY(-1px);
+  box-shadow: 0 4px 20px rgba(240,180,41,0.4);
 }
 .guess-btn:disabled { background: var(--surface3); color: var(--text-muted); cursor: not-allowed; }
 
-.giveup-btn {
-  background: transparent;
-  color: var(--text-dim);
-  border: 1px solid var(--border);
-  padding: 0 18px;
-  font-family: 'Inter', sans-serif;
-  font-size: 12px;
-  letter-spacing: 0.06em;
-  cursor: pointer;
-  transition: all 0.15s;
-  border-radius: 6px;
-  min-height: 50px;
-  white-space: nowrap;
-}
-.giveup-btn:hover:not(:disabled) { border-color: var(--red); color: #f08070; }
-.giveup-btn:disabled { opacity: 0.3; cursor: not-allowed; }
-
 /* ── AUTOCOMPLETE ── */
 .autocomplete-drop {
-  position: absolute;
-  top: calc(100% + 4px); left: 0; right: 0;
-  background: var(--surface2);
-  border: 1px solid var(--border-hi);
-  border-radius: 6px;
-  z-index: 200;
+  position: absolute; top: calc(100% + 5px); left: 0; right: 0;
+  background: var(--surface2); border: 1px solid var(--border-hi);
+  border-radius: 10px; z-index: 200;
   max-height: 280px; overflow-y: auto;
-  box-shadow: 0 8px 40px rgba(0,0,0,0.55);
-  display: none;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.6); display: none;
 }
 .autocomplete-drop.open { display: block; }
 .ac-item {
-  display: flex; align-items: center; gap: 11px;
-  padding: 9px 13px; cursor: pointer;
-  transition: background 0.1s;
-  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 14px; cursor: pointer;
+  transition: background 0.1s; border-bottom: 1px solid var(--border);
 }
 .ac-item:last-child { border-bottom: none; }
 .ac-item:hover { background: var(--surface3); }
-.ac-thumb {
-  width: 28px; height: 40px;
-  object-fit: cover; border-radius: 3px;
-  background: var(--surface3); flex-shrink: 0;
-}
+.ac-thumb { width: 30px; height: 44px; object-fit: cover; border-radius: 4px; flex-shrink: 0; }
 .ac-thumb-ph {
-  width: 28px; height: 40px;
-  background: var(--surface3); border-radius: 3px;
+  width: 30px; height: 44px; background: var(--surface3); border-radius: 4px;
   display: flex; align-items: center; justify-content: center;
   font-size: 14px; flex-shrink: 0; color: var(--text-muted);
 }
@@ -329,280 +257,263 @@ header {
 .ac-meta { font-size: 10px; color: var(--text-dim); margin-top: 2px; font-family: 'JetBrains Mono', monospace; }
 .ac-loading { padding: 14px; text-align: center; font-size: 11px; color: var(--text-dim); }
 
-/* ── PIPS ── */
-.guesses-bar {
-  display: flex; align-items: center; justify-content: space-between;
-  margin-bottom: 14px; padding: 0 2px;
-}
-.pips { display: flex; gap: 4px; }
-.pip {
-  width: 20px; height: 5px; border-radius: 3px;
-  background: var(--surface3); transition: background 0.3s;
-}
-.pip.used { background: var(--gold-dim); }
-.pip.danger { background: var(--red); }
-.guesses-text { font-size: 11px; color: var(--text-dim); font-family: 'JetBrains Mono', monospace; }
-.guesses-text span { color: var(--gold); font-weight: 500; }
-
-/* ── COLUMN HEADERS ── */
-.col-header-row {
-  display: grid;
-  grid-template-columns: 84px repeat(9, 1fr);
-  gap: 4px;
-  margin-bottom: 5px;
-  padding: 0 2px;
-}
-.col-h {
-  text-align: center;
-  font-size: 8px; letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--text-muted);
-  font-family: 'JetBrains Mono', monospace;
-  padding: 3px 2px;
-}
-.col-h:first-child { text-align: left; }
-
-/* ── GUESS ROWS ── */
-.guess-rows { display: flex; flex-direction: column; gap: 4px; }
-
-.guess-row {
-  display: grid;
-  grid-template-columns: 84px repeat(9, 1fr);
-  gap: 4px;
-  animation: rowIn 0.45s cubic-bezier(0.22, 1, 0.36, 1);
-}
-@keyframes rowIn {
-  from { opacity: 0; transform: translateY(-10px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-/* Poster */
-.poster-cell {
-  position: relative; border-radius: 5px; overflow: hidden;
-  background: var(--surface2); border: 1px solid var(--border);
-  aspect-ratio: 2/3; min-height: 120px;
-}
-.poster-img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.poster-fb {
-  width: 100%; height: 100%;
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  gap: 5px; color: var(--text-muted); font-size: 22px;
-}
-.poster-fb small { font-size: 7px; text-align: center; padding: 0 4px; color: var(--text-muted); }
-.poster-overlay {
-  position: absolute; bottom: 0; left: 0; right: 0;
-  background: linear-gradient(transparent, rgba(0,0,0,0.88));
-  padding: 18px 5px 5px;
-  font-size: 8px; font-weight: 600;
-  color: rgba(255,255,255,0.9); text-align: center;
-  line-height: 1.25; letter-spacing: 0.02em;
-}
-
-/* Cells */
-.data-col { display: flex; flex-direction: column; gap: 4px; }
-.cell {
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  border-radius: 5px;
-  padding: 6px 5px;
-  text-align: center;
-  font-size: 10px;
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  position: relative; overflow: hidden;
-  min-height: 38px;
-  transition: background 0.4s ease, border-color 0.4s ease;
-  animation: cellFlip 0.55s ease both;
-}
-@keyframes cellFlip {
-  0%   { transform: scaleY(1); }
-  40%  { transform: scaleY(0); opacity: 0.3; }
-  100% { transform: scaleY(1); }
-}
-.cell.correct { background: var(--green); border-color: var(--green-hi); color: var(--green-text); }
-.cell.close   { background: var(--yellow); border-color: var(--yellow-hi); color: var(--yellow-text); }
-.cell.wrong   { background: var(--wrong); border-color: var(--border); color: var(--wrong-text); }
-
-.cell-lbl {
-  font-size: 7px; letter-spacing: 0.15em;
-  text-transform: uppercase; opacity: 0.55;
-  font-family: 'JetBrains Mono', monospace;
-  margin-bottom: 2px;
-}
-.cell-val { font-size: 11px; font-weight: 500; line-height: 1.3; }
-.cell-val.sm { font-size: 9px; }
-.cell-arrow {
-  font-size: 11px; margin-top: 1px; opacity: 0.85;
-  line-height: 1;
-}
-
-/* Genre / cast tags */
-.tag-wrap { display: flex; flex-wrap: wrap; gap: 2px; justify-content: center; }
-.tag {
-  font-size: 7px; padding: 1px 4px; border-radius: 3px;
-  background: rgba(255,255,255,0.05);
-  letter-spacing: 0.04em; line-height: 1.4;
-}
-.tag.match { background: rgba(34,197,94,0.15); color: var(--green-hi); }
-
-.cast-list { display: flex; flex-direction: column; gap: 2px; width: 100%; }
-.cast-name {
-  font-size: 8px; text-align: center; line-height: 1.3;
-  padding: 1px 2px; border-radius: 2px;
-}
-.cast-name.match { background: rgba(34,197,94,0.15); color: var(--green-hi); }
-
-/* ── EMPTY ROWS ── */
-.empty-rows { display: flex; flex-direction: column; gap: 4px; margin-top: 4px; }
-.empty-row {
-  display: grid;
-  grid-template-columns: 84px repeat(9, 1fr);
-  gap: 4px; opacity: 0.18;
-}
-.empty-poster {
-  aspect-ratio: 2/3; min-height: 120px;
-  background: var(--surface2);
-  border: 1px dashed var(--border); border-radius: 5px;
-}
-.empty-col { display: flex; flex-direction: column; gap: 4px; }
-.empty-cell {
-  flex: 1; min-height: 38px;
-  background: var(--surface);
-  border: 1px dashed var(--border); border-radius: 5px;
-}
-
 /* ── SPINNER ── */
 .spinner {
-  display: inline-block; width: 13px; height: 13px;
-  border: 2px solid var(--border);
-  border-top-color: var(--gold); border-radius: 50%;
-  animation: spin 0.6s linear infinite;
-  vertical-align: middle; margin-right: 7px;
+  display: inline-block; width: 14px; height: 14px;
+  border: 2px solid var(--border); border-top-color: var(--gold);
+  border-radius: 50%; animation: spin 0.6s linear infinite;
+  vertical-align: middle; margin-right: 6px;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 
+/* ══════════════════════════════════════
+   GUESS CARD — matches reference image
+══════════════════════════════════════ */
+.guess-rows { display: flex; flex-direction: column; gap: 12px; }
+
+.guess-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  animation: cardIn 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(-12px) scale(0.99); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Row 1: poster + title/genres + stat blocks */
+.card-top {
+  display: grid;
+  grid-template-columns: 130px 1fr;
+  min-height: 180px;
+}
+
+/* Poster */
+.card-poster {
+  position: relative; overflow: hidden;
+  background: var(--surface2);
+  border-right: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.card-poster img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+}
+.card-poster-fb {
+  width: 100%; height: 100%;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 6px; color: var(--text-muted); font-size: 26px;
+}
+.card-poster-fb small { font-size: 8px; color: var(--text-muted); text-align: center; padding: 0 6px; }
+
+/* Right side of card-top */
+.card-right { display: flex; flex-direction: column; }
+
+/* Title + genre chips row */
+.card-title-row {
+  padding: 14px 16px 10px;
+  border-bottom: 1px solid var(--border);
+}
+.card-movie-title {
+  font-family: 'Playfair Display', serif;
+  font-weight: 700; font-size: 20px; color: var(--text);
+  margin-bottom: 8px; line-height: 1.2;
+}
+.genre-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.genre-chip {
+  font-size: 11px; font-weight: 500;
+  padding: 4px 11px; border-radius: 20px;
+  letter-spacing: 0.03em; border: 1px solid transparent;
+  background: var(--surface3); color: var(--text-dim);
+  transition: all 0.2s;
+}
+.genre-chip.correct {
+  background: rgba(72,187,120,0.2);
+  color: #68d391; border-color: rgba(72,187,120,0.4);
+}
+.genre-chip.close {
+  background: rgba(237,137,54,0.18);
+  color: #f6ad55; border-color: rgba(237,137,54,0.35);
+}
+
+/* Stat grid */
+.card-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  padding: 10px 12px;
+  flex: 1;
+}
+.stat-block {
+  border-radius: 8px; padding: 10px 8px;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  min-height: 64px; position: relative;
+  text-align: center;
+  transition: all 0.4s ease;
+}
+.stat-block.correct { background: var(--green); }
+.stat-block.close   { background: var(--yellow); }
+.stat-block.wrong   { background: var(--wrong-bg); }
+
+.stat-block-label {
+  font-size: 8px; font-weight: 600; letter-spacing: 0.18em;
+  text-transform: uppercase; margin-bottom: 5px; opacity: 0.7;
+  font-family: 'JetBrains Mono', monospace;
+}
+.stat-block.correct .stat-block-label { color: var(--green-text); opacity: 0.85; }
+.stat-block.close   .stat-block-label { color: var(--yellow-text); opacity: 0.85; }
+.stat-block.wrong   .stat-block-label { color: var(--text-muted); }
+
+.stat-block-value {
+  font-size: 16px; font-weight: 700; line-height: 1.1;
+  font-family: 'Inter', sans-serif;
+}
+.stat-block.correct .stat-block-value { color: var(--green-text); }
+.stat-block.close   .stat-block-value { color: var(--yellow-text); }
+.stat-block.wrong   .stat-block-value { color: var(--wrong-text); }
+
+.stat-block-value.lg { font-size: 20px; }
+.stat-block-value.sm { font-size: 12px; line-height: 1.3; }
+.stat-block-value.xs { font-size: 10px; line-height: 1.35; }
+
+.stat-arrow {
+  font-size: 14px; margin-top: 3px; line-height: 1;
+}
+.stat-block.correct .stat-arrow { color: var(--green-text); }
+.stat-block.close   .stat-arrow { color: var(--yellow-text); }
+.stat-block.wrong   .stat-arrow { color: var(--text-muted); }
+
+/* Studio block — full-width text */
+.stat-block.studio-block .stat-block-value {
+  font-family: 'Playfair Display', serif;
+  font-size: 15px; font-weight: 900;
+  letter-spacing: 0.06em; text-transform: uppercase;
+}
+
+/* ── Row 2: people row ── */
+.card-people {
+  border-top: 1px solid var(--border);
+  display: flex; align-items: center;
+  padding: 12px 16px; gap: 0;
+}
+
+.people-group {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 8px; padding: 0 16px;
+  border-right: 1px solid var(--border);
+}
+.people-group:last-child { border-right: none; }
+
+.people-label {
+  font-size: 8px; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--text-muted); font-family: 'JetBrains Mono', monospace;
+  align-self: flex-start;
+}
+
+.people-avatars { display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap; }
+
+.avatar-wrap {
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+}
+.avatar-circle {
+  width: 54px; height: 54px; border-radius: 50%;
+  overflow: hidden; border: 2px solid var(--border);
+  background: var(--surface2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; color: var(--text-muted);
+  flex-shrink: 0;
+  transition: border-color 0.3s;
+}
+.avatar-circle.match { border-color: var(--green-hi); box-shadow: 0 0 0 2px rgba(72,187,120,0.3); }
+.avatar-circle img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.avatar-name {
+  font-size: 9px; color: var(--text-dim);
+  text-align: center; max-width: 60px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  letter-spacing: 0.02em;
+}
+.avatar-name.match { color: var(--green-hi); }
+
+/* director avatar is slightly bigger */
+.director-wrap .avatar-circle { width: 60px; height: 60px; }
+.director-wrap .avatar-name { max-width: 70px; }
+
+/* ── EMPTY ROWS ── */
+.empty-rows { display: flex; flex-direction: column; gap: 12px; margin-top: 12px; }
+.empty-card {
+  background: var(--surface); border: 1px dashed var(--border);
+  border-radius: var(--radius); height: 60px; opacity: 0.22;
+}
+
 /* ── MODALS ── */
 .modal-bg {
-  position: fixed; inset: 0;
-  background: rgba(0,0,0,0.88);
-  backdrop-filter: blur(5px);
+  position: fixed; inset: 0; background: rgba(0,0,0,0.88);
+  backdrop-filter: blur(6px);
   display: none; align-items: center; justify-content: center;
   z-index: 500; padding: 20px;
 }
 .modal-bg.show { display: flex; animation: bgIn 0.3s ease; }
 @keyframes bgIn { from { opacity: 0; } to { opacity: 1; } }
-
 .modal {
-  background: var(--surface);
-  border: 1px solid var(--border-hi);
-  border-radius: 10px;
-  max-width: 480px; width: 100%;
-  box-shadow: 0 0 80px rgba(212,168,83,0.1), 0 20px 60px rgba(0,0,0,0.6);
-  animation: modalUp 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-  overflow: hidden;
+  background: var(--surface); border: 1px solid var(--border-hi);
+  border-radius: 14px; max-width: 480px; width: 100%;
+  box-shadow: 0 0 80px rgba(240,180,41,0.1), 0 20px 60px rgba(0,0,0,0.6);
+  animation: modalUp 0.4s cubic-bezier(0.22, 1, 0.36, 1); overflow: hidden;
 }
 @keyframes modalUp {
   from { transform: translateY(24px) scale(0.97); }
   to   { transform: translateY(0) scale(1); }
 }
-.modal-poster-area {
-  position: relative; height: 190px;
-  overflow: hidden; background: var(--surface2);
-}
-.modal-poster-bg {
-  width: 100%; height: 100%;
-  object-fit: cover; filter: blur(14px) brightness(0.35); transform: scale(1.12);
-}
+.modal-poster-area { position: relative; height: 200px; overflow: hidden; background: var(--surface2); }
+.modal-poster-bg { width: 100%; height: 100%; object-fit: cover; filter: blur(14px) brightness(0.35); transform: scale(1.12); }
 .modal-poster-front {
-  position: absolute; left: 50%; top: 50%;
-  transform: translate(-50%, -50%);
-  height: 155px; border-radius: 5px;
-  box-shadow: 0 8px 36px rgba(0,0,0,0.65);
+  position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+  height: 165px; border-radius: 6px; box-shadow: 0 8px 36px rgba(0,0,0,0.65);
 }
 .modal-body { padding: 26px 30px 30px; text-align: center; }
 .modal-icon { font-size: 40px; margin-bottom: 8px; }
 .modal-headline {
-  font-family: 'Playfair Display', serif;
-  font-weight: 900; font-size: 32px;
-  color: var(--gold); letter-spacing: 0.06em;
-  line-height: 1; margin-bottom: 6px;
+  font-family: 'Playfair Display', serif; font-weight: 900; font-size: 32px;
+  color: var(--gold); letter-spacing: 0.06em; line-height: 1; margin-bottom: 6px;
 }
 .modal-film {
-  font-family: 'Playfair Display', serif;
-  font-style: italic; font-size: 20px;
+  font-family: 'Playfair Display', serif; font-style: italic; font-size: 20px;
   color: var(--text); margin-bottom: 12px;
 }
 .modal-meta {
-  font-size: 11px; color: var(--text-dim);
-  line-height: 1.9; letter-spacing: 0.03em;
-  margin-bottom: 22px;
-  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; color: var(--text-dim); line-height: 1.9;
+  letter-spacing: 0.03em; margin-bottom: 22px; font-family: 'JetBrains Mono', monospace;
 }
 .modal-actions { display: flex; gap: 8px; justify-content: center; }
 .btn-primary {
-  background: var(--gold); color: #0a0b0e;
-  border: none; padding: 12px 26px;
-  font-family: 'Playfair Display', serif;
-  font-weight: 700; font-size: 15px;
-  letter-spacing: 0.08em; cursor: pointer;
-  border-radius: 6px; transition: all 0.15s;
+  background: var(--gold); color: #0a0b0e; border: none; padding: 13px 26px;
+  font-family: 'Inter', sans-serif; font-weight: 700; font-size: 14px;
+  letter-spacing: 0.06em; cursor: pointer; border-radius: 8px; transition: all 0.15s;
 }
 .btn-primary:hover { background: var(--gold2); transform: translateY(-1px); }
 .btn-secondary {
   background: var(--surface2); color: var(--text-dim);
-  border: 1px solid var(--border); padding: 12px 22px;
-  font-family: 'Inter', sans-serif; font-size: 13px;
-  letter-spacing: 0.06em; cursor: pointer;
-  border-radius: 6px; transition: all 0.15s;
+  border: 1px solid var(--border); padding: 13px 22px;
+  font-family: 'Inter', sans-serif; font-size: 13px; letter-spacing: 0.06em;
+  cursor: pointer; border-radius: 8px; transition: all 0.15s;
 }
 .btn-secondary:hover { border-color: var(--border-hi); color: var(--text); }
-
-/* ── CONFIRM DIALOG ── */
 .confirm-modal { max-width: 360px; }
 .confirm-modal .modal-body { padding: 32px 28px; }
 .confirm-title { font-family: 'Playfair Display', serif; font-size: 22px; color: var(--text); margin-bottom: 10px; }
 .confirm-text { font-size: 12px; color: var(--text-dim); line-height: 1.7; margin-bottom: 22px; }
 .btn-danger {
-  background: var(--red-dim); color: #f08070;
-  border: 1px solid var(--red); padding: 12px 22px;
-  font-family: 'Inter', sans-serif; font-size: 13px;
-  letter-spacing: 0.06em; cursor: pointer;
-  border-radius: 6px; transition: all 0.15s;
+  background: var(--red-dim); color: #fc8181;
+  border: 1px solid var(--red); padding: 13px 22px;
+  font-family: 'Inter', sans-serif; font-size: 13px; letter-spacing: 0.06em;
+  cursor: pointer; border-radius: 8px; transition: all 0.15s;
 }
-.btn-danger:hover { background: rgba(192,57,43,0.25); }
+.btn-danger:hover { background: rgba(229,62,62,0.25); }
 
-/* ── HOW TO PLAY ── */
-.how-card {
-  background: var(--surface);
-  border: 1px solid var(--border); border-radius: 8px;
-  padding: 20px 22px; margin: 0 auto 32px;
-  max-width: 1160px;
-}
-.how-title {
-  font-family: 'Playfair Display', serif; font-weight: 700;
-  font-size: 18px; color: var(--gold);
-  margin-bottom: 14px; letter-spacing: 0.05em;
-}
-.how-grid {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 10px;
-}
-.how-item {
-  display: flex; align-items: flex-start; gap: 9px;
-  font-size: 11px; color: var(--text-dim); line-height: 1.55;
-}
-.how-emoji { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
-
-.footer-attr {
-  text-align: center; padding: 10px;
-  font-size: 9px; color: var(--text-muted);
-  font-family: 'JetBrains Mono', monospace;
-}
-.footer-attr a { color: var(--gold-dim); text-decoration: none; }
-.footer-attr a:hover { color: var(--gold); }
-
-/* ── LOADING STATE ── */
+/* ── LOADING ── */
 .loading-overlay {
   display: flex; flex-direction: column;
   align-items: center; justify-content: center;
@@ -611,20 +522,117 @@ header {
 }
 .loading-overlay .spinner { width: 24px; height: 24px; }
 
-/* ── RESPONSIVE ── */
-@media (max-width: 860px) {
-  .col-header-row, .guess-row, .empty-row { grid-template-columns: 68px repeat(9, 1fr); }
-  .cell { font-size: 9px; min-height: 32px; }
-  .cell-lbl { display: none; }
-  .header { grid-template-columns: 1fr; justify-items: center; }
-  .header-stats { display: none; }
+/* ── HOW TO ── */
+.how-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 12px; padding: 20px 22px; margin: 0 auto 32px; max-width: 900px;
 }
-@media (max-width: 600px) {
-  .col-header-row, .guess-row, .empty-row { grid-template-columns: 56px repeat(9, 1fr); }
-  .cell { min-height: 28px; padding: 3px 2px; }
-  header { grid-template-columns: 1fr; }
+.how-title {
+  font-family: 'Playfair Display', serif; font-weight: 700;
+  font-size: 18px; color: var(--gold); margin-bottom: 14px;
+}
+.how-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
+.how-item { display: flex; align-items: flex-start; gap: 9px; font-size: 11px; color: var(--text-dim); line-height: 1.55; }
+.how-emoji { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+
+.footer-attr {
+  text-align: center; padding: 10px;
+  font-size: 9px; color: var(--text-muted); font-family: 'JetBrains Mono', monospace;
+}
+.footer-attr a { color: var(--gold-dim); text-decoration: none; }
+.footer-attr a:hover { color: var(--gold); }
+
+/* ── CREATE GAME MODE ── */
+.create-modal { max-width: 560px; }
+.create-modal .modal-body { padding: 28px 28px 24px; text-align: left; }
+.create-section-title {
+  font-family: 'Playfair Display', serif; font-size: 22px;
+  color: var(--gold); margin-bottom: 4px;
+}
+.create-subtitle { font-size: 11px; color: var(--text-dim); margin-bottom: 20px; letter-spacing: 0.04em; }
+.create-field { margin-bottom: 16px; }
+.create-label {
+  font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--text-dim); font-family: 'JetBrains Mono', monospace;
+  margin-bottom: 7px; display: block;
+}
+.create-input {
+  width: 100%; background: var(--surface2); border: 1px solid var(--border);
+  color: var(--text); padding: 11px 14px;
+  font-family: 'Inter', sans-serif; font-size: 13px;
+  outline: none; border-radius: 8px; transition: border-color 0.2s;
+}
+.create-input:focus { border-color: var(--gold-dim); }
+.create-input::placeholder { color: var(--text-muted); }
+.create-movie-search-wrap { position: relative; }
+.create-ac-drop {
+  position: absolute; top: calc(100% + 4px); left: 0; right: 0;
+  background: var(--surface2); border: 1px solid var(--border-hi);
+  border-radius: 8px; z-index: 600;
+  max-height: 200px; overflow-y: auto;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.6); display: none;
+}
+.create-ac-drop.open { display: block; }
+.create-selected-movie {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px; background: var(--surface3);
+  border: 1px solid var(--gold-dim); border-radius: 8px; margin-top: 8px;
+}
+.create-selected-movie img { width: 28px; height: 40px; object-fit: cover; border-radius: 3px; }
+.create-selected-movie-info { flex:1; }
+.create-selected-movie-title { font-size: 13px; color: var(--text); font-weight: 600; }
+.create-selected-movie-year { font-size: 10px; color: var(--text-dim); }
+.create-selected-movie .remove-btn {
+  background: none; border: none; color: var(--text-muted); cursor: pointer;
+  font-size: 16px; padding: 4px; line-height: 1;
+}
+.create-selected-movie .remove-btn:hover { color: var(--red); }
+.share-box {
+  background: var(--surface2); border: 1px solid var(--gold-dim);
+  border-radius: 8px; padding: 14px 16px; margin-top: 4px;
+}
+.share-url {
+  font-family: 'JetBrains Mono', monospace; font-size: 11px;
+  color: var(--gold); word-break: break-all; margin-bottom: 10px; line-height: 1.5;
+}
+.share-btns { display: flex; gap: 8px; }
+.share-copy-btn {
+  background: var(--gold); color: #0a0b0e; border: none;
+  padding: 9px 18px; border-radius: 7px;
+  font-family: 'Inter', sans-serif; font-weight: 700; font-size: 12px;
+  cursor: pointer; transition: all 0.15s; letter-spacing: 0.04em;
+}
+.share-copy-btn:hover { background: var(--gold2); }
+.share-copy-btn.copied { background: var(--green-hi); color: #fff; }
+
+/* Custom game banner */
+.custom-game-banner {
+  background: linear-gradient(135deg, rgba(240,180,41,0.12), rgba(240,180,41,0.05));
+  border: 1px solid var(--gold-dim); border-radius: 10px;
+  padding: 12px 16px; margin-bottom: 16px;
+  display: flex; align-items: center; gap: 12px;
+  animation: fadeUp 0.5s ease;
+}
+.custom-game-banner-icon { font-size: 24px; flex-shrink: 0; }
+.custom-game-banner-text { flex: 1; }
+.custom-game-banner-title { font-size: 12px; font-weight: 600; color: var(--gold); margin-bottom: 2px; }
+.custom-game-banner-sub { font-size: 10px; color: var(--text-dim); }
+
+  .card-top { grid-template-columns: 90px 1fr; }
+  .card-movie-title { font-size: 15px; }
+  .stat-block-value { font-size: 13px; }
+  .stat-block-value.lg { font-size: 16px; }
+  .avatar-circle { width: 42px; height: 42px; }
+  .director-wrap .avatar-circle { width: 46px; height: 46px; }
+  .card-stats { grid-template-columns: repeat(3, 1fr); gap: 4px; padding: 8px; }
+  .people-group { padding: 0 10px; }
+}
+@media (max-width: 500px) {
+  header { grid-template-columns: 1fr; justify-items: center; gap: 8px; }
+  .header-stats { display: none; }
   .header-actions { display: none; }
-  .logo { font-size: 42px; }
+  .card-top { grid-template-columns: 80px 1fr; }
+  .card-stats { grid-template-columns: repeat(3, 1fr); gap: 3px; padding: 6px; }
 }
 </style>
 </head>
@@ -640,18 +648,25 @@ header {
     <div class="stat-pill"><div class="stat-num" id="statAvg">—</div><div class="stat-lbl">Avg</div></div>
   </div>
   <div class="logo-block">
-    <div class="logo">CINEMATLE</div>
-    <div class="logo-sub">Guess the Film · One Clue at a Time</div>
+    <div class="logo">MOVORDLE</div>
+    <div class="logo-sub">Ik a genius name</div>
   </div>
   <div class="header-actions">
     <button class="icon-btn" onclick="showHowToModal()" title="How to play">?</button>
+    <button class="icon-btn" onclick="showCreateModal()" title="Create custom game" style="font-size:12px;">🎬+</button>
     <button class="icon-btn" onclick="newGame()" title="New game">↺</button>
   </div>
 </header>
 
+<div class="top-bar">
+  <div class="hint-counter-btn"><span class="lock-icon">🔒</span><span id="hintCounterText">Hint in 5</span></div>
+  <div class="guess-counter">Guess <span id="guessNumDisplay">1</span> of <span>10</span></div>
+  <button class="giveup-btn" id="giveupBtn" onclick="confirmGiveUp()">🏳️ Give Up</button>
+</div>
+
 <div class="legend">
   <div class="legend-item"><div class="legend-dot c"></div>Exact match</div>
-  <div class="legend-item"><div class="legend-dot y"></div>Close (±5 yrs / ±$30M / ±6pts)</div>
+  <div class="legend-item"><div class="legend-dot y"></div>Close (±5 yrs / ±$30M / ±6 pts)</div>
   <div class="legend-item"><div class="legend-dot w"></div>No match</div>
   <div class="legend-item">↑↓ = direction to target</div>
 </div>
@@ -668,42 +683,23 @@ header {
         <div class="autocomplete-drop" id="acDrop"></div>
       </div>
       <button class="guess-btn" id="guessBtn" disabled>Guess</button>
-      <button class="giveup-btn" id="giveupBtn" onclick="confirmGiveUp()">Give Up</button>
     </div>
-  </div>
-
-  <div class="guesses-bar">
-    <div class="pips" id="pips"></div>
-    <div class="guesses-text">Guesses left: <span id="guessesLeft">10</span></div>
-  </div>
-
-  <div class="col-header-row">
-    <div class="col-h">Film</div>
-    <div class="col-h">Year</div>
-    <div class="col-h">Genres</div>
-    <div class="col-h">Rating</div>
-    <div class="col-h">Box Office</div>
-    <div class="col-h">Score</div>
-    <div class="col-h">Studio</div>
-    <div class="col-h">Director</div>
-    <div class="col-h">Lead</div>
-    <div class="col-h">Cast</div>
   </div>
 
   <div class="guess-rows" id="guessRows"></div>
   <div class="empty-rows" id="emptyRows"></div>
 </div>
 
-<div style="max-width:1160px;margin:0 auto;padding:0 14px;">
+<div style="max-width:900px;margin:0 auto;padding:0 16px;">
   <div class="how-card">
     <div class="how-title">How to Play</div>
     <div class="how-grid">
-      <div class="how-item"><div class="how-emoji">🎬</div><div>Search any film and submit it as a guess. The mystery film always has won an award.</div></div>
+      <div class="how-item"><div class="how-emoji">🎬</div><div>Search any film and submit it as a guess.</div></div>
       <div class="how-item"><div class="how-emoji">🟩</div><div>Green = exact match. Yellow = close. Dark = no match.</div></div>
       <div class="how-item"><div class="how-emoji">↑↓</div><div>Arrows show whether the true value is higher or lower.</div></div>
-      <div class="how-item"><div class="how-emoji">💡</div><div>Hints unlock at guess 4 and 8. Pick: cast reveal, tagline, or awards.</div></div>
-      <div class="how-item"><div class="how-emoji">🎭</div><div>Genres and cast show partial green for each match.</div></div>
-      <div class="how-item"><div class="how-emoji">🏳️</div><div>Stuck? Use Give Up to reveal the answer.</div></div>
+      <div class="how-item"><div class="how-emoji">💡</div><div>Hints auto-unlock at guess 5 and 9 — choose one clue to reveal.</div></div>
+      <div class="how-item"><div class="how-emoji">🎭</div><div>Genre chips go green for each individual match.</div></div>
+      <div class="how-item"><div class="how-emoji">🏳️</div><div>Stuck? Hit Give Up to reveal the answer.</div></div>
     </div>
   </div>
 </div>
@@ -735,8 +731,8 @@ header {
   <div class="modal confirm-modal">
     <div class="modal-body">
       <div class="confirm-title">Give Up?</div>
-      <div class="confirm-text">The answer will be revealed and the game will end. This will count as a loss.</div>
-      <div class="modal-actions" style="justify-content:center">
+      <div class="confirm-text">The answer will be revealed and the game will end. This counts as a loss.</div>
+      <div class="modal-actions">
         <button class="btn-danger" onclick="giveUp()">Yes, Reveal Answer</button>
         <button class="btn-secondary" onclick="closeModal('confirmModal')">Cancel</button>
       </div>
@@ -750,15 +746,84 @@ header {
     <div class="modal-body" style="padding-top:32px;text-align:left">
       <div style="font-family:'Playfair Display',serif;font-size:26px;color:var(--gold);margin-bottom:18px;text-align:center">How to Play</div>
       <div style="font-size:12px;color:var(--text-dim);line-height:2;margin-bottom:22px">
-        🎬 &nbsp;Search any film and submit it as a guess. The mystery film always has award recognition.<br>
+        🎬 &nbsp;Search any film and submit it as a guess.<br>
         🟩 &nbsp;Green = exact match. Yellow = close. Dark = no match.<br>
         ↑↓ &nbsp;Arrows on numeric fields tell you if the target is higher or lower.<br>
-        💡 &nbsp;Hints unlock at guess 4 and 8 — choose what to reveal.<br>
-        🎭 &nbsp;Genres and Cast highlight green for each individual match.<br>
-        🏳️ &nbsp;Use the Give Up button any time to concede the round.
+        💡 &nbsp;Hints auto-unlock at guess 5 and 9 — choose what to reveal.<br>
+        🎭 &nbsp;Genre chips and cast avatars highlight green for matches.<br>
+        🏳️ &nbsp;Use Give Up any time to concede the round.
       </div>
       <div style="text-align:center">
         <button class="btn-primary" onclick="closeModal('howModal')">Got It</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Hint Modal -->
+<div class="modal-bg" id="hintModal">
+  <div class="modal" style="max-width:440px">
+    <div class="modal-body" style="padding:32px 30px 28px;text-align:left">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+        <div style="font-size:28px">💡</div>
+        <div>
+          <div style="font-family:'Playfair Display',serif;font-size:22px;color:var(--gold);line-height:1" id="hintModalTitle">Hint Unlocked!</div>
+          <div style="font-size:10px;color:var(--text-dim);letter-spacing:0.1em;margin-top:3px" id="hintModalSubtitle">Choose a clue to reveal</div>
+        </div>
+      </div>
+      <div style="height:1px;background:var(--border);margin:16px 0"></div>
+      <div class="hint-choices" id="hintModalChoices" style="flex-direction:column;gap:10px">
+        <button class="hint-choice-btn" style="justify-content:flex-start;padding:13px 16px;font-size:13px" onclick="revealHintModal('cast')">🎭 &nbsp;Reveal a Cast Member</button>
+        <button class="hint-choice-btn" style="justify-content:flex-start;padding:13px 16px;font-size:13px" onclick="revealHintModal('tagline')">💬 &nbsp;Reveal Tagline / Plot</button>
+        <button class="hint-choice-btn" style="justify-content:flex-start;padding:13px 16px;font-size:13px" onclick="revealHintModal('awards')">🏆 &nbsp;Reveal Award & Score Info</button>
+      </div>
+      <div id="hintModalReveal" style="display:none;margin-top:14px"></div>
+      <div style="margin-top:20px;text-align:center" id="hintModalClose" style="display:none">
+        <button class="btn-primary" onclick="closeModal('hintModal')">Got It</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Create Game Modal -->
+<div class="modal-bg" id="createModal">
+  <div class="modal create-modal">
+    <div class="modal-body">
+      <div class="create-section-title">🎬 Create a Game</div>
+      <div class="create-subtitle">Pick a movie, write 2 custom hints, then share the link with friends.</div>
+
+      <div class="create-field">
+        <label class="create-label">Movie</label>
+        <div class="create-movie-search-wrap">
+          <input type="text" class="create-input" id="createSearchInput" placeholder="Search for a movie…" autocomplete="off">
+          <div class="create-ac-drop" id="createAcDrop"></div>
+        </div>
+        <div id="createSelectedMovie" style="display:none"></div>
+      </div>
+
+      <div class="create-field">
+        <label class="create-label">Hint 1 — shown after guess 5</label>
+        <input type="text" class="create-input" id="createHint1" placeholder="e.g. 'The director also made Inception'" maxlength="200">
+      </div>
+
+      <div class="create-field">
+        <label class="create-label">Hint 2 — shown after guess 9</label>
+        <input type="text" class="create-input" id="createHint2" placeholder="e.g. 'Stars a famous Oscar-winning actress'" maxlength="200">
+      </div>
+
+      <div id="createShareBox" style="display:none">
+        <div class="create-label">Share this link with friends:</div>
+        <div class="share-box">
+          <div class="share-url" id="createShareUrl"></div>
+          <div class="share-btns">
+            <button class="share-copy-btn" id="createCopyBtn" onclick="copyShareLink()">📋 Copy Link</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-actions" style="margin-top:20px">
+        <button class="btn-primary" onclick="generateShareLink()">Generate Link</button>
+        <button class="btn-secondary" onclick="closeModal('createModal')">Cancel</button>
       </div>
     </div>
   </div>
@@ -774,17 +839,18 @@ const RATING_ORDER = ['G','PG','PG-13','R','NC-17','NR'];
 const MAX_GUESSES  = 10;
 
 // ─── STATE ────────────────────────────────────────────────────────────────────
-let target         = null;
-let guessesUsed    = 0;
-let selectedId     = null;
-let gameOver       = false;
-let moviePool      = [];   // array of TMDB movie objects (lightweight)
-let fullCache      = {};   // id → full enriched movie data
-let searchTimer    = null;
-let hintsShown     = new Set();
+let target      = null;
+let guessesUsed = 0;
+let selectedId  = null;
+let gameOver    = false;
+let moviePool   = [];
+let fullCache   = {};
+let searchTimer = null;
+let hintsShown  = new Set();
+let hintsRevealed = 0;
 let stats = JSON.parse(localStorage.getItem('cinematle_v3') || '{"played":0,"won":0,"streak":0,"total":0}');
 
-// ─── TMDB HELPERS ─────────────────────────────────────────────────────────────
+// ─── TMDB ─────────────────────────────────────────────────────────────────────
 async function tmdb(path, params = {}) {
   const url = new URL(`${TMDB_BASE}${path}`);
   url.searchParams.set('api_key', TMDB_KEY);
@@ -794,75 +860,44 @@ async function tmdb(path, params = {}) {
   return r.json();
 }
 
-// Build a pool of well-known, award-winning films via multiple Discover pages
 async function buildMoviePool() {
   if (moviePool.length > 0) return;
-
-  // Award-winning proxy: vote_count >= 500, vote_average >= 7.0, sorted by vote_average
-  // We fetch several pages to get variety
-  const pages = [1, 2, 3, 4, 5];
-  const baseParams = {
-    include_adult: false,
-    include_video: false,
-    language: 'en-US',
-    'vote_count.gte': 500,
-    'vote_average.gte': 7.2,
-    'release_date.lte': '2024-12-31',
-    sort_by: 'vote_average.desc',
-  };
-
-  const fetches = pages.map(p => tmdb('/discover/movie', { ...baseParams, page: p }).catch(() => null));
+  const pages = [1,2,3,4,5];
+  const base  = { include_adult:false, include_video:false, language:'en-US',
+                   'vote_count.gte':500, 'vote_average.gte':7.2,
+                   'release_date.lte':'2024-12-31', sort_by:'vote_average.desc' };
+  const fetches = pages.map(p => tmdb('/discover/movie', {...base, page:p}).catch(()=>null));
   const results = await Promise.all(fetches);
-
   const seen = new Set();
   results.forEach(r => {
-    if (!r || !r.results) return;
+    if (!r?.results) return;
     r.results.forEach(m => {
       if (!seen.has(m.id) && m.poster_path && m.release_date) {
-        seen.add(m.id);
-        moviePool.push(m);
+        seen.add(m.id); moviePool.push(m);
       }
     });
   });
-
-  // Also fetch page 1 sorted by popularity for mainstream recognition
   try {
-    const pop = await tmdb('/discover/movie', {
-      ...baseParams,
-      'vote_average.gte': 7.0,
-      'vote_count.gte': 2000,
-      sort_by: 'popularity.desc',
-      page: 1,
+    const pop = await tmdb('/discover/movie', {...base,'vote_average.gte':7.0,'vote_count.gte':2000,sort_by:'popularity.desc',page:1});
+    if (pop?.results) pop.results.forEach(m => {
+      if (!seen.has(m.id) && m.poster_path && m.release_date) { seen.add(m.id); moviePool.push(m); }
     });
-    if (pop && pop.results) {
-      pop.results.forEach(m => {
-        if (!seen.has(m.id) && m.poster_path && m.release_date) {
-          seen.add(m.id);
-          moviePool.push(m);
-        }
-      });
-    }
-  } catch(e) { /* ignore */ }
+  } catch(e) {}
 }
 
 function pickDailyMovie() {
   if (!moviePool.length) return null;
-  const seed = Math.floor(Date.now() / 86400000);
-  const idx  = seed % moviePool.length;
-  return moviePool[idx];
+  return moviePool[Math.floor(Date.now()/86400000) % moviePool.length];
 }
 
 async function getFullMovie(id) {
-  if (fullCache[id]) return fullCache[id];
-
-  const [details, credits, releases, keywords] = await Promise.all([
+  if (fullCache[id] !== undefined) return fullCache[id];
+  const [details, credits, releases] = await Promise.all([
     tmdb(`/movie/${id}`),
     tmdb(`/movie/${id}/credits`),
     tmdb(`/movie/${id}/release_dates`),
-    tmdb(`/movie/${id}/keywords`).catch(() => ({ keywords: [] })),
   ]);
 
-  // US rating
   let rating = 'NR';
   const us = releases.results?.find(r => r.iso_3166_1 === 'US');
   if (us) {
@@ -870,380 +905,390 @@ async function getFullMovie(id) {
     if (cert) rating = cert.certification;
   }
 
-  const director = credits.crew?.find(c => c.job === 'Director')?.name || null;
-  const cast      = credits.cast?.slice(0, 10) || [];
-  const lead      = cast[0]?.name || null;
-  const support   = cast.slice(1, 6).map(a => a.name);
+  const director  = credits.crew?.find(c => c.job === 'Director') || null;
+  const castRaw   = credits.cast?.slice(0, 10) || [];
+  const lead      = castRaw[0] || null;
+  const support   = castRaw.slice(1, 5);
   const genres    = (details.genres || []).slice(0, 5).map(g => g.name);
   const boxOffice = details.revenue ? Math.round(details.revenue / 1_000_000) : null;
   const studio    = details.production_companies?.[0]?.name || null;
   const rtScore   = details.vote_average ? Math.round(details.vote_average * 10) : null;
-  const year      = details.release_date ? parseInt(details.release_date.slice(0, 4)) : null;
-  const poster    = details.poster_path ? `${IMG}w342${details.poster_path}` : null;
-  const posterFull= details.poster_path ? `${IMG}w780${details.poster_path}` : null;
-  const tagline   = details.tagline || null;
-  const overview  = details.overview || null;
+  const year      = details.release_date ? parseInt(details.release_date.slice(0,4)) : null;
 
   const movie = {
     id, title: details.title, year, genres, rating,
-    boxOffice, rtScore, studio, director, lead, support,
-    poster, posterFull, tagline, overview,
+    boxOffice, rtScore, studio, director: director?.name || null,
+    directorProfilePath: director?.profile_path ? `${IMG}w185${director.profile_path}` : null,
+    lead: lead?.name || null,
+    leadProfilePath: lead?.profile_path ? `${IMG}w185${lead.profile_path}` : null,
+    support: support.map(a => a.name),
+    supportProfiles: support.map(a => a.profile_path ? `${IMG}w185${a.profile_path}` : null),
+    poster:     details.poster_path ? `${IMG}w342${details.poster_path}` : null,
+    posterFull: details.poster_path ? `${IMG}w780${details.poster_path}` : null,
+    tagline:  details.tagline || null,
+    overview: details.overview || null,
   };
 
-  // Validate: must have all key numeric fields
-  const valid = movie.year && movie.rtScore && movie.boxOffice &&
-                movie.director && movie.lead && genres.length > 0;
-
+  const valid = movie.year && movie.rtScore && movie.director && movie.lead && genres.length;
   fullCache[id] = valid ? movie : null;
   return fullCache[id];
 }
 
-async function searchMovies(query) {
-  if (!query || query.length < 2) return [];
-  const data = await tmdb('/search/movie', { query, include_adult: false, language: 'en-US', page: 1 });
-  // Filter to only include movies with enough data to play with
-  return (data.results || [])
-    .filter(m => m.poster_path && m.release_date && m.vote_count >= 50)
-    .slice(0, 9);
+async function searchMovies(q) {
+  if (!q || q.length < 2) return [];
+  const d = await tmdb('/search/movie', {query:q, include_adult:false, language:'en-US', page:1});
+  return (d.results||[]).filter(m => m.poster_path && m.release_date && m.vote_count >= 50).slice(0,9);
 }
 
 // ─── COMPARISON ───────────────────────────────────────────────────────────────
 function compare(guess, tgt, field) {
   if (field === 'year') {
-    if (!guess.year || !tgt.year) return { state: 'wrong', arrow: null };
-    if (guess.year === tgt.year) return { state: 'correct', arrow: null };
-    const diff = Math.abs(guess.year - tgt.year);
-    return { state: diff <= 5 ? 'close' : 'wrong', arrow: guess.year < tgt.year ? '↑' : '↓' };
+    if (!guess.year||!tgt.year) return {state:'wrong',arrow:null};
+    if (guess.year===tgt.year) return {state:'correct',arrow:null};
+    return {state:Math.abs(guess.year-tgt.year)<=5?'close':'wrong', arrow:guess.year<tgt.year?'↑':'↓'};
   }
   if (field === 'boxOffice') {
-    if (!guess.boxOffice || !tgt.boxOffice) return { state: 'wrong', arrow: null };
-    if (guess.boxOffice === tgt.boxOffice) return { state: 'correct', arrow: null };
-    const diff = Math.abs(guess.boxOffice - tgt.boxOffice);
-    return { state: diff <= 30 ? 'close' : 'wrong', arrow: guess.boxOffice < tgt.boxOffice ? '↑' : '↓' };
+    if (!guess.boxOffice||!tgt.boxOffice) return {state:'wrong',arrow:null};
+    if (guess.boxOffice===tgt.boxOffice) return {state:'correct',arrow:null};
+    const arrow = guess.boxOffice < tgt.boxOffice ? '↑' : '↓';
+    return {state:Math.abs(guess.boxOffice-tgt.boxOffice)<=30?'close':'wrong', arrow};
   }
   if (field === 'rtScore') {
-    if (!guess.rtScore || !tgt.rtScore) return { state: 'wrong', arrow: null };
-    if (guess.rtScore === tgt.rtScore) return { state: 'correct', arrow: null };
-    const diff = Math.abs(guess.rtScore - tgt.rtScore);
-    return { state: diff <= 6 ? 'close' : 'wrong', arrow: guess.rtScore < tgt.rtScore ? '↑' : '↓' };
+    if (!guess.rtScore||!tgt.rtScore) return {state:'wrong',arrow:null};
+    if (guess.rtScore===tgt.rtScore) return {state:'correct',arrow:null};
+    return {state:Math.abs(guess.rtScore-tgt.rtScore)<=6?'close':'wrong', arrow:guess.rtScore<tgt.rtScore?'↑':'↓'};
   }
   if (field === 'rating') {
-    if (guess.rating === tgt.rating) return { state: 'correct', arrow: null };
-    const gi = RATING_ORDER.indexOf(guess.rating);
-    const ti = RATING_ORDER.indexOf(tgt.rating);
-    if (gi !== -1 && ti !== -1 && Math.abs(gi - ti) === 1) return { state: 'close', arrow: null };
-    return { state: 'wrong', arrow: null };
+    if (guess.rating===tgt.rating) return {state:'correct',arrow:null};
+    const gi=RATING_ORDER.indexOf(guess.rating), ti=RATING_ORDER.indexOf(tgt.rating);
+    return {state:(gi!==-1&&ti!==-1&&Math.abs(gi-ti)===1)?'close':'wrong', arrow:null};
   }
   if (field === 'genres') {
-    const overlap = guess.genres.filter(g => tgt.genres.includes(g));
-    const perfect = overlap.length === guess.genres.length && overlap.length === tgt.genres.length;
-    return { state: perfect ? 'correct' : overlap.length > 0 ? 'close' : 'wrong' };
+    const overlap = guess.genres.filter(g=>tgt.genres.includes(g));
+    const perfect = overlap.length===guess.genres.length&&overlap.length===tgt.genres.length;
+    return {state: perfect?'correct': overlap.length?'close':'wrong'};
   }
-  if (field === 'support') {
-    const overlap = guess.support.filter(a => tgt.support.includes(a));
-    return { state: overlap.length > 0 ? 'close' : 'wrong' };
-  }
-  return { state: guess[field] === tgt[field] ? 'correct' : 'wrong', arrow: null };
+  return {state: guess[field]===tgt[field]?'correct':'wrong', arrow:null};
 }
 
 function fmtMoney(n) {
   if (!n) return 'N/A';
-  if (n >= 1000) return `$${(n / 1000).toFixed(1)}B`;
-  return `$${n}M`;
+  return n >= 1000 ? `$${(n/1000).toFixed(1)}B` : `$${n}M`;
 }
 
-// ─── UI BUILD ─────────────────────────────────────────────────────────────────
+// ─── FILMSTRIP ────────────────────────────────────────────────────────────────
 function buildFilmStrip() {
   const el = document.getElementById('filmstrip');
-  for (let i = 0; i < 100; i++) {
-    const h = document.createElement('div');
-    h.className = 'filmstrip-hole';
-    el.appendChild(h);
+  for (let i = 0; i < 120; i++) {
+    const h = document.createElement('div'); h.className='filmstrip-hole'; el.appendChild(h);
   }
 }
 
-function buildPips() {
-  const el = document.getElementById('pips');
-  el.innerHTML = '';
-  for (let i = 0; i < MAX_GUESSES; i++) {
-    const p = document.createElement('div');
-    const isLast = i === MAX_GUESSES - 1;
-    p.className = 'pip' + (i < guessesUsed ? (isLast ? ' danger' : ' used') : '');
-    el.appendChild(p);
+// ─── GUESS COUNTER ────────────────────────────────────────────────────────────
+function updateTopBar() {
+  document.getElementById('guessNumDisplay').textContent = guessesUsed + 1;
+  const hintGuesses = [5, 9];
+  const next = hintGuesses.find(n => n > guessesUsed);
+  const hintEl = document.getElementById('hintCounterText');
+  if (next) {
+    hintEl.textContent = `Hint in ${next - guessesUsed}`;
+    hintEl.closest('.hint-counter-btn').querySelector('.lock-icon').textContent = '🔒';
+  } else {
+    hintEl.textContent = 'Hints used';
+    hintEl.closest('.hint-counter-btn').querySelector('.lock-icon').textContent = '💡';
   }
-  document.getElementById('guessesLeft').textContent = MAX_GUESSES - guessesUsed;
 }
 
+// ─── EMPTY ROWS ───────────────────────────────────────────────────────────────
 function buildEmptyRows(n) {
   const el = document.getElementById('emptyRows');
   el.innerHTML = '';
   for (let i = 0; i < n; i++) {
-    const row = document.createElement('div');
-    row.className = 'empty-row';
-    const poster = document.createElement('div');
-    poster.className = 'empty-poster';
-    row.appendChild(poster);
-    for (let j = 0; j < 9; j++) {
-      const col = document.createElement('div'); col.className = 'empty-col';
-      const c1  = document.createElement('div'); c1.className = 'empty-cell';
-      const c2  = document.createElement('div'); c2.className = 'empty-cell';
-      col.appendChild(c1); col.appendChild(c2);
-      row.appendChild(col);
-    }
-    el.appendChild(row);
+    const d = document.createElement('div'); d.className = 'empty-card'; el.appendChild(d);
   }
 }
 
-function makeCell(label, content, state, arrow, delay) {
-  const cell = document.createElement('div');
-  cell.className = `cell ${state}`;
-  cell.style.animationDelay = `${delay}ms`;
+// ─── AVATAR ELEMENT ───────────────────────────────────────────────────────────
+function makeAvatar(name, profilePath, isMatch, extraClass='') {
+  const wrap = document.createElement('div');
+  wrap.className = 'avatar-wrap' + (extraClass ? ' ' + extraClass : '');
 
-  const lbl = document.createElement('div');
-  lbl.className = 'cell-lbl';
-  lbl.textContent = label;
-  cell.appendChild(lbl);
+  const circle = document.createElement('div');
+  circle.className = 'avatar-circle' + (isMatch ? ' match' : '');
 
-  if (typeof content === 'string' || typeof content === 'number') {
-    const v = document.createElement('div');
-    v.className = 'cell-val' + (String(content).length > 12 ? ' sm' : '');
-    v.textContent = content;
-    cell.appendChild(v);
-  } else if (content) {
-    cell.appendChild(content);
+  if (profilePath) {
+    const img = document.createElement('img');
+    img.src = profilePath; img.alt = name; img.loading = 'lazy';
+    circle.appendChild(img);
+  } else {
+    circle.textContent = '🎭';
   }
+
+  const label = document.createElement('div');
+  label.className = 'avatar-name' + (isMatch ? ' match' : '');
+  // Show first initial + last name
+  const parts = (name || '').split(' ');
+  label.textContent = parts.length > 1 ? `${parts[0][0]}. ${parts[parts.length-1]}` : name;
+
+  wrap.appendChild(circle);
+  wrap.appendChild(label);
+  return wrap;
+}
+
+// ─── STAT BLOCK ───────────────────────────────────────────────────────────────
+function makeStatBlock(label, value, state, arrow, extraClass='') {
+  const el = document.createElement('div');
+  el.className = `stat-block ${state}` + (extraClass ? ' ' + extraClass : '');
+
+  const lbl = document.createElement('div'); lbl.className='stat-block-label'; lbl.textContent=label;
+  el.appendChild(lbl);
+
+  const valLen = String(value).length;
+  const sizeCls = valLen > 14 ? 'xs' : valLen > 9 ? 'sm' : valLen > 5 ? '' : 'lg';
+  const val = document.createElement('div');
+  val.className = `stat-block-value ${sizeCls}`;
+  val.textContent = value;
+  el.appendChild(val);
 
   if (arrow) {
-    const a = document.createElement('div');
-    a.className = 'cell-arrow';
-    a.textContent = arrow;
-    cell.appendChild(a);
+    const arr = document.createElement('div'); arr.className='stat-arrow'; arr.textContent=arrow;
+    el.appendChild(arr);
   }
-  return cell;
+  return el;
 }
 
-function genreEl(guess, tgt) {
-  const wrap = document.createElement('div');
-  wrap.className = 'tag-wrap';
-  guess.genres.forEach(g => {
-    const t = document.createElement('span');
-    t.className = 'tag' + (tgt.genres.includes(g) ? ' match' : '');
-    t.textContent = g;
-    wrap.appendChild(t);
-  });
-  return wrap;
-}
-
-function castEl(support, tgtSupport) {
-  const wrap = document.createElement('div');
-  wrap.className = 'cast-list';
-  support.forEach(name => {
-    const el = document.createElement('div');
-    el.className = 'cast-name' + (tgtSupport.includes(name) ? ' match' : '');
-    el.textContent = name;
-    wrap.appendChild(el);
-  });
-  return wrap;
-}
-
+// ─── ADD GUESS CARD ───────────────────────────────────────────────────────────
 function addGuessRow(movie) {
   const container = document.getElementById('guessRows');
-  const wrap = document.createElement('div');
-  wrap.className = 'guess-row';
+  const card = document.createElement('div');
+  card.className = 'guess-card';
+
+  // ── TOP SECTION ──
+  const top = document.createElement('div'); top.className='card-top';
 
   // Poster
-  const pc = document.createElement('div');
-  pc.className = 'poster-cell';
+  const posterCell = document.createElement('div'); posterCell.className='card-poster';
   if (movie.poster) {
-    const img = document.createElement('img');
-    img.className = 'poster-img';
-    img.src = movie.poster; img.alt = movie.title; img.loading = 'lazy';
-    pc.appendChild(img);
+    const img = document.createElement('img'); img.src=movie.poster; img.alt=movie.title; img.loading='lazy';
+    posterCell.appendChild(img);
   } else {
-    const fb = document.createElement('div');
-    fb.className = 'poster-fb';
+    const fb = document.createElement('div'); fb.className='card-poster-fb';
     fb.innerHTML = `🎬<small>${movie.title}</small>`;
-    pc.appendChild(fb);
+    posterCell.appendChild(fb);
   }
-  const ol = document.createElement('div');
-  ol.className = 'poster-overlay';
-  ol.textContent = movie.title;
-  pc.appendChild(ol);
-  wrap.appendChild(pc);
+  top.appendChild(posterCell);
 
-  // Data columns
-  const defs = [
-    { lbl: 'YEAR',    field: 'year',      display: movie.year || 'N/A' },
-    { lbl: 'GENRES',  field: 'genres',    display: null },
-    { lbl: 'RATING',  field: 'rating',    display: movie.rating },
-    { lbl: 'B.O.',    field: 'boxOffice', display: fmtMoney(movie.boxOffice) },
-    { lbl: 'SCORE',   field: 'rtScore',   display: movie.rtScore ? `${movie.rtScore}%` : 'N/A' },
-    { lbl: 'STUDIO',  field: 'studio',    display: movie.studio || 'N/A' },
-    { lbl: 'DIRECTOR',field: 'director',  display: movie.director || 'N/A' },
-    { lbl: 'LEAD',    field: 'lead',      display: movie.lead || 'N/A' },
-    { lbl: 'CAST',    field: 'support',   display: null },
-  ];
+  // Right side
+  const right = document.createElement('div'); right.className='card-right';
 
-  defs.forEach((d, i) => {
-    const col = document.createElement('div');
-    col.className = 'data-col';
+  // Title + genres
+  const titleRow = document.createElement('div'); titleRow.className='card-title-row';
+  const titleEl = document.createElement('div'); titleEl.className='card-movie-title';
+  titleEl.textContent = movie.title;
+  titleRow.appendChild(titleEl);
 
-    const res = compare(movie, target, d.field);
-    let content;
-    if (d.field === 'genres') content = genreEl(movie, target);
-    else if (d.field === 'support') content = castEl(movie.support, target.support);
-    else content = d.display;
-
-    const cell = makeCell(d.lbl, content, res.state, res.arrow || null, i * 60);
-    col.appendChild(cell);
-    wrap.appendChild(col);
+  const chipsWrap = document.createElement('div'); chipsWrap.className='genre-chips';
+  const genreResult = compare(movie, target, 'genres');
+  movie.genres.forEach(g => {
+    const chip = document.createElement('span');
+    const isMatch = target.genres.includes(g);
+    chip.className = 'genre-chip' + (isMatch ? ' correct' : (genreResult.state === 'close' ? '' : ''));
+    chip.textContent = g;
+    chipsWrap.appendChild(chip);
   });
+  titleRow.appendChild(chipsWrap);
+  right.appendChild(titleRow);
 
-  container.appendChild(wrap);
-  wrap.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  // Stat blocks — 6 blocks in a 3×2 grid
+  const statsGrid = document.createElement('div'); statsGrid.className='card-stats';
+
+  const yearR   = compare(movie, target, 'year');
+  const boR     = compare(movie, target, 'boxOffice');
+  const scoreR  = compare(movie, target, 'rtScore');
+  const ratingR = compare(movie, target, 'rating');
+  const studioR = compare(movie, target, 'studio');
+  const dirR    = compare(movie, target, 'director');
+
+  const ratingIdx = RATING_ORDER.indexOf(movie.rating);
+  const tgtIdx    = RATING_ORDER.indexOf(target.rating);
+  const ratingArrow = ratingR.state !== 'correct' && ratingIdx !== -1 && tgtIdx !== -1
+    ? (ratingIdx < tgtIdx ? '↑' : '↓') : null;
+
+  statsGrid.appendChild(makeStatBlock('YEAR',       movie.year || 'N/A',         yearR.state,   yearR.arrow));
+  statsGrid.appendChild(makeStatBlock('BOX OFFICE', fmtMoney(movie.boxOffice),   boR.state,     boR.arrow));
+  statsGrid.appendChild(makeStatBlock('STUDIO',     movie.studio || 'N/A',       studioR.state, null, 'studio-block'));
+  statsGrid.appendChild(makeStatBlock('RATED',      movie.rating,                ratingR.state, ratingArrow));
+  statsGrid.appendChild(makeStatBlock('SCORE',      movie.rtScore ? `${movie.rtScore}/100` : 'N/A', scoreR.state, scoreR.arrow));
+  statsGrid.appendChild(makeStatBlock('DIRECTOR',   movie.director || 'N/A',     dirR.state,    null));
+
+  right.appendChild(statsGrid);
+  top.appendChild(right);
+  card.appendChild(top);
+
+  // ── PEOPLE ROW ──
+  const people = document.createElement('div'); people.className='card-people';
+
+  // Director group
+  const dirGroup = document.createElement('div'); dirGroup.className='people-group';
+  const dirLbl = document.createElement('div'); dirLbl.className='people-label'; dirLbl.textContent='Director';
+  const dirAvatars = document.createElement('div'); dirAvatars.className='people-avatars';
+  dirAvatars.appendChild(makeAvatar(movie.director, movie.directorProfilePath, dirR.state==='correct', 'director-wrap'));
+  dirGroup.appendChild(dirLbl); dirGroup.appendChild(dirAvatars);
+  people.appendChild(dirGroup);
+
+  // Lead group
+  const leadR = compare(movie, target, 'lead');
+  const leadGroup = document.createElement('div'); leadGroup.className='people-group';
+  const leadLbl = document.createElement('div'); leadLbl.className='people-label'; leadLbl.textContent='Lead Actor';
+  const leadAvatars = document.createElement('div'); leadAvatars.className='people-avatars';
+  leadAvatars.appendChild(makeAvatar(movie.lead, movie.leadProfilePath, leadR.state==='correct'));
+  leadGroup.appendChild(leadLbl); leadGroup.appendChild(leadAvatars);
+  people.appendChild(leadGroup);
+
+  // Supporting cast group
+  const castGroup = document.createElement('div'); castGroup.className='people-group';
+  const castLbl = document.createElement('div'); castLbl.className='people-label'; castLbl.textContent='Supporting Cast';
+  const castAvatars = document.createElement('div'); castAvatars.className='people-avatars';
+  movie.support.forEach((name, i) => {
+    const isMatch = target.support.includes(name);
+    castAvatars.appendChild(makeAvatar(name, movie.supportProfiles[i], isMatch));
+  });
+  castGroup.appendChild(castLbl); castGroup.appendChild(castAvatars);
+  people.appendChild(castGroup);
+
+  card.appendChild(people);
+  container.prepend(card);
+  document.getElementById('searchInput').scrollIntoView({behavior:'smooth', block:'center'});
   buildEmptyRows(Math.max(0, MAX_GUESSES - guessesUsed));
 }
 
-// ─── HINTS ────────────────────────────────────────────────────────────────────
-function showHintWidget(guessNum) {
+// ─── HINTS (MODAL) ───────────────────────────────────────────────────────────
+let currentHintGuessNum = null;
+
+function showHintWidget(guessNum, autoReveal=false) {
   if (hintsShown.has(guessNum)) return;
   hintsShown.add(guessNum);
+  currentHintGuessNum = guessNum;
 
-  const container = document.getElementById('hintContainer');
-  const box = document.createElement('div');
-  box.className = 'hint-box';
-  box.id = `hint-${guessNum}`;
+  // Reset modal state
+  document.getElementById('hintModalTitle').textContent = `Hint Unlocked! (Guess ${guessNum})`;
+  document.getElementById('hintModalSubtitle').textContent = 'Choose one clue to reveal:';
+  document.getElementById('hintModalReveal').style.display = 'none';
+  document.getElementById('hintModalReveal').innerHTML = '';
+  document.getElementById('hintModalClose').style.display = 'none';
 
-  box.innerHTML = `
-    <div class="hint-header">
-      <div class="hint-badge">Hint · Guess ${guessNum}</div>
-      <div class="hint-title">Choose a clue to reveal:</div>
-    </div>
-    <div class="hint-choices">
-      <button class="hint-choice-btn" onclick="revealHint(${guessNum},'cast',this)">🎭 Cast Member</button>
-      <button class="hint-choice-btn" onclick="revealHint(${guessNum},'tagline',this)">💬 Tagline / Plot</button>
-      <button class="hint-choice-btn" onclick="revealHint(${guessNum},'awards',this)">🏆 Award Info</button>
-    </div>
-    <div id="hint-reveal-${guessNum}" style="display:none"></div>
-  `;
-  container.appendChild(box);
+  const choicesEl = document.getElementById('hintModalChoices');
+  choicesEl.style.display = 'flex';
+
+  // For custom games, show single "reveal hint" button
+  if (window.customHints) {
+    choicesEl.innerHTML = `<button class="hint-choice-btn" style="justify-content:flex-start;padding:13px 16px;font-size:13px" onclick="revealHintModal('custom')">💡 &nbsp;Reveal Your Friend's Hint</button>`;
+  } else {
+    choicesEl.innerHTML = `
+      <button class="hint-choice-btn" style="justify-content:flex-start;padding:13px 16px;font-size:13px" onclick="revealHintModal('cast')">🎭 &nbsp;Reveal a Cast Member</button>
+      <button class="hint-choice-btn" style="justify-content:flex-start;padding:13px 16px;font-size:13px" onclick="revealHintModal('tagline')">💬 &nbsp;Reveal Tagline / Plot</button>
+      <button class="hint-choice-btn" style="justify-content:flex-start;padding:13px 16px;font-size:13px" onclick="revealHintModal('awards')">🏆 &nbsp;Reveal Award & Score Info</button>
+    `;
+  }
+
+  document.getElementById('hintModal').classList.add('show');
 }
 
-function revealHint(guessNum, type, btn) {
+function revealHintModal(type) {
   if (!target) return;
-  // Disable all buttons in this hint
-  const box = document.getElementById(`hint-${guessNum}`);
-  box.querySelectorAll('.hint-choice-btn').forEach(b => b.disabled = true);
+  const guessNum = currentHintGuessNum;
+  document.getElementById('hintModalChoices').style.display = 'none';
 
-  const revealEl = document.getElementById(`hint-reveal-${guessNum}`);
+  const revealEl = document.getElementById('hintModalReveal');
   revealEl.style.display = 'block';
 
-  if (type === 'cast') {
+  if (type === 'custom') {
+    hintsRevealed = (hintsRevealed||0) + 1;
+    const hintText = guessNum <= 5 ? window.customHints.h1 : window.customHints.h2;
+    revealEl.innerHTML = `<div class="hint-revealed">💡 <strong>${hintText}</strong></div>`;
+  } else if (type === 'cast') {
     const pool = [target.lead, ...target.support].filter(Boolean);
     const pick = pool[Math.floor(Math.random() * pool.length)];
-    revealEl.innerHTML = `<div class="hint-revealed">🎭 Cast: <strong>${pick || 'Unknown'}</strong></div>`;
+    revealEl.innerHTML = `<div class="hint-revealed">🎭 Cast: <strong>${pick||'Unknown'}</strong></div>`;
   } else if (type === 'tagline') {
-    const text = target.tagline || target.overview?.slice(0, 180) || 'No description available.';
+    const text = target.tagline || target.overview?.slice(0,180) || 'No description available.';
     revealEl.innerHTML = `<div class="hint-revealed">💬 "${text}"</div>`;
   } else if (type === 'awards') {
-    // Proxy: TMDB vote score and popularity as "critical recognition"
-    const score = target.rtScore || '?';
-    const yr    = target.year || '?';
-    const info  = score >= 80
-      ? `This film has received widespread critical acclaim with a score of <strong>${score}%</strong>.`
+    const score = target.rtScore || '?', yr = target.year || '?';
+    const info = score >= 80
+      ? `Received widespread critical acclaim with a score of <strong>${score}%</strong>.`
       : score >= 65
-      ? `This film earned mostly positive reviews with a score of <strong>${score}%</strong>.`
-      : `This film has a score of <strong>${score}%</strong>.`;
+        ? `Earned mostly positive reviews with a score of <strong>${score}%</strong>.`
+        : `Has a score of <strong>${score}%</strong>.`;
     revealEl.innerHTML = `<div class="hint-revealed">🏆 Released in <strong>${yr}</strong>. ${info} The director is known for ${target.genres.slice(0,2).join(' and ')} films.</div>`;
   }
+
+  document.getElementById('hintModalClose').style.display = 'block';
 }
+
+// keep old revealHint as no-op for safety
+function revealHint() {}
 
 // ─── SUBMIT ───────────────────────────────────────────────────────────────────
 async function submitGuess() {
   if (!selectedId || gameOver) return;
   const btn = document.getElementById('guessBtn');
-  btn.disabled = true;
-  btn.innerHTML = '<span class="spinner"></span>';
+  btn.disabled=true; btn.innerHTML='<span class="spinner"></span>';
 
   try {
     const movie = await getFullMovie(selectedId);
     if (!movie) {
       showError('That film is missing key data — try another.');
-      btn.innerHTML = 'Guess';
-      btn.disabled = !selectedId;
-      return;
+      btn.innerHTML='Guess'; btn.disabled=!selectedId; return;
     }
-
     guessesUsed++;
     addGuessRow(movie);
-    buildPips();
+    updateTopBar();
 
-    if (guessesUsed === 4) showHintWidget(4);
-    if (guessesUsed === 8) showHintWidget(8);
+    if (guessesUsed===5) showHintWidget(5, true);
+    if (guessesUsed===9) showHintWidget(9, true);
 
-    const won = movie.id === target.id || movie.title.toLowerCase() === target.title.toLowerCase();
-    if (won) {
-      endGame(true);
-    } else if (guessesUsed >= MAX_GUESSES) {
-      endGame(false);
-    }
-  } catch (e) {
-    showError('Failed to load movie data. Please try again.');
-    console.error(e);
+    const won = movie.id===target.id || movie.title.toLowerCase()===target.title.toLowerCase();
+    if (won) endGame(true);
+    else if (guessesUsed>=MAX_GUESSES) endGame(false);
+  } catch(e) {
+    showError('Failed to load movie data. Please try again.'); console.error(e);
   }
 
-  selectedId = null;
-  document.getElementById('searchInput').value = '';
+  selectedId=null;
+  document.getElementById('searchInput').value='';
   document.getElementById('acDrop').classList.remove('open');
-  btn.innerHTML = 'Guess';
-  btn.disabled = true;
+  btn.innerHTML='Guess'; btn.disabled=true;
 }
 
 // ─── GIVE UP ──────────────────────────────────────────────────────────────────
-function confirmGiveUp() {
-  if (gameOver) return;
-  document.getElementById('confirmModal').classList.add('show');
-}
-
-function giveUp() {
-  closeModal('confirmModal');
-  if (gameOver) return;
-  endGame(false, true);
-}
+function confirmGiveUp() { if (!gameOver) document.getElementById('confirmModal').classList.add('show'); }
+function giveUp() { closeModal('confirmModal'); if (!gameOver) endGame(false,true); }
 
 // ─── END GAME ─────────────────────────────────────────────────────────────────
-function endGame(won, gaveUp = false) {
-  gameOver = true;
+function endGame(won, gaveUp=false) {
+  gameOver=true;
   stats.played++;
-  if (won) {
-    stats.won++;
-    stats.streak++;
-    stats.total += guessesUsed;
-  } else {
-    stats.streak = 0;
-  }
+  if (won) { stats.won++; stats.streak++; stats.total+=guessesUsed; }
+  else stats.streak=0;
   localStorage.setItem('cinematle_v3', JSON.stringify(stats));
   updateStats();
 
-  document.getElementById('searchInput').disabled = true;
-  document.getElementById('guessBtn').disabled    = true;
-  document.getElementById('giveupBtn').disabled   = true;
+  document.getElementById('searchInput').disabled=true;
+  document.getElementById('guessBtn').disabled=true;
+  document.getElementById('giveupBtn').disabled=true;
 
-  const poster = target.posterFull || target.poster || '';
-  document.getElementById('mPosterBg').src    = poster;
-  document.getElementById('mPosterFront').src = poster;
-  document.getElementById('mIcon').textContent     = won ? '🏆' : gaveUp ? '🏳️' : '🎬';
-  document.getElementById('mHeadline').textContent = won ? 'BRILLIANT!' : gaveUp ? 'REVEALED' : "GAME OVER";
-  document.getElementById('mFilm').textContent     = `"${target.title}"`;
-  document.getElementById('mMeta').innerHTML = won
-    ? `Identified in <strong>${guessesUsed}</strong> guess${guessesUsed === 1 ? '' : 'es'} ·
-       ${target.year} · ${target.genres.slice(0,3).join(', ')}<br>
-       Dir. ${target.director} · ${target.lead}`
-    : `${target.year} · ${target.genres.slice(0,3).join(', ')}<br>
-       Dir. ${target.director} · ${target.lead}<br>
-       Box Office: ${fmtMoney(target.boxOffice)} · Score: ${target.rtScore}%`;
+  const poster=target.posterFull||target.poster||'';
+  document.getElementById('mPosterBg').src=poster;
+  document.getElementById('mPosterFront').src=poster;
+  document.getElementById('mIcon').textContent= won?'🏆': gaveUp?'🏳️':'🎬';
+  document.getElementById('mHeadline').textContent= won?'BRILLIANT!': gaveUp?'REVEALED':'GAME OVER';
+  document.getElementById('mFilm').textContent=`"${target.title}"`;
+  document.getElementById('mMeta').innerHTML= won
+    ?`Identified in <strong>${guessesUsed}</strong> guess${guessesUsed===1?'':'es'} · ${target.year} · ${target.genres.slice(0,3).join(', ')}<br>Dir. ${target.director} · ${target.lead}`
+    :`${target.year} · ${target.genres.slice(0,3).join(', ')}<br>Dir. ${target.director} · ${target.lead}<br>Box Office: ${fmtMoney(target.boxOffice)} · Score: ${target.rtScore}%`;
 
-  setTimeout(() => document.getElementById('resultModal').classList.add('show'), won ? 600 : 400);
+  setTimeout(()=>document.getElementById('resultModal').classList.add('show'), won?600:400);
 }
 
 function closeModal(id) { document.getElementById(id).classList.remove('show'); }
@@ -1251,134 +1296,273 @@ function showHowToModal() { document.getElementById('howModal').classList.add('s
 
 // ─── STATS ────────────────────────────────────────────────────────────────────
 function updateStats() {
-  document.getElementById('statPlayed').textContent = stats.played;
-  document.getElementById('statWon').textContent    = stats.won;
-  document.getElementById('statStreak').textContent = stats.streak;
-  document.getElementById('statAvg').textContent    = stats.won > 0 ? (stats.total / stats.won).toFixed(1) : '—';
+  document.getElementById('statPlayed').textContent=stats.played;
+  document.getElementById('statWon').textContent=stats.won;
+  document.getElementById('statStreak').textContent=stats.streak;
+  document.getElementById('statAvg').textContent=stats.won>0?(stats.total/stats.won).toFixed(1):'—';
 }
 
 // ─── SEARCH ───────────────────────────────────────────────────────────────────
 function setupSearch() {
-  const input = document.getElementById('searchInput');
-  const drop  = document.getElementById('acDrop');
-  const btn   = document.getElementById('guessBtn');
+  const input=document.getElementById('searchInput');
+  const drop=document.getElementById('acDrop');
+  const btn=document.getElementById('guessBtn');
 
-  input.addEventListener('input', () => {
-    const q = input.value.trim();
-    clearTimeout(searchTimer);
-    selectedId = null; btn.disabled = true;
-    if (q.length < 2) { drop.classList.remove('open'); return; }
-
-    drop.innerHTML = '<div class="ac-loading"><span class="spinner"></span>Searching…</div>';
+  input.addEventListener('input',()=>{
+    const q=input.value.trim();
+    clearTimeout(searchTimer); selectedId=null; btn.disabled=true;
+    if (q.length<2){drop.classList.remove('open');return;}
+    drop.innerHTML='<div class="ac-loading"><span class="spinner"></span>Searching…</div>';
     drop.classList.add('open');
-
-    searchTimer = setTimeout(async () => {
+    searchTimer=setTimeout(async()=>{
       try {
-        const results = await searchMovies(q);
-        drop.innerHTML = '';
-        if (!results.length) {
-          drop.innerHTML = '<div class="ac-loading">No results found</div>';
-          return;
-        }
-        results.forEach(r => {
-          const item = document.createElement('div');
-          item.className = 'ac-item';
-          const yr = r.release_date?.slice(0, 4) || '?';
-          if (r.poster_path) {
-            const img = document.createElement('img');
-            img.className = 'ac-thumb';
-            img.src = `${IMG}w92${r.poster_path}`; img.alt = '';
+        const results=await searchMovies(q);
+        drop.innerHTML='';
+        if (!results.length){drop.innerHTML='<div class="ac-loading">No results</div>';return;}
+        results.forEach(r=>{
+          const item=document.createElement('div'); item.className='ac-item';
+          const yr=r.release_date?.slice(0,4)||'?';
+          if (r.poster_path){
+            const img=document.createElement('img'); img.className='ac-thumb';
+            img.src=`${IMG}w92${r.poster_path}`; img.alt='';
             item.appendChild(img);
           } else {
-            const ph = document.createElement('div');
-            ph.className = 'ac-thumb-ph'; ph.textContent = '🎬';
+            const ph=document.createElement('div'); ph.className='ac-thumb-ph'; ph.textContent='🎬';
             item.appendChild(ph);
           }
-          const info = document.createElement('div');
-          info.className = 'ac-info';
-          info.innerHTML = `<div class="ac-title">${r.title}</div>
-                            <div class="ac-meta">${yr} · ★ ${r.vote_average?.toFixed(1) || '?'}</div>`;
+          const info=document.createElement('div'); info.className='ac-info';
+          info.innerHTML=`<div class="ac-title">${r.title}</div><div class="ac-meta">${yr} · ★ ${r.vote_average?.toFixed(1)||'?'}</div>`;
           item.appendChild(info);
-          item.addEventListener('click', () => {
-            selectedId = r.id;
-            input.value = r.title;
-            drop.classList.remove('open');
-            btn.disabled = false;
+          item.addEventListener('click',()=>{
+            selectedId=r.id; input.value=r.title;
+            drop.classList.remove('open'); btn.disabled=false;
           });
           drop.appendChild(item);
         });
-      } catch (e) {
-        drop.innerHTML = '<div class="ac-loading">Search failed — check connection</div>';
-      }
-    }, 280);
+      } catch(e){drop.innerHTML='<div class="ac-loading">Search failed</div>';}
+    },280);
   });
 
-  input.addEventListener('keydown', e => {
-    if (e.key === 'Enter' && !btn.disabled) submitGuess();
-    if (e.key === 'Escape') drop.classList.remove('open');
+  input.addEventListener('keydown',e=>{
+    if (e.key==='Enter'&&!btn.disabled) submitGuess();
+    if (e.key==='Escape') drop.classList.remove('open');
   });
-
-  btn.addEventListener('click', submitGuess);
-  document.addEventListener('click', e => {
+  btn.addEventListener('click',submitGuess);
+  document.addEventListener('click',e=>{
     if (!e.target.closest('.search-wrap')) drop.classList.remove('open');
   });
 }
 
 function showError(msg) {
-  const el = document.getElementById('errorMsg');
-  el.textContent = msg; el.classList.add('show');
-  setTimeout(() => el.classList.remove('show'), 4500);
+  const el=document.getElementById('errorMsg');
+  el.textContent=msg; el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'),4500);
 }
 
 // ─── NEW GAME ─────────────────────────────────────────────────────────────────
 async function newGame() {
-  guessesUsed = 0; selectedId = null; gameOver = false; target = null;
-  hintsShown.clear();
-
-  document.getElementById('guessRows').innerHTML = '';
-  document.getElementById('hintContainer').innerHTML = '';
+  guessesUsed=0; selectedId=null; gameOver=false; target=null; hintsShown.clear(); hintsRevealed=0;
+  window.customHints = null; customGameData = null;
+  document.getElementById('guessRows').innerHTML='';
+  document.getElementById('hintContainer').innerHTML='';
   document.getElementById('errorMsg').classList.remove('show');
   document.getElementById('resultModal').classList.remove('show');
   document.getElementById('confirmModal').classList.remove('show');
-  document.getElementById('searchInput').value = '';
-  document.getElementById('searchInput').disabled = false;
-  document.getElementById('guessBtn').disabled = true;
-  document.getElementById('giveupBtn').disabled = false;
+  document.getElementById('searchInput').value='';
+  document.getElementById('searchInput').disabled=false;
+  document.getElementById('guessBtn').disabled=true;
+  document.getElementById('giveupBtn').disabled=false;
   document.getElementById('acDrop').classList.remove('open');
-
-  buildPips();
+  document.querySelectorAll('.custom-game-banner').forEach(el=>el.remove());
+  updateTopBar();
   buildEmptyRows(MAX_GUESSES);
   updateStats();
 
-  // Show loading state
-  const main = document.getElementById('guessRows');
-  main.innerHTML = '<div class="loading-overlay"><span class="spinner"></span>Loading today\'s film…</div>';
+  const main=document.getElementById('guessRows');
+  main.innerHTML='<div class="loading-overlay"><span class="spinner"></span>Loading today\'s film…</div>';
 
   try {
     await buildMoviePool();
-    const candidate = pickDailyMovie();
-    if (!candidate) throw new Error('No pool');
-
-    // Try candidates until we find one with full data
-    let picked = null;
-    for (let offset = 0; offset < Math.min(30, moviePool.length); offset++) {
-      const seed = Math.floor(Date.now() / 86400000) + offset;
-      const m = moviePool[seed % moviePool.length];
-      const full = await getFullMovie(m.id);
-      if (full) { picked = full; break; }
+    let picked=null;
+    // Shuffle a copy of the pool and try until we get a valid full movie
+    const shuffled = [...moviePool].sort(() => Math.random() - 0.5);
+    for (let i=0; i<Math.min(30, shuffled.length); i++) {
+      const full=await getFullMovie(shuffled[i].id);
+      if (full){picked=full;break;}
     }
-
     if (!picked) throw new Error('No valid target');
-    target = picked;
-    console.log('🎬 Target:', target.title); // dev
-
-    main.innerHTML = '';
+    target=picked;
+    console.log('🎬',target.title);
+    main.innerHTML='';
     buildEmptyRows(MAX_GUESSES);
   } catch(e) {
-    main.innerHTML = '';
-    buildEmptyRows(MAX_GUESSES);
+    main.innerHTML=''; buildEmptyRows(MAX_GUESSES);
     showError('Could not load today\'s film. Check your connection and refresh.');
     console.error(e);
+  }
+}
+
+// ─── CREATE GAME MODE ────────────────────────────────────────────────────────
+let createSelectedMovie = null;
+let createSearchTimer = null;
+
+function showCreateModal() {
+  document.getElementById('createModal').classList.add('show');
+  document.getElementById('createSearchInput').value = '';
+  document.getElementById('createHint1').value = '';
+  document.getElementById('createHint2').value = '';
+  document.getElementById('createShareBox').style.display = 'none';
+  document.getElementById('createSelectedMovie').style.display = 'none';
+  createSelectedMovie = null;
+  setupCreateSearch();
+}
+
+function setupCreateSearch() {
+  const input = document.getElementById('createSearchInput');
+  const drop  = document.getElementById('createAcDrop');
+
+  // Remove previous listeners by cloning
+  const fresh = input.cloneNode(true);
+  input.parentNode.replaceChild(fresh, input);
+
+  fresh.addEventListener('input', () => {
+    const q = fresh.value.trim();
+    clearTimeout(createSearchTimer);
+    if (q.length < 2) { drop.classList.remove('open'); return; }
+    drop.innerHTML = '<div class="ac-loading"><span class="spinner"></span>Searching…</div>';
+    drop.classList.add('open');
+    createSearchTimer = setTimeout(async () => {
+      try {
+        const results = await searchMovies(q);
+        drop.innerHTML = '';
+        if (!results.length) { drop.innerHTML = '<div class="ac-loading">No results</div>'; return; }
+        results.forEach(r => {
+          const item = document.createElement('div'); item.className = 'ac-item';
+          const yr = r.release_date?.slice(0,4) || '?';
+          if (r.poster_path) {
+            const img = document.createElement('img'); img.className = 'ac-thumb';
+            img.src = `${IMG}w92${r.poster_path}`; img.alt = '';
+            item.appendChild(img);
+          } else {
+            const ph = document.createElement('div'); ph.className = 'ac-thumb-ph'; ph.textContent = '🎬';
+            item.appendChild(ph);
+          }
+          const info = document.createElement('div'); info.className = 'ac-info';
+          info.innerHTML = `<div class="ac-title">${r.title}</div><div class="ac-meta">${yr} · ★ ${r.vote_average?.toFixed(1)||'?'}</div>`;
+          item.appendChild(info);
+          item.addEventListener('click', () => {
+            createSelectedMovie = r;
+            fresh.value = r.title;
+            drop.classList.remove('open');
+            renderCreateSelected(r);
+          });
+          drop.appendChild(item);
+        });
+      } catch(e) { drop.innerHTML = '<div class="ac-loading">Search failed</div>'; }
+    }, 280);
+  });
+
+  document.addEventListener('click', e => {
+    if (!e.target.closest('.create-movie-search-wrap')) drop.classList.remove('open');
+  }, {once: false});
+}
+
+function renderCreateSelected(movie) {
+  const el = document.getElementById('createSelectedMovie');
+  const yr = movie.release_date?.slice(0,4) || '?';
+  const poster = movie.poster_path ? `${IMG}w92${movie.poster_path}` : null;
+  el.style.display = 'flex';
+  el.innerHTML = `
+    <div class="create-selected-movie">
+      ${poster ? `<img src="${poster}" alt="">` : '<div style="width:28px;height:40px;background:var(--surface3);border-radius:3px;display:flex;align-items:center;justify-content:center">🎬</div>'}
+      <div class="create-selected-movie-info">
+        <div class="create-selected-movie-title">${movie.title}</div>
+        <div class="create-selected-movie-year">${yr} · ★ ${movie.vote_average?.toFixed(1)||'?'}</div>
+      </div>
+      <button class="remove-btn" onclick="clearCreateMovie()">✕</button>
+    </div>
+  `;
+}
+
+function clearCreateMovie() {
+  createSelectedMovie = null;
+  document.getElementById('createSelectedMovie').style.display = 'none';
+  document.getElementById('createSearchInput').value = '';
+}
+
+function generateShareLink() {
+  if (!createSelectedMovie) { alert('Please select a movie first.'); return; }
+  const hint1 = document.getElementById('createHint1').value.trim();
+  const hint2 = document.getElementById('createHint2').value.trim();
+  if (!hint1 || !hint2) { alert('Please write both hints.'); return; }
+
+  const payload = {
+    id:    createSelectedMovie.id,
+    title: createSelectedMovie.title,
+    year:  createSelectedMovie.release_date?.slice(0,4) || '?',
+    poster: createSelectedMovie.poster_path || '',
+    h1: hint1,
+    h2: hint2
+  };
+  const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
+  const url = `${location.origin}${location.pathname}?cg=${encoded}`;
+
+  document.getElementById('createShareUrl').textContent = url;
+  document.getElementById('createShareBox').style.display = 'block';
+  document.getElementById('createCopyBtn').textContent = '📋 Copy Link';
+  document.getElementById('createCopyBtn').classList.remove('copied');
+}
+
+function copyShareLink() {
+  const url = document.getElementById('createShareUrl').textContent;
+  navigator.clipboard.writeText(url).then(() => {
+    const btn = document.getElementById('createCopyBtn');
+    btn.textContent = '✓ Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = '📋 Copy Link'; btn.classList.remove('copied'); }, 2500);
+  });
+}
+
+// ─── CUSTOM GAME LOADER ───────────────────────────────────────────────────────
+function loadCustomGame() {
+  const params = new URLSearchParams(location.search);
+  const cg = params.get('cg');
+  if (!cg) return false;
+  try {
+    const data = JSON.parse(decodeURIComponent(escape(atob(cg))));
+    if (!data.id || !data.title) return false;
+    customGameData = data;
+    return true;
+  } catch(e) { return false; }
+}
+
+let customGameData = null;
+
+async function startCustomGame(data) {
+  // Show the custom game banner
+  const banner = document.createElement('div');
+  banner.className = 'custom-game-banner';
+  banner.innerHTML = `
+    <div class="custom-game-banner-icon">🎭</div>
+    <div class="custom-game-banner-text">
+      <div class="custom-game-banner-title">Custom Game — Challenge from a friend!</div>
+      <div class="custom-game-banner-sub">Hints will reveal automatically at guesses 5 and 9.</div>
+    </div>
+  `;
+  document.querySelector('.main').prepend(banner);
+
+  // Override customHints so revealHint shows them
+  window.customHints = { h1: data.h1, h2: data.h2 };
+
+  // Load the full movie data using the id
+  await buildMoviePool();
+  const full = await getFullMovie(data.id);
+  if (full) {
+    target = full;
+    console.log('🎬 Custom game:', target.title);
+  } else {
+    // Fallback: construct a minimal target from the encoded data
+    showError('Could not fully load the custom movie. Some comparisons may be limited.');
   }
 }
 
@@ -1386,7 +1570,27 @@ async function newGame() {
 buildFilmStrip();
 setupSearch();
 updateStats();
-newGame();
+
+const isCustomGame = loadCustomGame();
+if (isCustomGame && customGameData) {
+  // Set up game state first, then load custom movie
+  guessesUsed=0; selectedId=null; gameOver=false; target=null; hintsShown.clear();
+  document.getElementById('guessRows').innerHTML='';
+  document.getElementById('hintContainer').innerHTML='';
+  document.getElementById('searchInput').disabled=false;
+  document.getElementById('guessBtn').disabled=true;
+  document.getElementById('giveupBtn').disabled=false;
+  updateTopBar();
+  buildEmptyRows(MAX_GUESSES);
+  updateStats();
+  document.getElementById('guessRows').innerHTML='<div class="loading-overlay"><span class="spinner"></span>Loading custom game…</div>';
+  startCustomGame(customGameData).then(() => {
+    document.getElementById('guessRows').innerHTML='';
+    buildEmptyRows(MAX_GUESSES);
+  });
+} else {
+  newGame();
+}
 </script>
 </body>
 </html>
