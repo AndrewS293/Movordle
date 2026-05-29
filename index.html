@@ -1790,7 +1790,7 @@ const BROWSE_TAB_CONFIG = {
   popular:  { vote_count_gte: 750,  vote_avg_gte: 7.0,  sort: 'popularity.desc',    label: 'Popular' },
   classics: { vote_count_gte: 1000, vote_avg_gte: 7.0,  sort: 'vote_average.desc',  label: 'Classics', date_lte: '1985-12-31' },
   acclaimed:{ vote_count_gte: 2000, vote_avg_gte: 8.2,  sort: 'vote_average.desc',  label: 'Acclaimed' },
-  indie:    { vote_count_gte: 500,  vote_avg_gte: 7.0,  sort: 'vote_average.desc',  label: 'Indie', budget_lte: 5000000 },
+  indie:    { vote_count_gte: 500,  vote_avg_gte: 7.0,  sort: 'vote_average.desc',  label: 'Indie', },
   '2000s-10s': { vote_count_gte: 1000,  vote_avg_gte: 6.0,  sort: 'vote_average.desc',  label: '2000s-10s', date_gte: '2000-01-01', date_lte: '2019-12-31' },
   random:   { vote_count_gte: 300,  vote_avg_gte: 6.5,  sort: 'random', label: 'Random' },
 };
@@ -1863,7 +1863,6 @@ async function loadBrowseTab(tab, page, reset) {
   };
   if (cfg.date_lte) params['release_date.lte'] = cfg.date_lte;
   if (cfg.date_gte) params['release_date.gte'] = cfg.date_gte;
-  if (cfg.budget_lte) params['budget.lte'] = cfg.budget_lte;
   if (cfg.sort === 'random') {
   params.sort_by = 'popularity.desc';
   params.page = Math.floor(Math.random() * 15) + 1; // random page 1–15
@@ -1871,6 +1870,7 @@ async function loadBrowseTab(tab, page, reset) {
   params.sort_by = cfg.sort;
 }
   try {
+    console.log('BROWSE PARAMS:', JSON.stringify(params));
     const data = await tmdb('/discover/movie', params);
     const results = (data.results || []).filter(m => m.poster_path);
     if (page === 1) grid.innerHTML = '';
