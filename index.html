@@ -865,7 +865,7 @@ async function buildMoviePool() {
   const pages = [1,2,3,4,5];
   const base  = { include_adult:false, include_video:false, language:'en-US',
                    'vote_count.gte':500, 'vote_average.gte':7.2,
-                   'release_date.lte':'2024-12-31', sort_by:'vote_average.desc' };
+                   'release_date.lte':'2025-12-31', sort_by:'vote_average.desc' };
   const fetches = pages.map(p => tmdb('/discover/movie', {...base, page:p}).catch(()=>null));
   const results = await Promise.all(fetches);
   const seen = new Set();
@@ -878,7 +878,7 @@ async function buildMoviePool() {
     });
   });
   try {
-    const pop = await tmdb('/discover/movie', {...base,'vote_average.gte':7.0,'vote_count.gte':2000,sort_by:'popularity.desc',page:1});
+    const pop = await tmdb('/discover/movie', {...base,'vote_average.gte':7.0,'vote_count.gte':2000,sort_by:'popularity.desc',page:2});
     if (pop?.results) pop.results.forEach(m => {
       if (!seen.has(m.id) && m.poster_path && m.release_date) { seen.add(m.id); moviePool.push(m); }
     });
