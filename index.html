@@ -1872,7 +1872,15 @@ async function loadBrowseTab(tab, page, reset) {
   try {
     console.log('BROWSE PARAMS:', JSON.stringify(params));
     const data = await tmdb('/discover/movie', params);
-    const results = (data.results || []).filter(m => m.poster_path);
+    const results = (data.results || [])
+      .filter(m => m.poster_path)
+      .filter(m => {
+        if (!cfg.date_gte && !cfg.date_lte) return true;
+        const yr = parseInt(m.release_date?.slice(0,4));
+        if (cfg.date_gte && yr < parseInt(cfg.date_gte.slice(0,4))) return false;
+        if (cfg.date_lte && yr > parseInt(cfg.date_lte.slice(0,4))) return false;
+        return true;
+      });
     if (page === 1) grid.innerHTML = '';
     results.forEach(m => grid.appendChild(makeBrowseCard(m)));
     browseHasMore = page < Math.min(data.total_pages || 1, 20);
